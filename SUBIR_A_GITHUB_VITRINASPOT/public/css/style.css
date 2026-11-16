@@ -6931,6 +6931,38 @@ body.admin-active-view .main-viewport {
   transform: translateY(-50%) scale(0.95) !important;
 }
 
+
+/* Botón directo: Ya tengo tienda / Entrar a Mi Negocio */
+.btn-welcome-login-direct {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  margin-top: 4px;
+}
+.btn-welcome-login-direct:hover,
+.btn-welcome-login-direct:active {
+  background: rgba(255, 184, 0, 0.18);
+  border-color: var(--spot-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 184, 0, 0.25);
+}
+.btn-welcome-login-direct strong {
+  color: var(--spot-gold);
+}
+
 /* Chips Flotantes en Cristal */
 .cat-quick-chips-row .cat-chip-btn {
   background: rgba(255, 255, 255, 0.06) !important;
