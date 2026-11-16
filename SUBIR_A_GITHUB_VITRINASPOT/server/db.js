@@ -265,25 +265,10 @@ class Database {
   init() {
     if (!fs.existsSync(DB_FILE)) {
       this.data = {
-        stores: DEFAULT_STORES,
-        videos: DEFAULT_VIDEOS,
-        transactions: DEFAULT_TRANSACTIONS,
-        notifications: [
-          {
-            id: "notif-1",
-            storeId: "store-1",
-            text: "Felipe Morales comentó en tu video de Zapatos Clásicos.",
-            date: new Date().toISOString(),
-            read: false
-          },
-          {
-            id: "notif-2",
-            storeId: "store-1",
-            text: "⭐ Tu tienda recibió 5 estrellas de calificación.",
-            date: new Date(Date.now() - 3600000 * 5).toISOString(),
-            read: false
-          }
-        ],
+        stores: [],
+        videos: [],
+        transactions: [],
+        notifications: [],
         config: {
           pricing: {
             free_spots_quota: 5,
@@ -1084,6 +1069,35 @@ class Database {
     });
 
     return items;
+  }
+
+  // Purgar y restablecer la base de datos a cero (Modo Virgen para lanzamiento oficial)
+  resetToVirginState() {
+    const initialStores = this.data.stores.length;
+    const initialVideos = this.data.videos.length;
+
+    this.data.stores = [];
+    this.data.videos = [];
+    this.data.transactions = [];
+    this.data.notifications = [];
+    if (!this.data.config) this.data.config = {};
+    if (!this.data.config.telemetry) {
+      this.data.config.telemetry = { totalWhatsAppClicks: 0, totalViews: 0 };
+    } else {
+      this.data.config.telemetry.totalWhatsAppClicks = 0;
+      this.data.config.telemetry.totalViews = 0;
+    }
+    this.data.config.reports = [];
+    this.save();
+
+    return {
+      success: true,
+      removedStores: initialStores,
+      removedVideos: initialVideos,
+      remainingStores: 0,
+      remainingVideos: 0,
+      message: 'Base de datos restablecida a modo virgen: 0 tiendas, 0 perfiles y 0 anuncios.'
+    };
   }
 
   // Limpiar tiendas y videos de prueba para lanzamiento oficial conservando negocios reales

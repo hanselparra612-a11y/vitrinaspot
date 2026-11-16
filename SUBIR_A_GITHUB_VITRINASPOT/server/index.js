@@ -1341,6 +1341,26 @@ app.post('/api/videos/:id/boost', (req, res) => {
 
 );
 
+// Endpoint de purga total a modo virgen (0 tiendas, 0 perfiles, 0 publicaciones)
+app.post('/api/admin/clean-to-virgin', (req, res) => {
+  try {
+    const token = req.headers['x-admin-token'];
+    const config = db.getConfig();
+    if (token && token !== config.admin?.token) {
+      return res.status(403).json({ error: 'Acceso Denegado 403: Zona de Administración Privada.' });
+    }
+    const result = db.resetToVirginState();
+    res.json({
+      success: true,
+      message: `¡Modo Virgen activado! Se purgaron ${result.removedStores} tiendas y ${result.removedVideos} anuncios. La plataforma quedó en cero perfiles, lista para el ingreso de suscriptores reales.`,
+      result
+    });
+  } catch (err) {
+    console.error('Error restableciendo a modo virgen:', err);
+    res.status(500).json({ error: 'Error al restablecer a modo virgen.' });
+  }
+});
+
 // Endpoint de limpieza oficial de datos de prueba conservando negocios reales
 app.post('/api/admin/clean-demo-data', (req, res) => {
   try {

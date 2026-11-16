@@ -6954,13 +6954,13 @@ function setupEventListeners() {
     if (navUpload) navUpload.click();
   });
 
-  // Botón Limpiar Datos de Prueba Oficial (con confirmación de seguridad)
+  // Botón Limpiar Datos y Purgar a Modo Virgen (0 perfiles, 0 anuncios, suscriptores reales)
   document.getElementById('btn-admin-clean-demo')?.addEventListener('click', async () => {
-    const ok = confirm('⚠️ ¿Estás seguro de que deseas eliminar todas las tiendas y videos de prueba (store-1, etc.)?\n\nTu tienda real (Cars full power) y sus videos se conservarán intactos.');
+    const ok = confirm('⚠️ ¿Deseas purgar toda la plataforma y dejarla con CERO perfiles y CERO anuncios?\n\n• La base de datos quedará 100% virgen para recibir nuevos suscriptores reales.\n• Tu acceso como Super Administrador se conservará intacto.');
     if (!ok) return;
 
     try {
-      const res = await fetch('/api/admin/clean-demo-data', {
+      const res = await fetch('/api/admin/clean-to-virgin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -6969,15 +6969,15 @@ function setupEventListeners() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert(data.message || 'Datos de prueba limpiados exitosamente.');
+        alert(data.message || 'Base de datos restablecida a modo virgen exitosamente.');
         await loadStores();
         await loadVideos();
         openAdminPortal();
       } else {
-        alert(data.error || 'Error limpiando datos de prueba.');
+        alert(data.error || 'Error limpiando base de datos.');
       }
     } catch (err) {
-      alert('Error de conexión con el servidor.');
+      alert('Error de conexión con el servidor al purgar base de datos.');
     }
   });
 }
