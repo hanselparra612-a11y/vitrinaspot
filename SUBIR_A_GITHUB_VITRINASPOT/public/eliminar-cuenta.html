@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eliminar Cuenta & Datos Personales - VitrinaSpot</title>
+  
+  <!-- Font Awesome & Fuentes Modernas -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css?v=21.9">
+  <link rel="icon" type="image/png" sizes="64x64" href="/icons/favicon.png?v=21.9">
+  <link rel="shortcut icon" href="/icons/favicon.png?v=21.9">
+
+  <style>
+    .delete-page-body {
+      background-color: var(--bg-dark, #0c0c0e);
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .delete-navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(12, 12, 14, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .delete-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 20px 80px 20px;
+      width: 100%;
+    }
+    .delete-header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .delete-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.12);
+      color: #ff6b6b;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .delete-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 0 0 10px 0;
+      letter-spacing: -0.5px;
+    }
+    .delete-subtitle {
+      color: var(--text-muted, #94a3b8);
+      font-size: 0.92rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .delete-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 28px;
+      line-height: 1.6;
+    }
+    .delete-box h2 {
+      font-family: 'Outfit', sans-serif;
+      color: #fff;
+      font-size: 1.2rem;
+      margin: 0 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .warning-card {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 0.86rem;
+      color: #fca5a5;
+    }
+    .warning-card strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+    .warning-card ul {
+      margin: 6px 0 0 0;
+      padding-left: 20px;
+      color: #fca5a5;
+    }
+    .warning-card li {
+      margin-bottom: 4px;
+    }
+    .delete-footer {
+      text-align: center;
+      padding: 28px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      color: var(--text-muted, #94a3b8);
+      margin-top: auto;
+    }
+    .result-alert {
+      display: none;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+    .result-alert.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+    .result-alert.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="delete-page-body">
+
+  <!-- CABECERA -->
+  <header class="delete-navbar">
+    <a href="/" style="text-decoration: none; display: flex; align-items: center;">
+      <span class="logo-title" style="font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 900; color: #fff;">
+        Vitrina<span class="logo-highlight" style="color: #ffb800;">Spot</span>
+      </span>
+    </a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <a href="/privacidad" class="btn btn-ghost btn-sm" style="font-size: 0.78rem; border: 1px solid rgba(255,255,255,0.15); color: #cbd5e1;">
+        <i class="fa-solid fa-shield-halved"></i> Privacidad
+      </a>
+      <a href="/" class="btn btn-spot btn-sm" style="font-size: 0.82rem; padding: 7px 16px; text-decoration: none;">
+        <i class="fa-solid fa-arrow-left"></i> Ir a la App
+      </a>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="delete-container">
+    <div class="delete-header">
+      <span class="delete-badge"><i class="fa-solid fa-user-xmark"></i> Google Play Account Deletion & Habeas Data</span>
+      <h1 class="delete-title">Eliminación de Cuenta y Datos Personales</h1>
+      <p class="delete-subtitle">
+        En cumplimiento de las políticas de Google Play y la Ley 1581 de 2012 de Colombia, puedes solicitar la eliminación permanente de tu tienda y datos personales en cualquier momento, incluso si no tienes la aplicación instalada.
+      </p>
+    </div>
+
+    <div class="delete-box">
+      <div class="warning-card">
+        <strong><i class="fa-solid fa-triangle-exclamation"></i> ¿Qué ocurre al eliminar tu cuenta?</strong>
+        <ul>
+          <li>Tu tienda y catálogo comercial serán dados de baja de forma inmediata.</li>
+          <li>Todos tus spots publicitarios e imágenes se eliminarán permanentemente de los servidores.</li>
+          <li>Tu número de WhatsApp y datos de contacto quedarán completamente desvinculados de VitrinaSpot.</li>
+          <li>Esta acción es irreversible y no se puede deshacer.</li>
+        </ul>
+      </div>
+
+      <h2><i class="fa-solid fa-key" style="color: #ffb800;"></i> Confirmar Supresión de Datos</h2>
+      <p style="font-size: 0.86rem; color: var(--text-muted); margin: 0 0 16px 0;">
+        Ingresa tu número de WhatsApp registrado y tu contraseña para procesar la baja inmediata de tu cuenta:
+      </p>
+
+      <form id="public-delete-form">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label style="font-size: 0.82rem; color: #fff; font-weight: 700;">Número de WhatsApp Registrado (10 dígitos) *</label>
+          <input type="tel" id="pub-delete-whatsapp" placeholder="Ej: 312 456 7890" required style="width: 100%;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label style="font-size: 0.82rem; color: #fff; font-weight: 700;">Contraseña de tu Negocio *</label>
+          <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+            <input type="password" id="pub-delete-password" placeholder="••••••••" required style="width: 100%; padding-right: 44px;">
+            <button type="button" class="btn-password-eye" id="btn-toggle-pub-del-pass" title="Ver u ocultar contraseña" style="position: absolute; right: 10px; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1.05rem; padding: 6px; display: flex; align-items: center; justify-content: center; z-index: 10;">
+              <i class="fa-solid fa-eye" id="icon-toggle-pub-del-pass" style="pointer-events: none;"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit-public-delete" class="btn btn-danger w-100" style="background: #ef4444; color: #fff; font-weight: 800; border: none; padding: 12px; font-size: 0.95rem; border-radius: 10px; cursor: pointer;">
+          <i class="fa-solid fa-trash-can"></i> Confirmar y Eliminar Mi Cuenta Definitivamente
+        </button>
+
+        <!-- MENSAJE DE RESULTADO -->
+        <div id="delete-result-box" class="result-alert"></div>
+      </form>
+
+      <!-- SEGUNDA ALTERNATIVA (SOPORTE ASISTIDO) -->
+      <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.82rem; color: var(--text-muted); text-align: center;">
+        ¿Olvidaste tu contraseña o requieres asistencia del equipo legal?
+        <br>
+        Escríbenos a <strong style="color: #fff;">soporte@vitrinaspot.com</strong> indicando tu número de WhatsApp registrado para tramitar la supresión de datos manualmente en un plazo máximo de 48 horas.
+      </div>
+    </div>
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="delete-footer">
+    <p style="margin: 0 0 6px 0;">© 2026 VitrinaSpot Colombia. Todos los derechos reservados.</p>
+    <p style="margin: 0; font-size: 0.78rem;">Cumplimiento oficial Google Play Store Data Safety & Ley 1581 de 2012.</p>
+  </footer>
+
+  <script>
+    // Ojito ver/ocultar contraseña
+    const btnEye = document.getElementById('btn-toggle-pub-del-pass');
+    const inputPass = document.getElementById('pub-delete-password');
+    const iconEye = document.getElementById('icon-toggle-pub-del-pass');
+
+    if (btnEye && inputPass && iconEye) {
+      btnEye.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isPassword = inputPass.getAttribute('type') === 'password' || inputPass.type === 'password';
+        if (isPassword) {
+          inputPass.setAttribute('type', 'text');
+          inputPass.type = 'text';
+          iconEye.classList.remove('fa-eye');
+          iconEye.classList.add('fa-eye-slash');
+          btnEye.style.color = '#ffb800';
+        } else {
+          inputPass.setAttribute('type', 'password');
+          inputPass.type = 'password';
+          iconEye.classList.remove('fa-eye-slash');
+          iconEye.classList.add('fa-eye');
+          btnEye.style.color = '#94a3b8';
+        }
+      });
+    }
+
+    // Formulario de eliminación pública
+    const formDel = document.getElementById('public-delete-form');
+    const resultBox = document.getElementById('delete-result-box');
+    const submitBtn = document.getElementById('btn-submit-public-delete');
+
+    if (formDel) {
+      formDel.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const whatsapp = document.getElementById('pub-delete-whatsapp').value.trim();
+        const password = document.getElementById('pub-delete-password').value;
+
+        if (!whatsapp || !password) return;
+
+        if (!confirm('⚠️ ¿Estás completamente seguro de que deseas eliminar tu tienda y todos tus datos de forma definitiva? Esta acción no se puede deshacer.')) {
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando y eliminando datos...';
+        resultBox.style.display = 'none';
+
+        try {
+          // 1. Primero autenticar el comercio con su WhatsApp y clave
+          const loginRes = await fetch('/api/stores/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ whatsapp, password })
+          });
+          const loginData = await loginRes.json();
+
+          if (!loginRes.ok) {
+            resultBox.className = 'result-alert error';
+            resultBox.innerHTML = `<strong><i class="fa-solid fa-circle-exclamation"></i> Error de Verificación:</strong> ${loginData.error || 'WhatsApp o contraseña incorrectos.'}`;
+            resultBox.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Confirmar y Eliminar Mi Cuenta Definitivamente';
+            return;
+          }
+
+          const storeId = loginData.store.id;
+
+          // 2. Ejecutar la eliminación permanente
+          const delRes = await fetch(`/api/stores/${storeId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+          });
+          const delData = await delRes.json();
+
+          if (delRes.ok) {
+            // Limpiar localStorage si esta sesión estaba activa en este navegador
+            localStorage.removeItem('vitrina_current_store_id');
+
+            resultBox.className = 'result-alert success';
+            resultBox.innerHTML = `
+              <strong><i class="fa-solid fa-circle-check"></i> Cuenta y Datos Eliminados:</strong>
+              <p style="margin: 6px 0 10px 0;">La cuenta del comercio y todos sus spots asociados han sido suprimidos de la base de datos de VitrinaSpot exitosamente.</p>
+              <a href="/" style="display: inline-block; background: #10b981; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.82rem;">
+                Volver a la Página Principal
+              </a>
+            `;
+            resultBox.style.display = 'block';
+            formDel.reset();
+            submitBtn.style.display = 'none';
+          } else {
+            resultBox.className = 'result-alert error';
+            resultBox.innerHTML = `<strong><i class="fa-solid fa-circle-exclamation"></i> Error al eliminar:</strong> ${delData.error || 'No se pudo procesar la eliminación.'}`;
+            resultBox.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Confirmar y Eliminar Mi Cuenta Definitivamente';
+          }
+        } catch (err) {
+          resultBox.className = 'result-alert error';
+          resultBox.innerHTML = '<strong><i class="fa-solid fa-triangle-exclamation"></i> Error de conexión:</strong> No se pudo conectar con el servidor. Inténtalo de nuevo más tarde.';
+          resultBox.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Confirmar y Eliminar Mi Cuenta Definitivamente';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

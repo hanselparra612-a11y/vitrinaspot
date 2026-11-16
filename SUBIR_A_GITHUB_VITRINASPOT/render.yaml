@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: vitrinaspot
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+    disk:
+      name: vitrinaspot-uploads
+      mountPath: /opt/render/project/src/uploads
+      sizeGB: 10

@@ -1,0 +1,19 @@
+{
+  "name": "vitrinaspot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "heic-convert": "^2.1.0",
+    "multer": "^1.4.5-lts.1",
+    "opentype.js": "^2.0.0",
+    "ws": "^8.22.1"
+  }
+}
