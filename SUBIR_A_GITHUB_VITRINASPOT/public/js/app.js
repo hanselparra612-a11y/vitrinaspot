@@ -995,11 +995,6 @@ function renderContinuousFeed() {
     if (gridContainer) gridContainer.style.display = 'none';
     if (deskPanel && window.innerWidth > 900) deskPanel.style.display = 'flex';
   }
-  } else {
-    if (feedContainer) feedContainer.style.display = 'flex';
-    if (gridContainer) gridContainer.style.display = 'none';
-    if (deskPanel && window.innerWidth > 900) deskPanel.style.display = 'flex';
-  }
 
   // 0. Publicidad de Enganche de Entrada (Reel Cero Oficial de VitrinaSpot)
   const isSearchActive = Boolean(state.searchQuery && state.searchQuery.trim() !== '');
