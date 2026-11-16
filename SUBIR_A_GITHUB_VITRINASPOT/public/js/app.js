@@ -4329,12 +4329,13 @@ function setupEventListeners() {
   const ALL_CATEGORIES_CATALOG = [
     { name: 'Todas', emoji: '✨', sub: 'Todo el catálogo' },
     { name: 'Solo Ofertas', emoji: '🔥', sub: 'Precios de remate' },
-    { name: 'Ropa de Mujer', emoji: '👗', sub: 'Moda y calzado femenino' },
+    { name: 'Calzado & Zapatos', emoji: '👟', sub: 'Tenis, zapatos, botas y sandalias' },
+    { name: 'Ropa de Mujer', emoji: '👗', sub: 'Vestidos, blusas y pantalones' },
     { name: 'Electrónica & Tecnología', emoji: '📱', sub: 'Celulares, PCs y audio' },
     { name: 'Vehículos & Motos', emoji: '🚗', sub: 'Carros y motocicletas' },
     { name: 'Comida & Domicilios', emoji: '🍔', sub: 'Restaurantes y postres' },
     { name: 'Empleo & Vacantes', emoji: '📢', sub: 'Ofertas laborales' },
-    { name: 'Ropa de Hombre', emoji: '👔', sub: 'Moda y calzado masculino' },
+    { name: 'Ropa de Hombre', emoji: '👔', sub: 'Camisas, jeans y chaquetas' },
     { name: 'Salud & Belleza', emoji: '💄', sub: 'Cuidado y peluquería' },
     { name: 'Muebles', emoji: '🛋️', sub: 'Salas, camas y clósets' },
     { name: 'Electrodomésticos', emoji: '🔌', sub: 'Neveras, lavadoras y cocina' },
@@ -4364,6 +4365,7 @@ function setupEventListeners() {
   const CATEGORY_KEYWORDS_MAP = {
     'Todas': 'todas todo general ver todos catalogo completo explorar productos todo colombia',
     'Solo Ofertas': 'ofertas promocion promociones descuento descuentos rebajas remate liquidacion precios bajos gangas pague 1 lleve 2 promo baraton baratillo 50% off remates saldos',
+    'Calzado & Zapatos': 'calzado calzados zapatos zapateria zapaterias tenis zapatillas botas botines sandalias tacones baletas mocasines chanclas crocs calzado deportivo calzado formal cuero bucaramanga restrepo calzado infantil calzado dama calzado caballero sneakers tenis deportivos calzado bucaramanga calzado de cuero',
     'Comida & Domicilios': 'restaurante restaurantes postre postres bebida bebidas hamburguesa hamburguesas pizza pizzas comida rapida almuerzo almuerzos cena desayunos cafeteria panaderia pasteleria empanadas asados sushi cafe arepas pollo frito licores jugos tortas gastronomia heladeria delivery domicilios comidas',
     'Ropa de Mujer': 'vestido vestidos blusa blusas pantalon pantalones falda faldas jeans short shorts moda femenina dama damas calzado zapatos tenis zapatillas tacones sandalias botines botas lenceria pijamas ropa interior bikinis trajes de baño chaquetas enterizos tops crop tops buzos fajas accesorios sandalia tenis dama',
     'Ropa de Hombre': 'camisa camisas camiseta camisetas chaqueta chaquetas pantalon pantalones jeans bermudas buzo buzos moda masculina caballero caballeros calzado zapatos tenis zapatillas mocasines botas calzoncillos medias corbatas trajes sacos gorras polos busos sudaderas calzado hombre',
@@ -4539,9 +4541,35 @@ function setupEventListeners() {
     }
   });
 
-  // Ocultar teclado automáticamente cuando el usuario desliza la lista de categorías
+  const btnHideKeyboardDir = document.getElementById('btn-hide-keyboard-dir');
+
+  // Control inteligente del teclado virtual
+  filterCatInput?.addEventListener('focus', () => {
+    catModal?.classList.add('keyboard-active');
+    if (btnHideKeyboardDir) btnHideKeyboardDir.style.display = 'inline-flex';
+  });
+
+  filterCatInput?.addEventListener('blur', () => {
+    catModal?.classList.remove('keyboard-active');
+    if (btnHideKeyboardDir) btnHideKeyboardDir.style.display = 'none';
+  });
+
+  btnHideKeyboardDir?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    filterCatInput?.blur();
+  });
+
+  // Ocultar teclado automáticamente cuando el usuario desliza o toca la lista de categorías
   const catModalBody = catModal?.querySelector('.modal-body');
   catModalBody?.addEventListener('scroll', () => {
+    if (document.activeElement === filterCatInput) {
+      filterCatInput.blur();
+    }
+  }, { passive: true });
+
+  const catGridEl = document.getElementById('all-categories-grid');
+  catGridEl?.addEventListener('touchstart', () => {
     if (document.activeElement === filterCatInput) {
       filterCatInput.blur();
     }
@@ -4565,11 +4593,10 @@ function setupEventListeners() {
   filterCatInput?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      filterCatInput.blur();
       const allCards = document.querySelectorAll('#all-categories-grid .category-directory-card');
       if (allCards.length === 1) {
         allCards[0].click();
-      } else {
-        filterCatInput.blur();
       }
     }
   });
@@ -4593,6 +4620,7 @@ function setupEventListeners() {
   // ==========================================
   const UPLOAD_CATEGORIES_LIST = [
     { name: "Comida & Domicilios", emoji: "🍔", sub: "Restaurantes, Postres, Bebidas" },
+    { name: "Calzado & Zapatos", emoji: "👟", sub: "Tenis, Zapatos, Botas, Sandalias" },
     { name: "Ropa de Mujer", emoji: "👗", sub: "Vestidos, Blusas, Pantalones" },
     { name: "Ropa de Hombre", emoji: "👔", sub: "Camisas, Chaquetas, Jeans" },
     { name: "Ropa para Niños & Bebés", emoji: "👶", sub: "Conjuntos, Pijamas, Niños" },
@@ -4723,26 +4751,63 @@ function setupEventListeners() {
   const btnClearCatSearch = document.getElementById('btn-clear-cat-search');
   const btnCloseCatPicker = document.getElementById('btn-close-category-picker');
   const btnResetCatSearch = document.getElementById('btn-reset-cat-search');
+  const btnHideKeyboardPicker = document.getElementById('btn-hide-keyboard-picker');
 
   btnOpenCatPicker?.addEventListener('click', () => {
     if (!catPickerModal) return;
-    if (catPickerSearchInput) catPickerSearchInput.value = '';
+    if (catPickerSearchInput) {
+      catPickerSearchInput.value = '';
+      catPickerSearchInput.blur(); // Nunca forzar teclado automático en móviles al abrir
+    }
     if (btnClearCatSearch) btnClearCatSearch.style.display = 'none';
     updatePickerChipsActive('');
     renderCategoryPickerButtons();
     catPickerModal.style.display = 'flex';
-    setTimeout(() => catPickerSearchInput?.focus(), 150);
   });
 
   btnCloseCatPicker?.addEventListener('click', () => {
     if (catPickerModal) catPickerModal.style.display = 'none';
+    catPickerSearchInput?.blur();
   });
 
   catPickerModal?.addEventListener('click', (e) => {
     if (e.target.id === 'modal-category-picker') {
       catPickerModal.style.display = 'none';
+      catPickerSearchInput?.blur();
     }
   });
+
+  // Control inteligente del teclado virtual en el selector de categoría
+  catPickerSearchInput?.addEventListener('focus', () => {
+    catPickerModal?.classList.add('keyboard-active');
+    if (btnHideKeyboardPicker) btnHideKeyboardPicker.style.display = 'inline-flex';
+  });
+
+  catPickerSearchInput?.addEventListener('blur', () => {
+    catPickerModal?.classList.remove('keyboard-active');
+    if (btnHideKeyboardPicker) btnHideKeyboardPicker.style.display = 'none';
+  });
+
+  btnHideKeyboardPicker?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    catPickerSearchInput?.blur();
+  });
+
+  // Ocultar teclado automáticamente cuando el usuario desliza o toca la lista de categorías
+  const pickerGridEl = document.getElementById('cat-picker-buttons-grid');
+  pickerGridEl?.addEventListener('touchstart', () => {
+    if (document.activeElement === catPickerSearchInput) {
+      catPickerSearchInput.blur();
+    }
+  }, { passive: true });
+
+  const pickerScrollBody = catPickerModal?.querySelector('.cat-picker-scrollable-body');
+  pickerScrollBody?.addEventListener('scroll', () => {
+    if (document.activeElement === catPickerSearchInput) {
+      catPickerSearchInput.blur();
+    }
+  }, { passive: true });
 
   catPickerSearchInput?.addEventListener('input', (e) => {
     const val = e.target.value;
@@ -4770,11 +4835,10 @@ function setupEventListeners() {
   catPickerSearchInput?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      catPickerSearchInput.blur(); // Ocultar teclado inmediatamente en móviles
       const allCards = document.querySelectorAll('#cat-picker-buttons-grid .cat-picker-card');
       if (allCards.length === 1) {
         allCards[0].click();
-      } else {
-        catPickerSearchInput.blur();
       }
     }
   });

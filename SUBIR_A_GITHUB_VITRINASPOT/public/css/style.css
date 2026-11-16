@@ -6895,6 +6895,42 @@ body.admin-active-view .main-viewport {
   box-shadow: 0 0 15px rgba(255, 184, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 }
 
+/* Modo escritura móvil optimizado: cuando el teclado virtual está abierto */
+@media (max-width: 768px) {
+  #modal-all-categories.keyboard-active .modal-header {
+    padding: 6px 14px !important;
+  }
+  #modal-all-categories.keyboard-active .cat-quick-chips-row {
+    display: none !important;
+  }
+  #modal-all-categories.keyboard-active .modal-categories-dialog {
+    max-height: 98vh !important;
+    max-height: 98dvh !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+  #modal-category-picker.keyboard-active .cat-quick-chips-row {
+    display: none !important;
+  }
+  #modal-category-picker.keyboard-active .cat-sheet-header {
+    padding: 8px 14px !important;
+  }
+  #modal-category-picker.keyboard-active .cat-sheet-sub {
+    display: none !important;
+  }
+}
+
+.btn-hide-keyboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  animation: fadeIn 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.btn-hide-keyboard:active {
+  transform: translateY(-50%) scale(0.95) !important;
+}
+
 /* Chips Flotantes en Cristal */
 .cat-quick-chips-row .cat-chip-btn {
   background: rgba(255, 255, 255, 0.06) !important;
