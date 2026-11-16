@@ -1799,12 +1799,24 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000);
 
-// Iniciar servidor en 0.0.0.0
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 VitrinaSpot Server corriendo con éxito:`);
-  console.log(`   - Local:    http://localhost:${PORT}`);
-  console.log(`   - En Red:   http://192.168.1.10:${PORT}`);
-  console.log(`   - Admin:    http://localhost:${PORT}/admin`);
-  console.log(`=======================================================`);
-});
+// Iniciar servidor en 0.0.0.0 con soporte para PostgreSQL Cloud
+async function startServer() {
+  if (typeof db.initAsync === 'function') {
+    try {
+      await db.initAsync();
+    } catch (err) {
+      console.error('Error inicializando motor de base de datos:', err);
+    }
+  }
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 VitrinaSpot Server corriendo con éxito:`);
+    console.log(`   - Local:    http://localhost:${PORT}`);
+    console.log(`   - En Red:   http://192.168.1.10:${PORT}`);
+    console.log(`   - Admin:    http://localhost:${PORT}/admin`);
+    console.log(`=======================================================`);
+  });
+}
+
+startServer();
