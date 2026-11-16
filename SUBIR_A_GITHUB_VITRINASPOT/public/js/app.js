@@ -1074,11 +1074,27 @@ function renderContinuousFeed() {
 
         <!-- ACCIONES PRINCIPALES: COMERCIANTE + COMPRADOR -->
         <div class="welcome-hook-actions-group">
+          ${state.currentStore ? `
+          <button type="button" class="btn-welcome-cta" onclick="handleWelcomeHookCTA()">
+            <i class="fa-solid fa-plus"></i>
+            <span>Publicar SPOT (${escapeHtml(state.currentStore.name)})</span>
+            <i class="fa-solid fa-arrow-right cta-arrow"></i>
+          </button>
+          <button type="button" class="btn-welcome-login-direct" onclick="openSellerPanel()">
+            <i class="fa-solid fa-chart-line text-gold"></i>
+            <span>Ir al <strong>Panel de Mi Tienda</strong></span>
+          </button>
+          ` : `
           <button type="button" class="btn-welcome-cta" onclick="handleWelcomeHookCTA()">
             <i class="fa-solid fa-store"></i>
             <span>Crear Mi Tienda Gratis</span>
             <i class="fa-solid fa-arrow-right cta-arrow"></i>
           </button>
+          <button type="button" class="btn-welcome-login-direct" onclick="openStoreLoginDirectly()">
+            <i class="fa-solid fa-right-to-bracket text-gold"></i>
+            <span>¿Ya tienes tienda? <strong>Entrar a Mi Negocio</strong></span>
+          </button>
+          `}
           ${(Array.isArray(state.videos) && state.videos.length > 0) ? `
           <button type="button" class="btn-welcome-explore" onclick="scrollToFirstProduct()">
             <i class="fa-solid fa-bag-shopping text-gold"></i>
@@ -1335,6 +1351,17 @@ function handleWelcomeHookCTA() {
   }
 }
 window.handleWelcomeHookCTA = handleWelcomeHookCTA;
+
+// Abrir directamente la pestaña de "Ya tengo Tienda (Ingresar)"
+function openStoreLoginDirectly() {
+  const authModal = document.getElementById('modal-store-auth');
+  if (authModal) {
+    authModal.style.display = 'flex';
+    const tabLogin = document.getElementById('tab-btn-login') || document.getElementById('tab-auth-login');
+    if (tabLogin) tabLogin.click();
+  }
+}
+window.openStoreLoginDirectly = openStoreLoginDirectly;
 
 function scrollToFirstProduct() {
   const container = document.getElementById('feed-scroll-container');
