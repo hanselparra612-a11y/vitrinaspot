@@ -256,12 +256,102 @@ const DEFAULT_TRANSACTIONS = [
     date: new Date(Date.now() - 86400000 * 5).toISOString()
   }
 ];
-
 class Database {
   constructor() {
+    this.pgPool = null;
+    this._isSavingToPg = false;
+    this._hasPendingPgSave = false;
     this.init();
   }
 
+  async initAsync() {
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl) {
+      console.log('ℹ️ [DB Engine] DATABASE_URL no detectada. Operando en almacenamiento local.');
+      return;
+    }
+
+    try {
+      console.log('🔌 [DB Engine] Conectando a PostgreSQL Cloud...');
+      const pgModule = await import('pg');
+      const Pool = pgModule.default?.Pool || pgModule.Pool;
+      this.pgPool = new Pool({
+        connectionString: dbUrl,
+        ssl: dbUrl.includes('localhost') ? false : { rejectUnauthorized: false },
+        connectionTimeoutMillis: 10000
+      });
+
+      // 1. Probar conexión y crear tabla de persistencia permanente
+      const client = await this.pgPool.connect();
+      console.log('✅ [DB Engine] Conectado exitosamente a PostgreSQL Cloud.');
+
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS vitrina_app_state (
+          id VARCHAR(64) PRIMARY KEY,
+          data JSONB NOT NULL,
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // 2. Consultar si ya existe el estado guardado
+      const res = await client.query(`SELECT data FROM vitrina_app_state WHERE id = 'main_state' LIMIT 1;`);
+      client.release();
+
+      if (res.rows.length > 0 && res.rows[0].data) {
+        const cloudData = res.rows[0].data;
+        this.data = {
+          ...this.data,
+          ...cloudData,
+          config: {
+            ...(this.data?.config || {}),
+            ...(cloudData?.config || {})
+          }
+        };
+        console.log(`📦 [DB Engine] Datos restaurados desde PostgreSQL Cloud:`);
+        console.log(`   - Tiendas registradas: ${this.data.stores?.length || 0}`);
+        console.log(`   - Anuncios/Videos activos: ${this.data.videos?.length || 0}`);
+        console.log(`   - Transacciones: ${this.data.transactions?.length || 0}`);
+        
+        // Mantener copia local en sincronía
+        try {
+          fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+        } catch (e) {}
+      } else {
+        console.log('🌱 [DB Engine] No hay datos previos en PostgreSQL. Inicializando registro maestro...');
+        await this.syncToPostgresAsync();
+      }
+    } catch (err) {
+      console.error('⚠️ [DB Engine] Error inicializando conexión a PostgreSQL:', err.message);
+      console.log('   Continuando con estado local...');
+    }
+  }
+
+  async syncToPostgresAsync() {
+    if (!this.pgPool) return;
+    if (this._isSavingToPg) {
+      this._hasPendingPgSave = true;
+      return;
+    }
+    this._isSavingToPg = true;
+    try {
+      const payload = JSON.stringify(this.data);
+      const query = `
+        INSERT INTO vitrina_app_state (id, data, updated_at)
+        VALUES ('main_state', $1::jsonb, CURRENT_TIMESTAMP)
+        ON CONFLICT (id) DO UPDATE 
+        SET data = EXCLUDED.data, updated_at = CURRENT_TIMESTAMP;
+      `;
+      await this.pgPool.query(query, [payload]);
+    } catch (err) {
+      console.error('❌ Error guardando en PostgreSQL:', err.message);
+    } finally {
+      this._isSavingToPg = false;
+      if (this._hasPendingPgSave) {
+        this._hasPendingPgSave = false;
+        setImmediate(() => this.syncToPostgresAsync());
+      }
+    }
+  }
   init() {
     if (!fs.existsSync(DB_FILE)) {
       this.data = {
@@ -318,7 +408,16 @@ class Database {
   }
 
   save() {
-    fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+    } catch (err) {
+      console.warn('Advertencia escribiendo a database.json:', err.message);
+    }
+    if (this.pgPool) {
+      this.syncToPostgresAsync().catch(e => {
+        console.error('Sync error:', e.message);
+      });
+    }
   }
 
   // --- 2.0 AUTOMATIZACIÓN DE IMPULSOS Y MEMBRESÍAS PRO ---
@@ -421,7 +520,6 @@ class Database {
 
     return hasChanged;
   }
-
   // Recalcular estado de impulso de una tienda específica inmediatamente tras una compra o subida
   recalculateStoreBoost(storeId) {
     const store = this.data.stores.find(s => s.id === storeId);
@@ -525,12 +623,6 @@ class Database {
     }
 
     // 🎲 ALGORITMO DE DESCUBRIMIENTO ALEATORIO PONDERADO (FISHER-YATES SHUFFLE)
-    // Cada usuario y cada sesión recibe un orden dinámico, fresco e impredecible:
-    // 1. Si hay spots VIP Diamante / Extreme, se barajan al azar entre ellos (el puesto #1 rota entre los VIP).
-    // 2. Luego se barajan al azar los spots Platino.
-    // 3. Luego se barajan al azar los spots Estándar.
-    // 4. Todos los productos orgánicos/gratuitos se barajan al 100% al azar entre sí.
-    // 5. Si no hay spots pagados en ese filtro, el feed completo es 100% aleatorio puro para todos los comercios.
     const shuffleArray = (arr) => {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -592,7 +684,6 @@ class Database {
       ...shuffleArray(regulars)
     ];
   }
-
   getVideosByStoreId(storeId) {
     this.cleanExpiredSpotsAndMemberships();
     return this.data.videos.filter(v => v.storeId === storeId && v.status !== "deleted");
@@ -791,7 +882,6 @@ class Database {
     }
     return null;
   }
-
   // Activar SPOT publicitario a una tienda con nivel de impulso
   activateSpot(storeId, days = 7, boostLevel = 'standard') {
     const store = this.getStoreById(storeId);
@@ -839,10 +929,10 @@ class Database {
       wompiTransactionId: tx.wompiTransactionId || null,
       storeId: tx.storeId,
       storeName: tx.storeName,
-      type: tx.type, // 'spot_7d', 'spot_15d', 'video_30s', 'video_60s'
+      type: tx.type,
       typeLabel: tx.typeLabel,
       amount: tx.amount,
-      method: tx.method, // 'wompi_nequi', 'wompi_pse', 'manual_nequi'
+      method: tx.method,
       status: tx.status || "approved",
       date: new Date().toISOString()
     };
@@ -956,7 +1046,6 @@ class Database {
     this.save();
     return notif;
   }
-
   reportVideo(report) {
     if (!Array.isArray(this.data.config.reports)) this.data.config.reports = [];
     const newRep = {
@@ -1053,7 +1142,6 @@ class Database {
     const pendingReports = (this.data.config.reports || []).filter(r => r.status === 'pending');
     const items = [];
     
-    // Videos con reportes pendientes o en estado under_review / rejected_needs_fix
     this.data.videos.forEach(v => {
       if (v.status === 'deleted') return;
       const vReports = pendingReports.filter(r => r.videoId === v.id);
