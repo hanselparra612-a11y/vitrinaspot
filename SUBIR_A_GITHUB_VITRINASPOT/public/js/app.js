@@ -156,6 +156,26 @@ function setupAdminSecretTriggers() {
   brandLogo.addEventListener('touchmove', () => {
     if (pressTimer) clearTimeout(pressTimer);
   }, { passive: true });
+
+  // Disparador secreto también en el botón de perfil / foto de usuario (5 toques rápidos)
+  const profileBtn = document.getElementById('btn-user-profile-menu');
+  if (profileBtn && !profileBtn._secretBound) {
+    profileBtn._secretBound = true;
+    let pTapCount = 0;
+    let pTapTimer = null;
+    profileBtn.addEventListener('click', (e) => {
+      pTapCount++;
+      if (pTapTimer) clearTimeout(pTapTimer);
+      if (pTapCount >= 5) {
+        e.stopPropagation();
+        pTapCount = 0;
+        openAdminPortal();
+        showToast('🛡️ Portal de Administrador Maestro activado');
+        return;
+      }
+      pTapTimer = setTimeout(() => { pTapCount = 0; }, 1500);
+    });
+  }
 }
 
 // Generador de enlaces públicos universales (Funciona en PC Local, LAN y Celulares en todo el país)
@@ -555,6 +575,7 @@ async function loadStores() {
 }
 
 function updateNavStoreUI() {
+  window.updateUserDropdownUI = updateNavStoreUI;
   const navAvatar = document.getElementById('nav-store-avatar');
   const navGuestIcon = document.getElementById('nav-guest-icon');
   const navName = document.getElementById('nav-store-name');
@@ -932,7 +953,8 @@ function renderContinuousFeed() {
   const feedContainer = document.getElementById('feed-scroll-container');
   const deskPanel = document.querySelector('.desktop-details-panel');
 
-  if (!state.videos || state.videos.length === 0) {
+  // Si el usuario realizó una búsqueda específica y no hay resultados, mostramos el cartel de búsqueda vacía
+  if ((!state.videos || state.videos.length === 0) && state.searchQuery && state.searchQuery.trim() !== '') {
     if (emptyState) {
       emptyState.style.display = 'block';
       const emptyH3 = emptyState.querySelector('h3');
@@ -940,31 +962,16 @@ function renderContinuousFeed() {
       const emptyBtn = document.getElementById('btn-empty-register');
       const searchInput = document.getElementById('search-input');
       const clearBtn = document.getElementById('btn-clear-search');
-      if (state.searchQuery) {
-        if (emptyH3) emptyH3.textContent = `No hay resultados para "${state.searchQuery}"`;
-        if (emptyP) emptyP.textContent = 'Intenta buscando por otra palabra clave o ciudad.';
-        if (emptyBtn) {
-          emptyBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Limpiar búsqueda y ver todo';
-          emptyBtn.onclick = () => {
-            if (searchInput) searchInput.value = '';
-            if (clearBtn) clearBtn.style.display = 'none';
-            state.searchQuery = '';
-            loadVideos();
-          };
-        }
-      } else {
-        if (emptyH3) emptyH3.textContent = 'Aún no hay SPOTS aquí...';
-        if (emptyP) emptyP.textContent = '¿Tienes un negocio, vendes productos o prestas servicios en esta categoría?';
-        if (emptyBtn) {
-          emptyBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> ¡Sé el primero en anunciar GRATIS!';
-          emptyBtn.onclick = () => {
-            if (!state.currentStore) {
-              document.getElementById('modal-store-auth').style.display = 'flex';
-            } else {
-              showView('upload-view');
-            }
-          };
-        }
+      if (emptyH3) emptyH3.textContent = `No hay resultados para "${state.searchQuery}"`;
+      if (emptyP) emptyP.textContent = 'Intenta buscando por otra palabra clave o ciudad.';
+      if (emptyBtn) {
+        emptyBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Limpiar búsqueda y ver todo';
+        emptyBtn.onclick = () => {
+          if (searchInput) searchInput.value = '';
+          if (clearBtn) clearBtn.style.display = 'none';
+          state.searchQuery = '';
+          loadVideos();
+        };
       }
     }
     if (feedContainer) {
@@ -975,6 +982,7 @@ function renderContinuousFeed() {
     return;
   }
 
+  // Si no hay búsqueda (modo normal o virgen sin productos aún), ocultamos la tarjeta vacía y mostramos el Reel Cero Oficial
   if (emptyState) emptyState.style.display = 'none';
   const gridContainer = document.getElementById('feed-grid-container');
   if (state.feedViewMode === 'grid') {
@@ -982,6 +990,11 @@ function renderContinuousFeed() {
     if (gridContainer) gridContainer.style.display = 'block';
     renderGridFeed();
     if (deskPanel) deskPanel.style.display = 'none';
+  } else {
+    if (feedContainer) feedContainer.style.display = 'flex';
+    if (gridContainer) gridContainer.style.display = 'none';
+    if (deskPanel && window.innerWidth > 900) deskPanel.style.display = 'flex';
+  }
   } else {
     if (feedContainer) feedContainer.style.display = 'flex';
     if (gridContainer) gridContainer.style.display = 'none';
@@ -1071,18 +1084,25 @@ function renderContinuousFeed() {
             <span>Crear Mi Tienda Gratis</span>
             <i class="fa-solid fa-arrow-right cta-arrow"></i>
           </button>
+          ${(Array.isArray(state.videos) && state.videos.length > 0) ? `
           <button type="button" class="btn-welcome-explore" onclick="scrollToFirstProduct()">
             <i class="fa-solid fa-bag-shopping text-gold"></i>
             <span>Explorar Productos y Ofertas</span>
             <i class="fa-solid fa-arrow-down"></i>
           </button>
+          ` : `
+          <button type="button" class="btn-welcome-explore" onclick="handleWelcomeHookCTA()">
+            <i class="fa-solid fa-rocket text-gold"></i>
+            <span>¡Sé el Primero en Anunciar GRATIS!</span>
+          </button>
+          `}
         </div>
       </div>
 
-      <div class="welcome-hook-footer" onclick="scrollToFirstProduct()">
-        <span class="welcome-footer-hint">Desliza para explorar la vitrina comercial</span>
+      <div class="welcome-hook-footer" onclick="${(Array.isArray(state.videos) && state.videos.length > 0) ? 'scrollToFirstProduct()' : 'handleWelcomeHookCTA()'}">
+        <span class="welcome-footer-hint">${(Array.isArray(state.videos) && state.videos.length > 0) ? 'Desliza para explorar la vitrina comercial' : '🇨🇴 ¡Sé el primer negocio en abrir tu vitrina en Colombia!'}</span>
         <div class="welcome-scroll-pill">
-          <i class="fa-solid fa-chevron-down bounce-arrow"></i>
+          <i class="fa-solid fa-${(Array.isArray(state.videos) && state.videos.length > 0) ? 'chevron-down' : 'plus'} bounce-arrow"></i>
         </div>
       </div>
     </article>
@@ -6767,26 +6787,28 @@ function setupEventListeners() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password: password.trim() })
       });
       if (res.ok) {
         const data = await res.json();
         state.adminToken = data.token;
         localStorage.setItem('vitrina_admin_token', data.token);
-        updateUserDropdownUI();
-        updateNavStoreUI();
+        if (typeof updateNavStoreUI === 'function') updateNavStoreUI();
         openAdminPortal();
       } else {
-        alert('Credenciales de administrador inválidas.');
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || 'Credenciales de administrador inválidas.');
       }
-    } catch (e) { alert('Error al iniciar sesión de administrador.'); }
+    } catch (e) {
+      console.error('Error al iniciar sesión de administrador:', e);
+      alert('Error al iniciar sesión de administrador: ' + (e.message || e));
+    }
   });
 
   document.getElementById('btn-admin-logout')?.addEventListener('click', () => {
     state.adminToken = null;
     localStorage.removeItem('vitrina_admin_token');
-    updateUserDropdownUI();
-    updateNavStoreUI();
+    if (typeof updateNavStoreUI === 'function') updateNavStoreUI();
     openAdminPortal();
   });
 

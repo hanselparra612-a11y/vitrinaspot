@@ -1533,10 +1533,11 @@ app.post('/api/wompi/webhook', (req, res) => {
 
 // Login de administrador
 app.post('/api/admin/login', (req, res) => {
-  const { email, password } = req.body;
+  const email = (req.body?.email || '').trim().toLowerCase();
+  const password = (req.body?.password || '').trim();
   const adminConf = db.getConfig().admin;
 
-  if (email === adminConf.email && password === adminConf.password) {
+  if (email === adminConf.email.toLowerCase() && password === adminConf.password) {
     res.json({
       success: true,
       token: adminConf.token,
