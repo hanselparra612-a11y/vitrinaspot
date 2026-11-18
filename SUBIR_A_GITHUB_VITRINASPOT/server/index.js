@@ -1611,6 +1611,30 @@ app.get('/api/admin/metrics', (req, res) => {
     topStores,
     pricing: config.pricing,
     launch_campaign: db.getLaunchCampaign(),
+    admob: config.admob || {
+      enabled: true,
+      publisherId: "ca-pub-3940256099942544",
+      feedAdFrequency: 4,
+      boostStdDays: 3,
+      boostDiamDays: 7,
+      interstitialOnUpload: true,
+      testMode: true,
+      bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
+      rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
+      interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
+    },
+    admob: config.admob || {
+      enabled: true,
+      publisherId: "ca-pub-3940256099942544",
+      feedAdFrequency: 4,
+      boostStdDays: 3,
+      boostDiamDays: 7,
+      interstitialOnUpload: true,
+      testMode: true,
+      bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
+      rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
+      interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
+    },
     wompi: config.wompi,
     reports: config.reports,
     recentTransactions: transactions.slice(0, 15)
@@ -1644,7 +1668,19 @@ app.get('/api/pricing', (req, res) => {
       currency: pricing.currency || "COP"
     },
     public_url: config.public_url || "https://eco-dock-chart-locking.trycloudflare.com",
-    launch_campaign: db.getLaunchCampaign()
+    launch_campaign: db.getLaunchCampaign(),
+    admob: config.admob || {
+      enabled: true,
+      publisherId: "ca-pub-3940256099942544",
+      feedAdFrequency: 4,
+      boostStdDays: 3,
+      boostDiamDays: 7,
+      interstitialOnUpload: true,
+      testMode: true,
+      bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
+      rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
+      interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
+    }
   });
 });
 
@@ -1723,6 +1759,29 @@ app.post('/api/admin/wompi-config', (req, res) => {
   });
 
   res.json({ success: true, wompi: updatedWompi });
+});
+
+// Actualizar configuración oficial de Google AdMob desde el panel de Administrador
+app.post('/api/admin/admob-config', (req, res) => {
+  const token = req.headers['x-admin-token'];
+  if (token !== db.getConfig().admin.token) {
+    return res.status(403).json({ error: 'Acceso Denegado.' });
+  }
+
+  const updatedAdmob = db.updateAdMobConfig({
+    enabled: req.body.enabled,
+    publisherId: req.body.publisherId,
+    feedAdFrequency: req.body.feedAdFrequency,
+    boostStdDays: req.body.boostStdDays,
+    boostDiamDays: req.body.boostDiamDays,
+    interstitialOnUpload: req.body.interstitialOnUpload,
+    testMode: req.body.testMode,
+    bannerUnitId: req.body.bannerUnitId,
+    rewardedUnitId: req.body.rewardedUnitId,
+    interstitialUnitId: req.body.interstitialUnitId
+  });
+
+  res.json({ success: true, admob: updatedAdmob });
 });
 
 // ==========================================

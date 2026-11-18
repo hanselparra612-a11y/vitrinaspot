@@ -987,6 +987,36 @@ class Database {
     return this.data.config.wompi;
   }
 
+  // --- MODELO OFICIAL GOOGLE ADMOB (100% GRATIS PARA COMERCIOS / PLAY STORE COMPLIANT) ---
+  updateAdMobConfig(admobData) {
+    if (!this.data.config.admob) {
+      this.data.config.admob = {
+        enabled: true,
+        publisherId: "ca-pub-3940256099942544",
+        feedAdFrequency: 4,
+        boostStdDays: 3,
+        boostDiamDays: 7,
+        interstitialOnUpload: true,
+        testMode: true,
+        bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
+        rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
+        interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
+      };
+    }
+    if (admobData.enabled !== undefined) this.data.config.admob.enabled = Boolean(admobData.enabled);
+    if (admobData.publisherId !== undefined) this.data.config.admob.publisherId = String(admobData.publisherId).trim();
+    if (admobData.feedAdFrequency !== undefined) this.data.config.admob.feedAdFrequency = Math.max(2, Number(admobData.feedAdFrequency) || 4);
+    if (admobData.boostStdDays !== undefined) this.data.config.admob.boostStdDays = Math.max(1, Number(admobData.boostStdDays) || 3);
+    if (admobData.boostDiamDays !== undefined) this.data.config.admob.boostDiamDays = Math.max(1, Number(admobData.boostDiamDays) || 7);
+    if (admobData.interstitialOnUpload !== undefined) this.data.config.admob.interstitialOnUpload = Boolean(admobData.interstitialOnUpload);
+    if (admobData.testMode !== undefined) this.data.config.admob.testMode = Boolean(admobData.testMode);
+    if (admobData.bannerUnitId !== undefined) this.data.config.admob.bannerUnitId = String(admobData.bannerUnitId).trim();
+    if (admobData.rewardedUnitId !== undefined) this.data.config.admob.rewardedUnitId = String(admobData.rewardedUnitId).trim();
+    if (admobData.interstitialUnitId !== undefined) this.data.config.admob.interstitialUnitId = String(admobData.interstitialUnitId).trim();
+    this.save();
+    return this.data.config.admob;
+  }
+
   // --- CAMPAÑA DE LANZAMIENTO PIONEROS (GANCHO 1.000 TIENDAS / 7 IMÁGENES GRATIS) ---
   getLaunchCampaign() {
     return {

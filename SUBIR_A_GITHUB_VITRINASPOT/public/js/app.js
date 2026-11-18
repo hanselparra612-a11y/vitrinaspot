@@ -1325,9 +1325,10 @@ function renderContinuousFeed() {
       </article>
     `;
 
-    // Inserción de Espacio Publicitario Google AdMob cada 4 productos
+    // Inserción de Espacio Publicitario Google AdMob según la frecuencia configurada por el Administrador
     let adMobCardHTML = '';
-    if ((idx + 1) % 4 === 0 && idx < state.videos.length - 1) {
+    const feedFreq = Math.max(2, Number(state.admobConfig?.feedAdFrequency) || 4);
+    if ((idx + 1) % feedFreq === 0 && idx < state.videos.length - 1) {
       adMobCardHTML = `
         <article class="reel-player-card reel-admob-card">
           <div class="admob-card-badge"><i class="fa-solid fa-bullhorn text-gold"></i> Publicidad Patrocinada</div>
@@ -3329,94 +3330,57 @@ async function loadAdminMetrics() {
       document.getElementById('adm-spots-active').textContent = data.counts.spotsActive;
       document.getElementById('adm-stores-count').textContent = `${data.counts.stores} / ${data.counts.videos}`;
 
-      // Precios dinámicos y tiempos
+      // Parámetros Dinámicos Google AdMob e Impulsos Recompensados
       const prc = data.pricing || {};
-      const freeQuotaVal = prc.free_spots_quota || 5;
+      const admob = data.admob || {};
+      state.admobConfig = Object.assign(state.admobConfig || {}, admob);
+
+      const freeQuotaVal = prc.free_spots_quota || 100;
       if (document.getElementById('adm-quota-free-spots')) document.getElementById('adm-quota-free-spots').value = freeQuotaVal;
       updateAdminQuotaHelperUI(freeQuotaVal);
-      if (document.getElementById('adm-price-spot-perm')) document.getElementById('adm-price-spot-perm').value = prc.spot_permanent_price || 3500;
-      if (document.getElementById('adm-price-boost-standalone')) document.getElementById('adm-price-boost-standalone').value = prc.boost_standard_standalone_price || 3500;
-      if (document.getElementById('adm-price-boost-std')) document.getElementById('adm-price-boost-std').value = prc.boost_standard_price || 5000;
-      if (document.getElementById('adm-days-boost-std')) document.getElementById('adm-days-boost-std').value = prc.boost_standard_days || 2;
-      if (document.getElementById('adm-price-boost-plat')) document.getElementById('adm-price-boost-plat').value = prc.boost_platino_price || 10000;
-      if (document.getElementById('adm-days-boost-plat')) document.getElementById('adm-days-boost-plat').value = prc.boost_platino_days || 5;
-      if (document.getElementById('adm-price-boost-diam')) document.getElementById('adm-price-boost-diam').value = prc.boost_diamante_price || prc.boost_extreme_price || 15000;
-      if (document.getElementById('adm-days-boost-diam')) document.getElementById('adm-days-boost-diam').value = prc.boost_diamante_days || prc.boost_extreme_days || 8;
-      if (document.getElementById('adm-price-membership')) document.getElementById('adm-price-membership').value = prc.membership_pro_price || 29000;
-      if (document.getElementById('adm-days-membership')) document.getElementById('adm-days-membership').value = prc.membership_pro_days || 30;
-      if (document.getElementById('adm-membership-limit')) document.getElementById('adm-membership-limit').value = prc.membership_product_limit || 100;
 
-      // Datos de Campaña de Lanzamiento Pioneros
-      const camp = data.launch_campaign || state.launchCampaign || {};
-      const ratioEl = document.getElementById('adm-pioneers-ratio');
-      const barEl = document.getElementById('adm-pioneers-bar');
-      const remEl = document.getElementById('adm-pioneers-remaining');
-      const badgeEl = document.getElementById('adm-pioneer-status-badge');
+      if (document.getElementById('adm-admob-feed-freq')) {
+        document.getElementById('adm-admob-feed-freq').value = admob.feedAdFrequency || 4;
+      }
+      if (document.getElementById('adm-admob-boost-std-days')) {
+        document.getElementById('adm-admob-boost-std-days').value = admob.boostStdDays || 3;
+      }
+      if (document.getElementById('adm-admob-boost-diam-days')) {
+        document.getElementById('adm-admob-boost-diam-days').value = admob.boostDiamDays || 7;
+      }
+      if (document.getElementById('adm-admob-interstitial-upload')) {
+        document.getElementById('adm-admob-interstitial-upload').value = admob.interstitialOnUpload !== false ? 'true' : 'false';
+      }
 
-      const pCount = camp.current_pioneers_count || 1;
-      const pTarget = camp.pioneers_target || 1000;
-      const pRem = camp.remaining_pioneers_slots !== undefined ? camp.remaining_pioneers_slots : Math.max(0, pTarget - pCount);
-      const pct = Math.min(100, Math.max(0.2, ((pCount / pTarget) * 100))).toFixed(1);
+      // Credenciales Oficiales de Google AdMob
+      if (document.getElementById('adm-admob-test-mode')) {
+        document.getElementById('adm-admob-test-mode').value = admob.testMode !== false ? 'true' : 'false';
+      }
+      if (document.getElementById('adm-admob-pub-id')) {
+        document.getElementById('adm-admob-pub-id').value = admob.publisherId || 'ca-pub-3940256099942544';
+      }
+      if (document.getElementById('adm-admob-banner-unit-id')) {
+        document.getElementById('adm-admob-banner-unit-id').value = admob.bannerUnitId || 'ca-app-pub-3940256099942544/6300978111';
+      }
+      if (document.getElementById('adm-admob-rewarded-unit-id')) {
+        document.getElementById('adm-admob-rewarded-unit-id').value = admob.rewardedUnitId || 'ca-app-pub-3940256099942544/5224354917';
+      }
+      if (document.getElementById('adm-admob-interstitial-unit-id')) {
+        document.getElementById('adm-admob-interstitial-unit-id').value = admob.interstitialUnitId || 'ca-app-pub-3940256099942544/1033173712';
+      }
 
-      if (ratioEl) ratioEl.textContent = `${pCount.toLocaleString('es-CO')} / ${pTarget.toLocaleString('es-CO')} Comercios (${pct}%)`;
-      if (barEl) barEl.style.width = `${pct}%`;
-      if (remEl) remEl.textContent = pRem.toLocaleString('es-CO');
-      if (badgeEl) {
-        if (pRem > 0) {
-          badgeEl.textContent = '🟢 FASE DE DESPEGUE ACTIVA';
-          badgeEl.style.background = 'rgba(0,200,83,0.2)';
-          badgeEl.style.color = '#00ff88';
+      const admobBadge = document.getElementById('adm-admob-status-badge');
+      if (admobBadge) {
+        if (admob.testMode === false) {
+          admobBadge.textContent = '🟢 MODO PRODUCCIÓN EN VIVO (INGRESOS REALES)';
+          admobBadge.style.background = 'rgba(0, 255, 136, 0.2)';
+          admobBadge.style.color = '#00ff88';
+          admobBadge.style.borderColor = 'rgba(0, 255, 136, 0.5)';
         } else {
-          badgeEl.textContent = '⭐ META 1.000 ALCANZADA (IMPULSOS HABILITADOS)';
-          badgeEl.style.background = 'rgba(255,184,0,0.2)';
-          badgeEl.style.color = 'var(--spot-gold)';
-        }
-      }
-
-      if (document.getElementById('adm-launch-free-quota')) {
-        document.getElementById('adm-launch-free-quota').value = camp.free_welcome_products_quota || 5;
-      }
-      if (document.getElementById('adm-launch-target')) {
-        document.getElementById('adm-launch-target').value = pTarget;
-      }
-      if (document.getElementById('adm-launch-lock-boosts')) {
-        document.getElementById('adm-launch-lock-boosts').checked = camp.lock_boosts_until_target !== false;
-      }
-
-      // Pasarela Wompi Bancolombia
-      const wompi = data.wompi || {};
-      if (document.getElementById('adm-wompi-public-key')) {
-        document.getElementById('adm-wompi-public-key').value = wompi.publicKey || '';
-      }
-      if (document.getElementById('adm-wompi-integrity-secret')) {
-        document.getElementById('adm-wompi-integrity-secret').value = wompi.integritySecret || '';
-      }
-      if (document.getElementById('adm-wompi-event-secret')) {
-        document.getElementById('adm-wompi-event-secret').value = wompi.eventSecret || '';
-      }
-      if (document.getElementById('adm-wompi-mode')) {
-        document.getElementById('adm-wompi-mode').value = wompi.isLive ? 'true' : 'false';
-      }
-      if (document.getElementById('adm-wompi-webhook-url')) {
-        let webhookUrl = `${window.location.origin}/api/wompi/webhook`;
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-          // Si el admin está abriendo desde localhost en la PC, suministrar la URL pública HTTPS accesible por Wompi
-          webhookUrl = `https://eco-dock-chart-locking.trycloudflare.com/api/wompi/webhook`;
-        }
-        document.getElementById('adm-wompi-webhook-url').value = webhookUrl;
-      }
-      const wompiBadge = document.getElementById('adm-wompi-status-badge');
-      if (wompiBadge) {
-        if (wompi.isLive) {
-          wompiBadge.textContent = '🔴 PRODUCCIÓN EN VIVO (COBROS REALES)';
-          wompiBadge.style.background = 'rgba(239, 68, 68, 0.2)';
-          wompiBadge.style.color = '#ff6b6b';
-          wompiBadge.style.borderColor = 'rgba(239, 68, 68, 0.5)';
-        } else {
-          wompiBadge.textContent = '🧪 MODO SANDBOX (PRUEBAS)';
-          wompiBadge.style.background = 'rgba(0, 210, 255, 0.15)';
-          wompiBadge.style.color = '#00d2ff';
-          wompiBadge.style.borderColor = 'rgba(0, 210, 255, 0.4)';
+          admobBadge.textContent = '🧪 MODO PRUEBAS OFICIAL (TEST ADS)';
+          admobBadge.style.background = 'rgba(0, 210, 255, 0.15)';
+          admobBadge.style.color = '#00d2ff';
+          admobBadge.style.borderColor = 'rgba(0, 210, 255, 0.4)';
         }
       }
 
@@ -3895,68 +3859,40 @@ async function confirmCheckout() {
   if (!state.activeCheckout || !state.currentStore) return;
 
   const btn = document.getElementById('btn-confirm-checkout');
-  const originalBtnText = btn ? btn.innerHTML : '<i class="fa-solid fa-lock"></i> Pagar con Nequi / Wompi';
-  if (btn) {
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando pasarela Wompi...';
-    btn.disabled = true;
-  }
+  const player = document.getElementById('admob-rewarded-player');
+  const countdownEl = document.getElementById('admob-countdown');
+  const progressBar = document.getElementById('admob-reward-progress-bar');
 
-  const method = document.querySelector('input[name="payMethod"]:checked')?.value || 'wompi_nequi';
-  const amountCOP = Number(state.activeCheckout.price) || 5000;
-  const amountInCents = Math.round(amountCOP * 100);
-  const reference = `REF__${state.currentStore.id}__${state.activeCheckout.type}__${state.activeCheckout.videoId || 'novid'}__${Date.now()}`;
+  if (player) player.style.display = 'block';
+  if (btn) btn.style.display = 'none';
 
-  try {
-    // 1. Obtener firma oficial de integridad SHA-256 desde el backend
-    const sigRes = await fetch(`/api/wompi/signature?reference=${encodeURIComponent(reference)}&amountInCents=${amountInCents}&currency=COP`);
-    const sigData = await sigRes.json();
+  let timeLeft = 5;
+  if (countdownEl) countdownEl.textContent = `Recompensa en ${timeLeft}s...`;
+  if (progressBar) progressBar.style.width = '0%';
 
-    // 2. Si el widget oficial de Wompi está cargado y la llave pública empieza por 'pub_'
-    if (typeof WidgetCheckout !== 'undefined' && sigData.publicKey && sigData.publicKey.startsWith('pub_')) {
-      const checkout = new WidgetCheckout({
-        currency: 'COP',
-        amountInCents: amountInCents,
-        reference: reference,
-        publicKey: sigData.publicKey,
-        signature: {
-          integrity: sigData.signature
-        }
-      });
-
-      checkout.open(async function (result) {
-        console.log('Resultado transacción Wompi Widget:', result);
-        const tx = result?.transaction;
-        if (tx && tx.status === 'APPROVED') {
-          showToast('🎉 ¡Pago aprobado con éxito en Wompi!');
-          await finalizeCheckoutApproval(tx.id || reference, method, amountCOP);
-        } else if (tx && tx.status === 'DECLINED') {
-          showToast('Pago declinado por el banco emisor.', 'error');
-        } else if (tx && tx.status === 'ERROR') {
-          showToast('Error procesando pago con Wompi.', 'error');
-        } else {
-          console.log('Ventana Wompi cerrada o transacción pendiente:', tx);
-        }
-        if (btn) {
-          btn.innerHTML = originalBtnText;
-          btn.disabled = false;
-        }
-      });
-      return;
+  const interval = setInterval(async () => {
+    timeLeft--;
+    if (progressBar) {
+      progressBar.style.width = `${((5 - timeLeft) / 5) * 100}%`;
+    }
+    if (countdownEl) {
+      countdownEl.textContent = timeLeft > 0 ? `Recompensa en ${timeLeft}s...` : '¡Recompensa ganada!';
     }
 
-    // 3. Fallback: Simulación interna para desarrollo local
-    console.log('Utilizando confirmación interna (Modo de desarrollo/simulado)...');
-    await finalizeCheckoutApproval(null, method, amountCOP);
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      if (player) player.style.display = 'none';
+      if (btn) {
+        btn.style.display = 'block';
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Ver Video AdMob y Activar Impulso Gratis';
+      }
 
-  } catch (e) {
-    console.error('Error en checkout Wompi:', e);
-    showToast('Error procesando transacción', 'error');
-  } finally {
-    if (btn) {
-      btn.innerHTML = originalBtnText;
-      btn.disabled = false;
+      const method = 'admob_rewarded_video';
+      const reference = `REF_ADMOB_${state.currentStore.id}_${state.activeCheckout.type}_${Date.now()}`;
+      showToast('🎉 ¡Video completado! Impulso VIP otorgado con éxito.');
+      await finalizeCheckoutApproval(reference, method, 0);
     }
-  }
+  }, 1000);
 }
 
 async function finalizeCheckoutApproval(txId, method, amount) {
@@ -6955,24 +6891,18 @@ function setupEventListeners() {
     openAdminPortal();
   });
 
-  // Actualizar tarifas dinámicas y tiempos de impulso en el panel de Administrador
+  // Actualizar parámetros de frecuencia e impulsos AdMob en el panel de Administrador
   document.getElementById('admin-pricing-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const freeQuota = Number(document.getElementById('adm-quota-free-spots')?.value) || 5;
-    const spotPermPrice = Number(document.getElementById('adm-price-spot-perm')?.value) || 3500;
-    const bStandalonePrice = Number(document.getElementById('adm-price-boost-standalone')?.value) || 3500;
-    const bStdPrice = Number(document.getElementById('adm-price-boost-std')?.value) || 5000;
-    const bStdDays = Number(document.getElementById('adm-days-boost-std')?.value) || 2;
-    const bPlatPrice = Number(document.getElementById('adm-price-boost-plat')?.value) || 10000;
-    const bPlatDays = Number(document.getElementById('adm-days-boost-plat')?.value) || 5;
-    const bDiamPrice = Number(document.getElementById('adm-price-boost-diam')?.value) || 15000;
-    const bDiamDays = Number(document.getElementById('adm-days-boost-diam')?.value) || 8;
-    const memPrice = Number(document.getElementById('adm-price-membership')?.value) || 29000;
-    const memDays = Number(document.getElementById('adm-days-membership')?.value) || 30;
-    const memLimit = Number(document.getElementById('adm-membership-limit')?.value) || 100;
+    const freeQuota = Number(document.getElementById('adm-quota-free-spots')?.value) || 100;
+    const feedFreq = Math.max(2, Number(document.getElementById('adm-admob-feed-freq')?.value) || 4);
+    const boostStdDays = Math.max(1, Number(document.getElementById('adm-admob-boost-std-days')?.value) || 3);
+    const boostDiamDays = Math.max(1, Number(document.getElementById('adm-admob-boost-diam-days')?.value) || 7);
+    const interstitialOnUpload = document.getElementById('adm-admob-interstitial-upload')?.value === 'true';
 
     try {
-      const res = await fetch('/api/admin/pricing', {
+      // 1. Guardar cupo en pricing
+      const pRes = await fetch('/api/admin/pricing', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -6980,125 +6910,94 @@ function setupEventListeners() {
         },
         body: JSON.stringify({
           free_spots_quota: freeQuota,
-          spot_permanent_price: spotPermPrice,
-          boost_standard_standalone_price: bStandalonePrice,
-          photos_5_price: 0,
-          boost_standard_price: bStdPrice,
-          boost_standard_days: bStdDays,
-          boost_platino_price: bPlatPrice,
-          boost_platino_days: bPlatDays,
-          boost_diamante_price: bDiamPrice,
-          boost_diamante_days: bDiamDays,
-          boost_extreme_price: bDiamPrice,
-          boost_extreme_days: bDiamDays,
-          membership_pro_price: memPrice,
-          membership_pro_days: memDays,
-          membership_product_limit: memLimit
+          spot_permanent_price: 0,
+          boost_standard_price: 0,
+          boost_standard_days: boostStdDays,
+          boost_diamante_days: boostDiamDays,
+          photos_5_price: 0
         })
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.pricing) {
-          state.pricing = Object.assign(state.pricing, data.pricing);
-          renderDynamicPlansUI();
-          updateAdminQuotaHelperUI(data.pricing.free_spots_quota);
+
+      // 2. Guardar parámetros de AdMob
+      const adRes = await fetch('/api/admin/admob-config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': state.adminToken
+        },
+        body: JSON.stringify({
+          feedAdFrequency: feedFreq,
+          boostStdDays: boostStdDays,
+          boostDiamDays: boostDiamDays,
+          interstitialOnUpload: interstitialOnUpload
+        })
+      });
+
+      if (pRes.ok && adRes.ok) {
+        const adData = await adRes.json();
+        if (adData.admob) {
+          state.admobConfig = Object.assign(state.admobConfig || {}, adData.admob);
         }
-        showToast('⚙️ ¡Tarifas y duraciones actualizadas en toda la app!');
+        updateAdminQuotaHelperUI(freeQuota);
+        showToast('⚙️ ¡Parámetros de AdMob y tiempos de impulso guardados!');
       } else {
-        alert('Error al guardar tarifas en el servidor.');
+        alert('Error al guardar parámetros en el servidor.');
       }
-    } catch (e) { alert('Error de conexión al guardar tarifas.'); }
+    } catch (e) { alert('Error de conexión al guardar parámetros.'); }
   });
 
   // Actualización en tiempo real al escribir en el panel de Administrador
   document.getElementById('adm-quota-free-spots')?.addEventListener('input', (e) => {
     updateAdminQuotaHelperUI(e.target.value);
   });
-  document.getElementById('adm-price-spot-perm')?.addEventListener('input', () => {
-    updateAdminQuotaHelperUI(document.getElementById('adm-quota-free-spots')?.value);
-  });
 
-  // Configuración de la Campaña de Lanzamiento Pioneros desde el panel de Administrador
-  document.getElementById('admin-launch-form')?.addEventListener('submit', async (e) => {
+  // Configuración oficial de Google AdMob desde el panel de Administrador
+  document.getElementById('admin-admob-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const quota = Number(document.getElementById('adm-launch-free-quota')?.value) || 5;
-    const target = Number(document.getElementById('adm-launch-target')?.value) || 1000;
-    const lockBoosts = document.getElementById('adm-launch-lock-boosts')?.checked !== false;
+    const testMode = document.getElementById('adm-admob-test-mode')?.value === 'true';
+    const publisherId = document.getElementById('adm-admob-pub-id')?.value.trim();
+    const bannerUnitId = document.getElementById('adm-admob-banner-unit-id')?.value.trim();
+    const rewardedUnitId = document.getElementById('adm-admob-rewarded-unit-id')?.value.trim();
+    const interstitialUnitId = document.getElementById('adm-admob-interstitial-unit-id')?.value.trim();
 
     try {
-      const res = await fetch('/api/admin/launch-campaign', {
+      const res = await fetch('/api/admin/admob-config', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-admin-token': state.adminToken
         },
         body: JSON.stringify({
-          welcome_pack_enabled: true,
-          free_welcome_products_quota: quota,
-          pioneers_target: target,
-          lock_boosts_until_target: lockBoosts
+          testMode,
+          publisherId,
+          bannerUnitId,
+          rewardedUnitId,
+          interstitialUnitId
         })
       });
       if (res.ok) {
         const data = await res.json();
-        if (data.launch_campaign) {
-          state.launchCampaign = Object.assign(state.launchCampaign, data.launch_campaign);
-          renderLaunchCampaignUI();
-          renderDynamicPlansUI();
-        }
-        showToast('🚀 ¡Estrategia de Despegue Pionero guardada exitosamente!');
-      } else {
-        alert('Error al guardar configuración de lanzamiento.');
-      }
-    } catch (err) {
-      alert('Error de conexión al guardar campaña de lanzamiento.');
-    }
-  });
-
-  // Configuración de llaves oficiales de Wompi Bancolombia desde el panel de Administrador
-  document.getElementById('admin-wompi-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const publicKey = document.getElementById('adm-wompi-public-key')?.value.trim();
-    const integritySecret = document.getElementById('adm-wompi-integrity-secret')?.value.trim();
-    const eventSecret = document.getElementById('adm-wompi-event-secret')?.value.trim();
-    const isLive = document.getElementById('adm-wompi-mode')?.value === 'true';
-
-    try {
-      const res = await fetch('/api/admin/wompi-config', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-token': state.adminToken
-        },
-        body: JSON.stringify({
-          publicKey,
-          integritySecret,
-          eventSecret,
-          isLive
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const badgeEl = document.getElementById('adm-wompi-status-badge');
-        if (badgeEl && data.wompi) {
-          if (data.wompi.isLive) {
-            badgeEl.textContent = '🔴 PRODUCCIÓN EN VIVO (COBROS REALES)';
-            badgeEl.style.background = 'rgba(239, 68, 68, 0.2)';
-            badgeEl.style.color = '#ff6b6b';
-            badgeEl.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+        const badgeEl = document.getElementById('adm-admob-status-badge');
+        if (badgeEl && data.admob) {
+          state.admobConfig = Object.assign(state.admobConfig || {}, data.admob);
+          if (data.admob.testMode === false) {
+            badgeEl.textContent = '🟢 MODO PRODUCCIÓN EN VIVO (INGRESOS REALES)';
+            badgeEl.style.background = 'rgba(0, 255, 136, 0.2)';
+            badgeEl.style.color = '#00ff88';
+            badgeEl.style.borderColor = 'rgba(0, 255, 136, 0.5)';
           } else {
-            badgeEl.textContent = '🧪 MODO SANDBOX (PRUEBAS)';
+            badgeEl.textContent = '🧪 MODO PRUEBAS OFICIAL (TEST ADS)';
             badgeEl.style.background = 'rgba(0, 210, 255, 0.15)';
             badgeEl.style.color = '#00d2ff';
             badgeEl.style.borderColor = 'rgba(0, 210, 255, 0.4)';
           }
         }
-        showToast('💳 ¡Credenciales de Wompi Bancolombia guardadas con éxito!');
+        showToast('📡 ¡Credenciales de Google AdMob vinculadas exitosamente!');
       } else {
-        alert('Error al guardar credenciales de Wompi.');
+        alert('Error al guardar credenciales de AdMob.');
       }
     } catch (err) {
-      alert('Error de conexión al guardar credenciales de Wompi.');
+      alert('Error de conexión al guardar credenciales de AdMob.');
     }
   });
 

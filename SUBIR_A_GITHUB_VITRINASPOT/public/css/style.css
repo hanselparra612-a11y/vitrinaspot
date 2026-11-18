@@ -4591,7 +4591,7 @@ body.admin-active-view .main-viewport {
     height: 54px;
     min-height: 54px;
     flex-wrap: nowrap !important;
-    padding: 0 10px !important;
+    padding: 0 max(16px, env(safe-area-inset-right, 16px)) 0 max(14px, env(safe-area-inset-left, 14px)) !important;
     align-items: center !important;
     justify-content: space-between !important;
     display: flex !important;
@@ -4605,7 +4605,7 @@ body.admin-active-view .main-viewport {
     align-items: center !important;
     gap: 8px !important;
     flex: 0 0 auto !important;
-    margin-right: 14px !important;
+    margin-right: 12px !important;
     min-width: auto;
     z-index: 10;
   }
@@ -4634,11 +4634,11 @@ body.admin-active-view .main-viewport {
     letter-spacing: -0.3px;
   }
 
-  /* ACCIONES DE NAVEGACIÓN EN MÓVIL (AHORA CON MÁXIMO ESPACIO Y RESPIRO) */
+  /* ACCIONES DE NAVEGACIÓN EN MÓVIL (EQUILIBRADAS Y CON RESPIRO PERFECTO) */
   .standard-nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 7px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
   }
 
   /* Selector de ciudad compacto */
@@ -4673,7 +4673,7 @@ body.admin-active-view .main-viewport {
     font-size: 0.76rem;
     height: 32px;
     gap: 5px;
-    max-width: 120px;
+    max-width: 110px;
   }
 
   .category-nav-btn span {
@@ -4681,23 +4681,23 @@ body.admin-active-view .main-viewport {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 68px;
+    max-width: 62px;
     font-size: 0.75rem;
   }
 
-  /* BOTÓN ALTERNADOR DE VISTA (CUADRÍCULA 2x2 / VITRINA INMERSIVA) EN MÓVIL */
+  /* BOTÓN ALTERNADOR DE VISTA (CUADRÍCULA 2x2) */
   #btn-feed-view-toggle {
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
     color: #ffffff !important;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
+    flex-shrink: 0 !important;
+    transition: all 0.2s ease !important;
   }
 
   #btn-feed-view-toggle:active {
@@ -4717,6 +4717,29 @@ body.admin-active-view .main-viewport {
     color: var(--spot-gold) !important;
   }
 
+  /* BOTÓN TOGGLE BÚSQUEDA (LUPA CON RESPIRO PERFECTO RESPECTO AL FILO DE LA PANTALLA) */
+  #btn-nav-search-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    flex-shrink: 0 !important;
+    margin-right: 6px !important; /* Despegar del filo de la pantalla */
+    transition: all 0.2s ease !important;
+  }
+
+  #btn-nav-search-toggle:active {
+    transform: scale(0.92);
+    background: rgba(255, 184, 0, 0.2);
+    border-color: var(--spot-gold);
+    color: var(--spot-gold) !important;
+  }
+
   /* OCULTAR EN MÓVIL EL BOTÓN PUBLICAR DE LA BARRA (SE TRASLADA AL FAB FLOTANTE) */
   #btn-nav-upload {
     display: none !important;
@@ -4726,7 +4749,7 @@ body.admin-active-view .main-viewport {
   .floating-fab-upload {
     display: flex !important;
     position: fixed;
-    right: 14px;
+    right: 16px;
     bottom: max(22px, calc(env(safe-area-inset-bottom, 0px) + 20px));
     width: 48px;
     height: 48px;
@@ -4753,15 +4776,16 @@ body.admin-active-view .main-viewport {
   .nav-right {
     display: flex !important;
     align-items: center !important;
-    gap: 7px !important;
+    gap: 8px !important;
     flex: 0 0 auto !important;
     margin-left: auto !important;
+    padding-right: 4px !important;
     z-index: 10;
   }
 
   .icon-nav-btn {
-    width: 32px;
-    height: 32px;
+    width: 34px !important;
+    height: 34px !important;
     font-size: 0.9rem;
     flex-shrink: 0;
   }

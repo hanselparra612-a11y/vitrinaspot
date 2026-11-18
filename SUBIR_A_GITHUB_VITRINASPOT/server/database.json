@@ -438,6 +438,18 @@
       "nequiManualNumber": "3128525929",
       "daviplataManualNumber": "3128525929"
     },
+    "admob": {
+      "enabled": true,
+      "publisherId": "ca-pub-3940256099942544",
+      "feedAdFrequency": 4,
+      "boostStdDays": 3,
+      "boostDiamDays": 7,
+      "interstitialOnUpload": true,
+      "testMode": true,
+      "bannerUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "rewardedUnitId": "ca-app-pub-3940256099942544/5224354917",
+      "interstitialUnitId": "ca-app-pub-3940256099942544/1033173712"
+    },
     "telemetry": {
       "totalWhatsAppClicks": 0,
       "totalViews": 0

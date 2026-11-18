@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=23.0">
+  <link rel="stylesheet" href="css/style.css?v=23.2">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -676,143 +676,114 @@
             </button>
           </div>
 
-          <!-- TABLA DE CONTROL DE TARIFAS DINÁMICAS Y TIEMPOS DE IMPULSO -->
+          <!-- FIJADOR DINÁMICO DE FRECUENCIA ADMOB Y TIEMPOS DE IMPULSO RECOMPENSADO -->
           <div class="admin-pricing-card">
-            <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador Dinámico de Tarifas y Tiempos de Impulso</h3>
-            <p class="text-muted" id="adm-pricing-header-desc">Como Administrador, modifica aquí los precios y la duración de los impulsos comerciales. Cada comercio cuenta con <strong id="adm-header-quota-val">100 SPOTS GRATIS</strong> con carrusel de fotos. A partir del siguiente spot, el costo es de $3.500 COP (o mediante impulsos/membresía).</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+              <div>
+                <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador Dinámico de Frecuencia AdMob y Tiempos de Impulso</h3>
+                <p class="text-muted" id="adm-pricing-header-desc" style="margin: 0;">Plataforma <strong>100% GRATIS</strong> para Comercios • Modelo oficial de Monetización Exclusiva con <strong>Google AdMob</strong> (Google Play Store Compliant).</p>
+              </div>
+              <span class="badge" style="background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.4); padding: 6px 12px; font-size: 0.82rem; font-weight: 700;">
+                <i class="fa-brands fa-google-play"></i> 100% Play Store Compliant
+              </span>
+            </div>
+
             <form id="admin-pricing-form" class="pricing-edit-grid">
               <!-- 1. Cupo de Spots Gratuitos -->
               <div class="form-group">
-                <label><i class="fa-solid fa-gift text-gold"></i> 1. Cupo de Spots Gratuitos por Tienda</label>
+                <label><i class="fa-solid fa-gift text-gold"></i> 1. Cupo de Spots Gratuitos por Comercio</label>
                 <input type="number" id="adm-quota-free-spots" value="100" min="1" max="1000" required>
-                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">🎁 Cada tienda publica gratis hasta <strong id="adm-helper-quota-val" style="color:var(--spot-gold); font-weight:800;">100</strong> spots (cada producto incluye carrusel de hasta 7 fotos a $0 COP).</small>
+                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">🎁 Cada tienda publica gratis hasta <strong id="adm-helper-quota-val" style="color:var(--spot-gold); font-weight:800;">100</strong> productos (carrusel permanente de fotos a $0 COP).</small>
               </div>
 
-              <!-- 2. Spot Permanente (Sin Impulso) -->
+              <!-- 2. Frecuencia de Anuncios In-Feed AdMob -->
               <div class="form-group">
-                <label><i class="fa-solid fa-image text-gold"></i> 2. Precio por Spot Permanente Adicional ($ COP)</label>
-                <input type="number" id="adm-price-spot-perm" value="3500" min="0" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">📸 Tarifa para publicar 1 spot adicional cuando el comercio agote su cupo gratuito (permanente).</small>
+                <label><i class="fa-solid fa-rectangle-ad text-gold"></i> 2. Frecuencia de Anuncios In-Feed (Cada N Reels)</label>
+                <input type="number" id="adm-admob-feed-freq" value="4" min="2" max="15" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">📲 Cada cuántos productos en el feed vertical se inyecta una tarjeta de anuncio patrocinado AdMob.</small>
               </div>
 
-              <!-- 2.1 Solo Impulso Estándar (Sin Spot) -->
+              <!-- 3. Duración Impulso Estándar (Rewarded Video) -->
               <div class="form-group">
-                <label><i class="fa-solid fa-bolt text-gold"></i> 2.1 Solo Impulso Estándar Sin Spot ($ COP)</label>
-                <input type="number" id="adm-price-boost-standalone" value="3500" min="0" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">⚡ Para impulsar un producto existente durante los días fijados (no incluye spot nuevo).</small>
+                <label><i class="fa-solid fa-bolt text-gold"></i> 3. Duración Impulso Estándar (Días)</label>
+                <input type="number" id="adm-admob-boost-std-days" value="3" min="1" max="30" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">🎬 Días de impulso VIP otorgados por ver <strong>1 video publicitario recompensado</strong> de 20s ($0 COP).</small>
               </div>
 
-              <!-- 3. Combo Spot Nuevo + Impulso Estándar -->
+              <!-- 4. Duración Impulso Diamante VIP -->
               <div class="form-group">
-                <label><i class="fa-solid fa-boxes-stacked text-gold"></i> 3. Precio Combo Spot + Impulso ($ COP)</label>
-                <input type="number" id="adm-price-boost-std" value="5000" min="0" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">📦 1 Spot permanente + impulso destacado en el feed.</small>
-              </div>
-              <div class="form-group">
-                <label><i class="fa-regular fa-clock text-gold"></i> Duración Impulso Estándar (Días)</label>
-                <input type="number" id="adm-days-boost-std" value="2" min="1" max="90" required>
+                <label><i class="fa-solid fa-crown text-gold"></i> 4. Duración Impulso Diamante VIP (Días)</label>
+                <input type="number" id="adm-admob-boost-diam-days" value="7" min="1" max="60" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">⭐ Días de máxima exposición en historias y #1 del feed por ver <strong>2 videos bonificados</strong>.</small>
               </div>
 
-              <!-- 4. Impulso Platino -->
-              <div class="form-group">
-                <label><i class="fa-solid fa-gem" style="color: #00d2ff;"></i> 4. Precio Impulso Platino ($ COP)</label>
-                <input type="number" id="adm-price-boost-plat" value="10000" min="0" required>
-              </div>
-              <div class="form-group">
-                <label><i class="fa-regular fa-clock" style="color: #00d2ff;"></i> Duración Impulso Platino (Días)</label>
-                <input type="number" id="adm-days-boost-plat" value="5" min="1" max="90" required>
-              </div>
-
-              <!-- 5. Impulso Diamante VIP -->
-              <div class="form-group">
-                <label><i class="fa-solid fa-crown text-gold"></i> 5. Precio Impulso Diamante VIP ($ COP)</label>
-                <input type="number" id="adm-price-boost-diam" value="15000" min="0" required>
-              </div>
-              <div class="form-group">
-                <label><i class="fa-regular fa-clock text-gold"></i> Duración Impulso Diamante (Días)</label>
-                <input type="number" id="adm-days-boost-diam" value="8" min="1" max="90" required>
-              </div>
-
-              <!-- 6. Membresía Mensual Pro -->
-              <div class="form-group">
-                <label><i class="fa-solid fa-certificate text-spot"></i> 6. Precio Membresía ($ COP / mes)</label>
-                <input type="number" id="adm-price-membership" value="29000" min="0" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">👑 Tarifa plana mensual para tiendas con gran catálogo.</small>
-              </div>
-              <div class="form-group">
-                <label><i class="fa-regular fa-calendar-days text-spot"></i> Duración Membresía (Días)</label>
-                <input type="number" id="adm-days-membership" value="30" min="1" max="365" required>
-              </div>
-              <div class="form-group">
-                <label><i class="fa-solid fa-boxes-stacked text-spot"></i> Cupo Máximo de Productos (Membresía)</label>
-                <input type="number" id="adm-membership-limit" value="100" min="1" max="1000" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">Límite de productos que la tienda puede tener publicados mientras mantenga su suscripción activa.</small>
+              <!-- 5. Anuncio Intersticial Post-Publicación -->
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label><i class="fa-solid fa-mobile-screen text-gold"></i> 5. Anuncio Intersticial tras Publicar Spot</label>
+                <select id="adm-admob-interstitial-upload" style="background: #181d2a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px; border-radius: 8px; width: 100%; font-weight: 700;">
+                  <option value="true">Activado (Mostrar anuncio de 5 seg a pantalla completa tras subir un spot gratis)</option>
+                  <option value="false">Desactivado (Publicación silenciosa sin intersticial)</option>
+                </select>
+                <small class="text-muted" style="display:block; margin-top:3px;">Monetiza cada nueva publicación exitosa del comerciante con el formato intersticial de Google.</small>
               </div>
 
               <div class="pricing-btn-col" style="grid-column: 1 / -1; margin-top: 10px;">
                 <button type="submit" class="btn btn-spot w-100" style="padding: 12px; font-size: 1rem; font-weight: 700;">
-                  <i class="fa-solid fa-floppy-disk"></i> Guardar Nuevas Tarifas y Tiempos
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Nuevos Parámetros de Frecuencia e Impulsos
                 </button>
               </div>
             </form>
           </div>
 
-          <!-- CONFIGURACIÓN DE PASARELA DE PAGOS WOMPI BANCOLOMBIA -->
-          <div class="admin-pricing-card" style="border: 1px solid rgba(0, 210, 255, 0.35); background: linear-gradient(180deg, #101524 0%, #0d111c 100%);">
+          <!-- CENTRO DE CONEXIÓN OFICIAL GOOGLE ADMOB -->
+          <div class="admin-pricing-card" style="border: 1px solid rgba(255, 184, 0, 0.4); background: linear-gradient(180deg, #15140f 0%, #0d0d0c 100%);">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
               <div>
-                <h3 style="color: #00d2ff; margin-bottom: 4px;"><i class="fa-solid fa-credit-card"></i> Pasarela de Pagos Wompi Bancolombia</h3>
-                <p class="text-muted" style="margin: 0;">Configura aquí tus llaves de Wompi (Nequi, Bancolombia QR, PSE y Tarjetas). Vinculadas directamente a tu cuenta comercial.</p>
+                <h3 style="color: var(--spot-gold); margin-bottom: 4px;"><i class="fa-brands fa-google"></i> Centro de Conexión Oficial Google AdMob</h3>
+                <p class="text-muted" style="margin: 0;">Vincula aquí los Bloques de Anuncios Oficiales de tu consola de Google AdMob para monetizar el tráfico móvil.</p>
               </div>
-              <span class="badge" id="adm-wompi-status-badge" style="background: rgba(0,210,255,0.15); color: #00d2ff; border: 1px solid rgba(0,210,255,0.4); padding: 6px 12px; font-size: 0.85rem; font-weight: 700;">
-                MODO SANDBOX (PRUEBAS)
+              <span class="badge" id="adm-admob-status-badge" style="background: rgba(0, 210, 255, 0.15); color: #00d2ff; border: 1px solid rgba(0, 210, 255, 0.4); padding: 6px 12px; font-size: 0.85rem; font-weight: 700;">
+                🧪 MODO PRUEBAS OFICIAL (TEST ADS)
               </span>
             </div>
 
-            <form id="admin-wompi-form" class="pricing-edit-grid">
+            <form id="admin-admob-form" class="pricing-edit-grid">
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label><i class="fa-solid fa-toggle-on text-gold"></i> Entorno de Pagos (Modo)</label>
-                <select id="adm-wompi-mode" style="background: #181d2a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px; border-radius: 8px; width: 100%; font-weight: 700;">
-                  <option value="false">Sandbox / Laboratorio de Pruebas (pub_test_...)</option>
-                  <option value="true">Producción en Vivo (Cobros y Ventas Reales) (pub_prod_...)</option>
+                <label><i class="fa-solid fa-toggle-on text-gold"></i> Entorno de Google AdMob (Modo)</label>
+                <select id="adm-admob-test-mode" style="background: #181d2a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px; border-radius: 8px; width: 100%; font-weight: 700;">
+                  <option value="true">🧪 Modo Pruebas Oficial (IDs de Demo de Google - No genera infracciones)</option>
+                  <option value="false">🟢 Modo Producción en Vivo (Genera Ingresos Reales en tu Cuenta AdMob)</option>
                 </select>
-                <small class="text-muted" style="display:block; margin-top:4px;">Usa Sandbox para verificar sin dinero real, y Producción para recibir dinero en tu cuenta de Bancolombia/Nequi.</small>
+                <small class="text-muted" style="display:block; margin-top:4px;">Utiliza Modo Pruebas durante el desarrollo. Pasa a Producción cuando tu cuenta de Google AdMob esté aprobada.</small>
               </div>
 
               <div class="form-group">
-                <label><i class="fa-solid fa-key text-gold"></i> Llave Pública (Public Key)</label>
-                <input type="text" id="adm-wompi-public-key" placeholder="pub_prod_... o pub_test_..." required style="font-family: monospace;">
-                <small class="text-muted" style="display:block; margin-top:3px;">Visible en Wompi > Desarrolladores > Llaves de API</small>
+                <label><i class="fa-solid fa-id-card text-gold"></i> ID de Editor (Publisher ID)</label>
+                <input type="text" id="adm-admob-pub-id" value="ca-pub-3940256099942544" placeholder="ca-pub-XXXXXXXXXXXXXXXX" required style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Tu ID de cuenta visible en AdMob > Configuración > Información de cuenta</small>
               </div>
 
               <div class="form-group">
-                <label><i class="fa-solid fa-shield-halved text-gold"></i> Secreto de Integridad (Integrity Secret)</label>
-                <input type="text" id="adm-wompi-integrity-secret" placeholder="prod_integrity_... o test_integrity_..." required style="font-family: monospace;">
-                <small class="text-muted" style="display:block; margin-top:3px;">Utilizado para firmar cada transacción con SHA-256 e impedir fraudes</small>
+                <label><i class="fa-solid fa-rectangle-ad text-gold"></i> ID Bloque In-Feed / Banner</label>
+                <input type="text" id="adm-admob-banner-unit-id" value="ca-app-pub-3940256099942544/6300978111" placeholder="ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY" required style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Para las tarjetas publicitarias en el feed vertical de productos</small>
               </div>
 
               <div class="form-group">
-                <label><i class="fa-solid fa-bell text-gold"></i> Secreto de Eventos (Event Secret - Webhooks)</label>
-                <input type="text" id="adm-wompi-event-secret" placeholder="prod_events_... o test_events_..." style="font-family: monospace;">
-                <small class="text-muted" style="display:block; margin-top:3px;">Opcional: Para corroborar la firma de los eventos enviados por Wompi</small>
+                <label><i class="fa-solid fa-gift text-gold"></i> ID Bloque Video Bonificado (Rewarded Ads)</label>
+                <input type="text" id="adm-admob-rewarded-unit-id" value="ca-app-pub-3940256099942544/5224354917" placeholder="ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY" required style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Para los Impulsos VIP que los comercios activan viendo videos</small>
               </div>
 
-              <div class="form-group" style="grid-column: 1 / -1;">
-                <label><i class="fa-solid fa-link text-gold"></i> URL de Eventos (Webhook) para registrar en Wompi</label>
-                <div style="display: flex; gap: 8px;">
-                  <input type="text" id="adm-wompi-webhook-url" readonly style="background: #0d111a; color: #00ff88; font-family: monospace; font-size: 0.95rem; font-weight: 700; cursor: copy; flex: 1;" title="Haz clic para copiar">
-                  <button type="button" id="btn-copy-wompi-webhook" class="btn" style="background: #1e2638; color: #00d2ff; border: 1px solid rgba(0,210,255,0.4); padding: 0 16px; white-space: nowrap; font-weight: 700;">
-                    <i class="fa-solid fa-copy"></i> Copiar URL
-                  </button>
-                </div>
-                <small class="text-muted" style="display:block; margin-top:6px; line-height: 1.4;">
-                  ⚠️ <strong>Regla de Wompi:</strong> Wompi rechaza enlaces con <code>http://localhost</code>. Debe ser siempre una URL pública y segura con <code>https://</code> (como tu túnel de Cloudflare o dominio propio).
-                </small>
+              <div class="form-group">
+                <label><i class="fa-solid fa-mobile-screen text-gold"></i> ID Bloque Intersticial (Pantalla Completa)</label>
+                <input type="text" id="adm-admob-interstitial-unit-id" value="ca-app-pub-3940256099942544/1033173712" placeholder="ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY" required style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Para los anuncios tras publicar un nuevo producto o video comercial</small>
               </div>
 
               <div class="pricing-btn-col" style="grid-column: 1 / -1; margin-top: 10px;">
-                <button type="submit" class="btn btn-spot w-100" style="padding: 12px; font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, #00d2ff, #0070f3); border: none;">
-                  <i class="fa-solid fa-floppy-disk"></i> Guardar Credenciales Oficiales de Wompi
+                <button type="submit" class="btn btn-spot w-100" style="padding: 12px; font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, #ffb800, #ff8c00); border: none; color: #000;">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Credenciales Oficiales de Google AdMob
                 </button>
               </div>
             </form>
@@ -1413,169 +1384,88 @@
     </div>
   </div>
 
-  <!-- MODAL 3: CHECKOUT WOMPI & NEQUI (COMPRA DE SPOTS O EXTENSIONES) -->
+  <!-- MODAL 3: IMPULSO VIP GRATUITO RECOMPENSADO (GOOGLE ADMOB) -->
   <div class="modal-overlay" id="modal-checkout" style="display: none;">
     <div class="modal-dialog modal-checkout-card">
       <div class="modal-header">
         <div class="checkout-title-row">
-          <i class="fa-solid fa-bolt text-gold"></i>
-          <h3>Activar Publicidad & SPOTS en VitrinaSpot</h3>
+          <i class="fa-solid fa-crown text-gold"></i>
+          <h3>Activar Impulso VIP 100% GRATIS</h3>
         </div>
         <button class="close-modal-btn" id="btn-close-checkout">&times;</button>
       </div>
 
       <div class="modal-body">
+        <div class="admob-boost-notice-banner" style="background: rgba(255,184,0,0.12); border: 1px solid rgba(255,184,0,0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+          <i class="fa-solid fa-circle-check text-green" style="font-size: 1.5rem; flex-shrink: 0;"></i>
+          <div>
+            <strong style="color: #fff; font-size: 0.95rem; display: block;">¡Cero costo de tu bolsillo! ($0 COP)</strong>
+            <span style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.3; display: block;">Patrocinado por Google AdMob. Mira un breve video interactivo para activar exposición VIP en el feed.</span>
+          </div>
+        </div>
+
         <!-- SELECTOR INTERACTIVO DE PLANES DE IMPULSO Y PUBLICIDAD -->
         <div class="checkout-plan-selector" id="checkout-plan-selector-container">
           <label class="checkout-selector-label">
-            <i class="fa-solid fa-layer-group text-gold"></i> Elige tu Plan de Publicidad o Impulso:
+            <i class="fa-solid fa-layer-group text-gold"></i> Elige el Nivel de Impulso para tu SPOT:
           </label>
-          <div class="checkout-plans-grid" id="checkout-plans-grid">
-            <!-- 0. IMPULSO ESTÁNDAR (2 DÍAS - $3.500 COP) -->
-            <div class="checkout-plan-btn" data-plan="boost_standard_standalone">
+          <div class="checkout-plans-grid" id="checkout-plans-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+            <!-- 1. IMPULSO ESTÁNDAR RECOMPENSADO -->
+            <div class="checkout-plan-btn" data-plan="boost_standard_standalone" style="cursor: pointer;">
               <div class="chk-plan-icon"><i class="fa-solid fa-bolt text-gold"></i></div>
               <div class="chk-plan-info">
                 <strong>Impulso Estándar</strong>
-                <span class="chk-plan-badge badge-perm" id="chk-badge-boost-standalone">2 DÍAS</span>
+                <span class="chk-plan-badge badge-perm" id="chk-badge-boost-standalone">3 DÍAS VIP</span>
               </div>
-              <span class="chk-plan-price" id="chk-price-boost-standalone">$3.500 COP</span>
+              <span class="chk-plan-price" style="color: #00ff88; font-weight: 800;">1 Video (20s)</span>
             </div>
 
-            <!-- 1. SPOT PERMANENTE (7 IMÁGENES SIN IMPULSO - $3.500 COP) -->
-            <div class="checkout-plan-btn" data-plan="spot_permanent">
-              <div class="chk-plan-icon"><i class="fa-solid fa-image text-gold"></i></div>
-              <div class="chk-plan-info">
-                <strong>Spot Permanente</strong>
-                <span class="chk-plan-badge badge-perm" id="chk-badge-spot-perm">7 FOTOS</span>
-              </div>
-              <span class="chk-plan-price" id="chk-price-spot-perm">$3.500 COP</span>
-            </div>
-
-            <!-- 2. COMBO SPOT NUEVO + IMPULSO ESTÁNDAR (2 DÍAS - $5.000 COP) -->
-            <div class="checkout-plan-btn" data-plan="boost_standard">
-              <div class="chk-plan-icon"><i class="fa-solid fa-boxes-stacked text-gold"></i></div>
-              <div class="chk-plan-info">
-                <strong>Combo Spot + Impulso</strong>
-                <span class="chk-plan-badge" id="chk-badge-boost-std">SPOT + 2 DÍAS</span>
-              </div>
-              <span class="chk-plan-price" id="chk-price-boost-std">$5.000 COP</span>
-            </div>
-
-            <!-- 2. IMPULSO PLATINO (5 DÍAS - $10.000 COP) -->
-            <div class="checkout-plan-btn" data-plan="boost_platino">
-              <div class="chk-plan-icon"><i class="fa-solid fa-gem" style="color: #6366f1;"></i></div>
-              <div class="chk-plan-info">
-                <strong>Impulso Platino</strong>
-                <span class="chk-plan-badge badge-platino" id="chk-badge-boost-plat">5 DÍAS</span>
-              </div>
-              <span class="chk-plan-price" id="chk-price-boost-plat">$10.000 COP</span>
-            </div>
-
-            <!-- 3. IMPULSO DIAMANTE (8 DÍAS VIP - $15.000 COP) -->
-            <div class="checkout-plan-btn active" data-plan="boost_diamante">
+            <!-- 2. IMPULSO DIAMANTE VIP RECOMPENSADO -->
+            <div class="checkout-plan-btn active" data-plan="boost_diamante" style="cursor: pointer;">
               <div class="chk-plan-icon"><i class="fa-solid fa-crown text-gold"></i></div>
               <div class="chk-plan-info">
                 <strong>Impulso Diamante</strong>
-                <span class="chk-plan-badge badge-diamante" id="chk-badge-boost-diam">8 DÍAS VIP</span>
+                <span class="chk-plan-badge badge-diamante" id="chk-badge-boost-diam">7 DÍAS VIP</span>
               </div>
-              <span class="chk-plan-price" id="chk-price-boost-diam">$15.000 COP</span>
-            </div>
-
-            <!-- 4. MEMBRESÍA MENSUAL PRO (30 DÍAS - $29.000 COP) -->
-            <div class="checkout-plan-btn" data-plan="membership_pro">
-              <div class="chk-plan-icon"><i class="fa-solid fa-certificate text-spot"></i></div>
-              <div class="chk-plan-info">
-                <strong>Membresía Mensual</strong>
-                <span class="chk-plan-badge badge-pro" id="chk-badge-membership">30 DÍAS</span>
-              </div>
-              <span class="chk-plan-price" id="chk-price-membership">$29.000 COP</span>
+              <span class="chk-plan-price" style="color: #00ff88; font-weight: 800;">2 Videos AdMob</span>
             </div>
           </div>
         </div>
 
-        <div class="checkout-product-preview">
-          <span class="preview-tag">Servicio Seleccionado</span>
-          <h2 id="checkout-item-title">⭐ Impulso Extremo SPOT VIP</h2>
-          <div class="checkout-price-tag" id="checkout-item-price">$15.000 COP</div>
-          <p id="checkout-item-desc">Máxima exposición: Posición #1 en el feed y presencia en Historias VIP superiores.</p>
-          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">
-            Referencia de Transacción: <strong id="checkout-ref-code" class="text-gold">VT-2026</strong>
-          </div>
+        <div class="checkout-product-preview" style="margin: 16px 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; background: rgba(0,0,0,0.3);">
+          <span class="preview-tag">Beneficio Seleccionado</span>
+          <h2 id="checkout-item-title" style="margin: 4px 0; font-size: 1.15rem; color: var(--spot-gold);">⭐ Impulso Diamante VIP (7 Días)</h2>
+          <div class="checkout-price-tag" id="checkout-item-price" style="font-size: 1.25rem; color: #00ff88; font-weight: 900;">100% GRATIS</div>
+          <p id="checkout-item-desc" style="font-size: 0.85rem; color: var(--text-muted); margin: 6px 0 0 0;">Máxima exposición: Posición #1 en el feed y presencia en Historias VIP superiores.</p>
         </div>
 
-        <!-- MEDIOS DE PAGO COLOMBIANOS -->
-        <div class="checkout-payment-methods">
-          <label>Elige tu método de pago preferido:</label>
-          <div class="pay-methods-grid">
-            <label class="pay-method-option active" data-target="nequi">
-              <input type="radio" name="payMethod" value="wompi_nequi" checked>
-              <div class="pay-option-card">
-                <i class="fa-solid fa-mobile-screen-button"></i>
-                <span>Nequi Directo</span>
-              </div>
-            </label>
-            <label class="pay-method-option" data-target="pse">
-              <input type="radio" name="payMethod" value="wompi_pse">
-              <div class="pay-option-card">
-                <i class="fa-solid fa-building-columns"></i>
-                <span>Daviplata / PSE</span>
-              </div>
-            </label>
-            <label class="pay-method-option" data-target="card">
-              <input type="radio" name="payMethod" value="wompi_card">
-              <div class="pay-option-card">
-                <i class="fa-solid fa-credit-card"></i>
-                <span>Tarjeta Crédito/Débito</span>
-              </div>
-            </label>
+        <!-- SIMULADOR INTERACTIVO / PLAYER DE VIDEO BONIFICADO ADMOB -->
+        <div id="admob-rewarded-player" style="display: none; background: #000; border-radius: 14px; padding: 20px; text-align: center; border: 1px solid var(--spot-gold); margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 0.75rem; background: var(--spot-gold); color: #000; font-weight: 800; padding: 3px 8px; border-radius: 4px;">ANUNCIO BONIFICADO ADMOB</span>
+            <span id="admob-countdown" style="font-size: 0.85rem; color: #fff; font-weight: 700;">Recompensa en 5s...</span>
           </div>
-        </div>
-
-        <!-- DETALLES DEL MEDIO DE PAGO SELECCIONADO -->
-        <div class="checkout-details-box" id="checkout-details-box">
-          <div id="pay-detail-nequi" class="pay-detail-pane">
-            <div class="pay-detail-header">
-              <i class="fa-solid fa-mobile-screen-button text-gold"></i>
-              <strong>Pago Rápido con Nequi Colombia</strong>
-            </div>
-            <p>1. Transfiere desde tu App Nequi al número oficial de recargas VitrinaSpot:</p>
-            <div class="nequi-number-pill">
-              <span>📱 Nequi: <strong>312 852 5929</strong></span>
-            </div>
-            <div class="form-group mt-2">
-              <label>Tu número de celular Nequi (para validar tu pago):</label>
-              <input type="tel" id="checkout-nequi-phone" placeholder="Ej: 300 123 4567" maxlength="10">
-            </div>
+          <div style="padding: 24px 10px;">
+            <i class="fa-solid fa-play-circle text-gold" style="font-size: 3rem; animation: pulse 1.5s infinite;"></i>
+            <h4 style="margin: 10px 0 4px 0; color: #fff;">Reproduciendo Anuncio Patrocinado</h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Espera que termine el video para activar tu impulso VIP automático.</p>
           </div>
-
-          <div id="pay-detail-pse" class="pay-detail-pane" style="display: none;">
-            <div class="pay-detail-header">
-              <i class="fa-solid fa-building-columns text-green"></i>
-              <strong>Transferencia Daviplata / Bancolombia</strong>
-            </div>
-            <p>Transfiere el valor exacto a la llave comercial VitrinaSpot o escanea el QR en tu app bancaria.</p>
-            <div class="nequi-number-pill">
-              <span>🏦 Llave Bancolombia / Daviplata: <strong>312 852 5929</strong></span>
-            </div>
-          </div>
-
-          <div id="pay-detail-card" class="pay-detail-pane" style="display: none;">
-            <div class="pay-detail-header">
-              <i class="fa-solid fa-shield-halved text-gold"></i>
-              <strong>Pago Seguro con Tarjeta o Wompi</strong>
-            </div>
-            <p>Conexión cifrada de 256-bit certificada por Bancolombia para pagos con Visa, Mastercard y Débito.</p>
+          <div class="admob-reward-progress-track" style="height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden;">
+            <div id="admob-reward-progress-bar" style="height: 100%; width: 0%; background: var(--spot-gold); transition: width 1s linear;"></div>
           </div>
         </div>
 
         <!-- BOTÓN DE CONFIRMACIÓN AUTOMÁTICA -->
-        <button type="button" class="btn btn-gold btn-large w-100" id="btn-confirm-checkout">
-          <i class="fa-solid fa-lock"></i> Pagar y Activar al Instante
+        <button type="button" class="btn btn-gold btn-large w-100" id="btn-confirm-checkout" style="padding: 14px; font-weight: 800; font-size: 1rem; border-radius: 12px;">
+          <i class="fa-solid fa-play"></i> Ver Video AdMob y Activar Impulso Gratis
         </button>
 
-        <div class="checkout-security-note">
-          <i class="fa-solid fa-shield-halved"></i> Transacción 100% Segura procesada mediante Wompi Bancolombia.
+        <div class="checkout-security-note" style="margin-top: 12px; text-align: center; font-size: 0.78rem; color: var(--text-muted);">
+          <i class="fa-brands fa-google"></i> Google AdMob Rewarded Video System • Acreditación Inmediata
         </div>
+      </div>
+    </div>
+  </div>
       </div>
     </div>
   </div>
@@ -2324,6 +2214,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=23.0"></script>
+  <script src="js/app.js?v=23.2"></script>
 </body>
 </html>
