@@ -261,7 +261,7 @@ function renderLaunchCampaignUI() {
 function renderDynamicPlansUI() {
   const p = state.pricing;
 
-  // Card 1: Publicación Gratuita (Hasta 5 Spots Gratis de 7 imágenes)
+  // Card 1: Publicación Gratuita (Hasta 5 Spots Gratis de 5 fotos)
   const c1 = document.querySelector('.video-plan-card[data-plan="photos_5"]');
   const freeQuota = Number(p.free_spots_quota) || 5;
   const storeCount = state.currentStore && state.videos 
@@ -284,7 +284,7 @@ function renderDynamicPlansUI() {
       if (lockStrong) lockStrong.textContent = `🔒 Cupo Gratuito Bloqueado (${storeCount} de ${freeQuota} Spots Usados)`;
       const lockP = lockedBanner.querySelector('p');
       const permPrice = Number(p.spot_permanent_price) || 3500;
-      if (lockP) lockP.innerHTML = `Has utilizado todos tus ${freeQuota} spots gratuitos. Para subir este nuevo spot de 7 imágenes debes adquirir <strong>1 Spot Permanente por $${permPrice.toLocaleString('es-CO')} COP</strong> o activar un <strong>Impulso Comercial</strong>.`;
+      if (lockP) lockP.innerHTML = `Has utilizado todos tus ${freeQuota} spots gratuitos. Para subir este nuevo spot de 5 fotos puedes activar un <strong>Impulso Comercial VIP</strong>.`;
     }
   }
 
@@ -312,7 +312,7 @@ function renderDynamicPlansUI() {
         bEl.style.color = '';
       }
       if (dEl) {
-        dEl.innerHTML = `<strong style="color:#ef4444;">🔒 Límite gratuito alcanzado (${storeCount}/${freeQuota}).</strong> Ya no puedes subir más spots gratis. Adquiere <strong>1 Spot Permanente ($3.500 COP)</strong> o activa un Impulso para publicar.`;
+        dEl.innerHTML = `<strong style="color:#ef4444;">🔒 Límite gratuito alcanzado (${storeCount}/${freeQuota}).</strong> Ya no puedes subir más spots gratis. Activa un Impulso VIP para continuar publicando.`;
       }
     } else {
       c1.classList.remove('plan-free-locked');
@@ -325,12 +325,12 @@ function renderDynamicPlansUI() {
         bEl.style.color = '#000';
       }
       if (dEl) {
-        dEl.textContent = `Tus primeros ${freeQuota} spots con carrusel de hasta 7 fotos son 100% gratis ($0 COP). Disponibles: ${freeRem} spots.`;
+        dEl.textContent = `Tus primeros ${freeQuota} spots con carrusel de hasta 5 fotos son 100% gratis ($0 COP). Disponibles: ${freeRem} spots.`;
       }
     }
   }
 
-  // Card 2: Spot Permanente 7 Imágenes Sin Impulso ($3.500 COP)
+  // Card 2: Spot Permanente 5 Fotos Sin Impulso
   const cPerm = document.querySelector('.video-plan-card[data-plan="spot_permanent"]');
   if (cPerm) {
     const permPrice = Number(p.spot_permanent_price) || 3500;
@@ -343,7 +343,7 @@ function renderDynamicPlansUI() {
     }
     const dEl = cPerm.querySelector('.plan-desc');
     if (dEl) {
-      dEl.textContent = `1 Spot adicional permanente con carrusel de hasta 7 fotos sin fecha de caducidad (sin impulso publicitario).`;
+      dEl.textContent = `1 Spot adicional permanente con carrusel de hasta 5 fotos sin fecha de caducidad (sin impulso publicitario).`;
     }
   }
 
@@ -529,7 +529,7 @@ function refreshUploadMembershipUI() {
     } else {
       c1.classList.remove('plan-free-locked');
       if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-gift text-gold"></i>';
-      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">$0 COP</span> <small style="font-size:0.75rem; color:#00ff88;">(7 IMÁGENES)</small>';
+      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">$0 COP</span> <small style="font-size:0.75rem; color:#00ff88;">(5 FOTOS)</small>';
       if (bgPill) {
         bgPill.className = 'plan-badge-pill';
         bgPill.textContent = `${freeRem > 0 ? freeRem + ' DE ' + freeQuota + ' GRATIS' : freeQuota + ' SPOTS GRATIS'}`;
@@ -537,7 +537,7 @@ function refreshUploadMembershipUI() {
         bgPill.style.color = '#000';
       }
       if (dEl) {
-        dEl.textContent = `Tus primeros ${freeQuota} spots con 7 imágenes son 100% gratis ($0 COP). Disponibles: ${freeRem} spots.`;
+        dEl.textContent = `Tus primeros ${freeQuota} spots con 5 fotos son 100% gratis ($0 COP). Disponibles: ${freeRem} spots.`;
       }
     }
   }
@@ -839,7 +839,7 @@ async function loadVideos() {
 }
 
 // ==========================================
-// FOTOS DE PRODUCTOS (HASTA 7 IMÁGENES GRATIS POR ANUNCIO)
+// FOTOS DE PRODUCTOS (HASTA 5 FOTOS GRATIS POR ANUNCIO)
 // ==========================================
 function preloadAdjacentPhotos(video) {
   if (!video || !video._allPhotos || video._allPhotos.length <= 1) return;
@@ -1082,7 +1082,7 @@ function renderContinuousFeed() {
             </div>
             <div>
               <strong>Carrusel de Fotos</strong>
-              <span>Hasta 7 por producto</span>
+              <span>Hasta 5 por producto</span>
             </div>
           </div>
           <div class="welcome-benefit-item benefit-fees">
@@ -1179,7 +1179,7 @@ function renderContinuousFeed() {
 
     return `
       <article class="reel-player-card" id="card-${video.id}" data-id="${video.id}" data-index="${idx}">
-        <!-- CARRUSEL DE FOTOS NATIVO (HASTA 7 FOTOS DESLIZABLES HORIZONTALMENTE) -->
+        <!-- CARRUSEL DE FOTOS NATIVO (HASTA 5 FOTOS DESLIZABLES HORIZONTALMENTE) -->
         <div class="reel-photo-viewport" id="viewport-${video.id}">
           <div class="reel-photos-slider" id="slider-${video.id}" data-id="${video.id}">
             ${photos.map((pUrl, pIdx) => `
@@ -3745,8 +3745,8 @@ function selectCheckoutPlan(planKey) {
   if (planKey === 'spot_permanent') {
     type = 'spot_permanent';
     price = prc.spot_permanent_price || 3500;
-    title = '📸 Spot Permanente (7 Imágenes)';
-    desc = 'Publicación fija e indefinida de 1 Spot con 7 imágenes en alta definición sin fecha de caducidad (sin impulso publicitario).';
+    title = '📸 Spot Permanente (5 Fotos)';
+    desc = 'Publicación fija e indefinida de 1 Spot con 5 fotos en alta definición sin fecha de caducidad (sin impulso publicitario).';
   } else if (planKey === 'boost_standard_standalone' || planKey === 'spot_boost_standard_only') {
     type = 'boost_standard_standalone';
     price = prc.boost_standard_standalone_price || 3500;
@@ -3758,7 +3758,7 @@ function selectCheckoutPlan(planKey) {
     price = prc.boost_standard_price || 5000;
     const days = prc.boost_standard_days || 2;
     title = `⚡ Combo Spot + Impulso (${days} Días)`;
-    desc = `Sube 1 nuevo spot permanente de 7 imágenes + mayor frecuencia de rotación en el feed por ${days} días con aro ámbar destacado.`;
+    desc = `Sube 1 nuevo spot permanente de 5 fotos + mayor frecuencia de rotación en el feed por ${days} días con aro ámbar destacado.`;
   } else if (planKey === 'boost_platino') {
     type = 'spot_boost_platino';
     price = prc.boost_platino_price || 10000;
@@ -3776,7 +3776,7 @@ function selectCheckoutPlan(planKey) {
     price = prc.membership_pro_price || 29000;
     const days = prc.membership_pro_days || 30;
     title = `👑 Membresía Tienda Pro (${days} Días)`;
-    desc = `Catálogo amplio de 7 imágenes gratis fijas + Insignia de Tienda Verificada + Link web propio en bio y Estadísticas Pro. (⚠️ No incluye impulsos).`;
+    desc = `Catálogo amplio de 5 fotos gratis fijas + Insignia de Tienda Verificada + Link web propio en bio y Estadísticas Pro. (⚠️ No incluye impulsos).`;
   }
 
   const currentVid = state.activeCheckout ? state.activeCheckout.videoId : null;
@@ -3806,7 +3806,7 @@ function triggerCheckout(type, title, price, customDesc) {
     const descEl = document.getElementById('checkout-item-desc');
     if (titleEl) titleEl.textContent = title;
     if (priceEl) priceEl.textContent = `$${Number(price).toLocaleString('es-CO')} COP`;
-    if (descEl) descEl.textContent = customDesc || 'Publicación fija e indefinida de tu anuncio con carrusel de 7 imágenes gratis en alta definición.';
+    if (descEl) descEl.textContent = customDesc || 'Publicación fija e indefinida de tu anuncio con carrusel de 5 fotos gratis en alta definición.';
   } else {
     if (selectorContainer) selectorContainer.style.display = 'block';
     let pKey = 'boost_diamante';
@@ -5249,7 +5249,7 @@ function setupEventListeners() {
 
   async function prepareCompressedFormData(form) {
     const formData = new FormData(form);
-    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7'];
+    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
     for (const fName of photoFields) {
       const file = formData.get(fName);
       if (file && file instanceof File && file.size > 0) {
@@ -5318,8 +5318,8 @@ function setupEventListeners() {
     if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
   });
 
-  // Vistas previas instantáneas y botones de eliminación de Fotos 2, 3, 4, 5, 6 y 7
-  [2, 3, 4, 5, 6, 7].forEach(num => {
+  // Vistas previas instantáneas y botones de eliminación de Fotos 2, 3, 4 y 5
+  [2, 3, 4, 5].forEach(num => {
     const pInput = document.getElementById(`upload-photo-${num}`);
     const pImg = document.getElementById(`preview-photo-${num}`);
     const btnRemove = document.getElementById(`btn-remove-photo-${num}`);
@@ -5557,7 +5557,7 @@ function setupEventListeners() {
 
     let amount = 0;
     let typeKey = 'photos_5_pack';
-    let planTitle = `📸 Publicación 7 Imágenes Gratis (100% GRATIS - Permanente)`;
+    let planTitle = `📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)`;
     let isSpotPlan = false;
     let isStandardBoost = false;
 
@@ -5574,11 +5574,11 @@ function setupEventListeners() {
       if (!isMemActive && storeCount >= freeQuota) {
         amount = Number(prc.spot_permanent_price) || 3500;
         typeKey = 'spot_permanent';
-        planTitle = `📸 Spot Permanente 7 Imágenes ($${amount.toLocaleString('es-CO')} COP)`;
+        planTitle = `📸 Spot Permanente 5 Fotos ($${amount.toLocaleString('es-CO')} COP)`;
       } else {
         amount = 0;
         typeKey = 'photos_5_pack';
-        planTitle = `📸 Publicación 7 Imágenes Gratis (100% GRATIS - Permanente)`;
+        planTitle = `📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)`;
       }
     } else if (selectedPlan === 'boost_standard_standalone') {
       amount = Number(prc.boost_standard_standalone_price) || 3500;
@@ -5588,7 +5588,7 @@ function setupEventListeners() {
     } else if (selectedPlan === 'spot_permanent') {
       amount = Number(prc.spot_permanent_price) || 3500;
       typeKey = 'spot_permanent';
-      planTitle = `📸 Spot Permanente 7 Imágenes ($${amount.toLocaleString('es-CO')} COP)`;
+      planTitle = `📸 Spot Permanente 5 Fotos ($${amount.toLocaleString('es-CO')} COP)`;
     } else if (selectedPlan === 'boost_standard') {
       amount = prc.boost_standard_price || 5000;
       typeKey = 'spot_boost_standard';
@@ -5607,7 +5607,7 @@ function setupEventListeners() {
     } else if (selectedPlan === 'membership_pro') {
       amount = prc.membership_pro_price || 29000;
       typeKey = 'membership_pro_monthly';
-      planTitle = `👑 Membresía Tienda Pro Mensual ($${amount.toLocaleString('es-CO')} COP - 7 Imágenes Gratis)`;
+      planTitle = `👑 Membresía Tienda Pro Mensual ($${amount.toLocaleString('es-CO')} COP - 5 Fotos Gratis)`;
     }
 
     // Calcular etiqueta de domicilio configurada por el vendedor
@@ -5629,7 +5629,7 @@ function setupEventListeners() {
     }
 
     // MODELO DE NEGOCIO VITRINASPOT 100% GRATIS (MONETIZACIÓN CON GOOGLE ADMOB):
-    // Publicar spots de hasta 7 imágenes es 100% GRATIS ($0 COP) para todos los comercios.
+    // Publicar spots de hasta 5 fotos es 100% GRATIS ($0 COP) para todos los comercios.
     const submitBtn = document.getElementById('btn-submit-upload');
     if (submitBtn) {
       submitBtn.disabled = true;

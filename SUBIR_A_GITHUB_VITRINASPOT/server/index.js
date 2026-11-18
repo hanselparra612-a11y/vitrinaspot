@@ -345,7 +345,7 @@ app.post('/api/videos/:id/report', (req, res) => {
   });
 });
 
-// Subir nuevo anuncio comercial (Paquete de 7 Imágenes Gratis o Video)
+// Subir nuevo anuncio comercial (Paquete de 5 Fotos Gratis o Video)
 app.post('/api/videos', upload.fields([
   { name: 'coverPhoto', maxCount: 1 },
   { name: 'photo1', maxCount: 1 },
@@ -353,13 +353,11 @@ app.post('/api/videos', upload.fields([
   { name: 'photo3', maxCount: 1 },
   { name: 'photo4', maxCount: 1 },
   { name: 'photo5', maxCount: 1 },
-  { name: 'photo6', maxCount: 1 },
-  { name: 'photo7', maxCount: 1 },
   { name: 'video', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const detailPhotos = [];
-    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7'];
+    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
     for (const fName of photoFields) {
       if (req.files && req.files[fName] && req.files[fName].length > 0) {
         const fileObj = req.files[fName][0];
@@ -452,7 +450,7 @@ app.post('/api/videos', upload.fields([
     const platformConfig = db.getConfig();
     const currentPricing = platformConfig.pricing || {};
 
-    // 🚀 Modelo Comercial: 5 spots gratis de 7 imágenes por tienda
+    // 🚀 Modelo Comercial: 5 spots gratis de 5 fotos por tienda
     // Al superar los 5 spots, la publicación permanente cuesta $3.500 COP o requiere un Impulso/Membresía
     const isDiamante = req.body.paidPlan === 'boost_diamante' || req.body.paidPlan === 'boost_extreme' || req.body.paidPlan === 'photos_5_spot' || req.body.paidPlan === 'photos_7_spot' || req.body.paidPlan === 'spot_boost_diamante' || req.body.hasSpot === 'true';
     const isPlatino = req.body.paidPlan === 'boost_platino' || req.body.paidPlan === 'spot_boost_platino';
@@ -472,7 +470,7 @@ app.post('/api/videos', upload.fields([
     const hasFreeQuota = storeVideos.length < freeQuota;
 
     // 🚀 MODELO 100% GRATUITO PARA COMERCIOS (MONETIZACIÓN CON GOOGLE ADMOB)
-    // Cualquier negocio puede publicar spots permanentes de 7 imágenes sin límite ni cobros
+    // Cualquier negocio puede publicar spots permanentes de 5 fotos sin límite ni cobros
     const isStandardFree = true;
     const hasValidTx = true;
 
@@ -686,9 +684,7 @@ app.post('/api/videos/:id/fix-rejected', upload.fields([
   { name: 'photo2', maxCount: 1 },
   { name: 'photo3', maxCount: 1 },
   { name: 'photo4', maxCount: 1 },
-  { name: 'photo5', maxCount: 1 },
-  { name: 'photo6', maxCount: 1 },
-  { name: 'photo7', maxCount: 1 }
+  { name: 'photo5', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const { storeId, title, price, description } = req.body;
@@ -698,7 +694,7 @@ app.post('/api/videos/:id/fix-rejected', upload.fields([
     }
 
     const detailPhotos = [...(video.detailPhotos || [])];
-    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7'];
+    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
     for (let i = 0; i < photoFields.length; i++) {
       const fName = photoFields[i];
       if (req.files && req.files[fName] && req.files[fName].length > 0) {
@@ -1202,9 +1198,9 @@ app.post('/api/payments/checkout', (req, res) => {
     typeLabel = `Membresía Mensual Pro (${days} Días)`;
     db.activateMembership(storeId, days, limit);
   } else if (type === 'spot_permanent' || type === 'spot_permanent_pack') {
-    typeLabel = 'Spot Permanente 7 Imágenes (Sin Impulso)';
+    typeLabel = 'Spot Permanente 5 Fotos (Sin Impulso)';
   } else if (type === 'photos_7_pack' || type === 'photos_5_pack') {
-    typeLabel = 'Publicación 7 Imágenes Gratis (Permanente)';
+    typeLabel = 'Publicación 5 Fotos Gratis (Permanente)';
   } else if (type === 'spot_15d') {
     typeLabel = 'SPOT Destacado 15 Días';
     days = 15;
@@ -1488,9 +1484,9 @@ app.post('/api/wompi/webhook', (req, res) => {
             typeLabel = `Membresía Mensual Pro (${days} Días)`;
             db.activateMembership(storeId, days, limit);
           } else if (planType === 'spot_permanent' || planType === 'spot_permanent_pack') {
-            typeLabel = 'Spot Permanente 7 Imágenes (Sin Impulso)';
+            typeLabel = 'Spot Permanente 5 Fotos (Sin Impulso)';
           } else if (planType === 'photos_7_pack' || planType === 'photos_5_pack') {
-            typeLabel = 'Publicación 7 Imágenes Gratis (Permanente)';
+            typeLabel = 'Publicación 5 Fotos Gratis (Permanente)';
           }
 
           // Si vino asociado a un video

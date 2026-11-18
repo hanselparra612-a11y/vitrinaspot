@@ -1017,7 +1017,7 @@ class Database {
     return this.data.config.admob;
   }
 
-  // --- CAMPAÑA DE LANZAMIENTO PIONEROS (GANCHO 1.000 TIENDAS / 7 IMÁGENES GRATIS) ---
+  // --- CAMPAÑA DE LANZAMIENTO PIONEROS (GANCHO 1.000 TIENDAS / 5 FOTOS GRATIS) ---
   getLaunchCampaign() {
     return {
       welcome_pack_enabled: false,
