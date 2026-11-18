@@ -3144,7 +3144,7 @@ body.admin-active-view .main-viewport {
 
 .video-plans-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 8px;
 }
@@ -4796,12 +4796,16 @@ body.admin-active-view .main-viewport {
   .user-dropdown.show {
     display: flex !important;
     position: fixed !important;
-    top: 60px !important;
-    left: 14px !important;
+    top: 128px !important;
+    left: 12px !important;
     right: auto !important;
     width: 290px !important;
-    max-width: calc(100vw - 28px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 145px) !important;
+    overflow-y: auto !important;
     z-index: 10000 !important;
+    border: 1.5px solid var(--spot-gold) !important;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 20px rgba(255, 184, 0, 0.25) !important;
   }
 
   /* Restauración global de todos los botones de la app para que NUNCA sean círculos deformados */
@@ -4844,7 +4848,7 @@ body.admin-active-view .main-viewport {
   }
 
   .user-menu-wrapper {
-    display: none !important;
+    display: contents !important;
   }
 
   .btn-store-login {

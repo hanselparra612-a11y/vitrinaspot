@@ -4952,9 +4952,15 @@ function setupEventListeners() {
     userDropdown.classList.toggle('show');
   });
 
-  document.addEventListener('click', () => {
+  userDropdown?.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  document.addEventListener('click', (e) => {
     cityMenu?.classList.remove('show');
-    userDropdown?.classList.remove('show');
+    if (!e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu')) {
+      userDropdown?.classList.remove('show');
+    }
     if (floatingSearchBar && floatingSearchBar.style.display === 'block') {
       floatingSearchBar.style.display = 'none';
       searchInput?.blur();
