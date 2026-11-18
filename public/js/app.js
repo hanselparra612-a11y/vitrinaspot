@@ -2242,6 +2242,7 @@ window.prevVideo = prevVideo;
 // 4. VISTA: CATÁLOGO DE LA TIENDA
 // ==========================================
 async function openStoreCatalog(storeId) {
+  document.getElementById('user-dropdown-menu')?.classList.remove('show');
   try {
     const res = await fetch(`/api/stores/${storeId}`);
     if (!res.ok) return;
@@ -2666,6 +2667,7 @@ function updateSavedBadge() {
 // 6. VISTA: PANEL PRIVADO DEL VENDEDOR
 // ==========================================
 async function openSellerPanel() {
+  document.getElementById('user-dropdown-menu')?.classList.remove('show');
   if (!state.currentStore) {
     document.getElementById('modal-store-auth').style.display = 'flex';
     return;
@@ -4803,8 +4805,17 @@ function setupEventListeners() {
   });
 
   userDropdown?.addEventListener('click', (e) => {
-    e.stopPropagation();
+    // Si se toca cualquier botón o enlace dentro del menú, cerrarlo de inmediato
+    if (e.target.closest('.dropdown-link, button, a')) {
+      userDropdown.classList.remove('show');
+    }
   });
+
+  userDropdown?.addEventListener('touchend', (e) => {
+    if (e.target.closest('.dropdown-link, button, a')) {
+      userDropdown.classList.remove('show');
+    }
+  }, { passive: true });
 
   document.addEventListener('click', (e) => {
     cityMenu?.classList.remove('show');
@@ -5863,11 +5874,13 @@ function setupEventListeners() {
   // Disparadores rápidos desde el menú de invitados
   document.getElementById('btn-guest-login-trigger')?.addEventListener('click', () => {
     document.getElementById('user-dropdown-menu')?.classList.remove('show');
+    document.getElementById('user-dropdown-menu')?.classList.remove('show');
     tabLogin?.click();
     authModal.style.display = 'flex';
   });
 
   document.getElementById('btn-guest-register-trigger')?.addEventListener('click', () => {
+    document.getElementById('user-dropdown-menu')?.classList.remove('show');
     document.getElementById('user-dropdown-menu')?.classList.remove('show');
     tabRegister?.click();
     authModal.style.display = 'flex';
@@ -6064,7 +6077,7 @@ function setupEventListeners() {
     }
   });
   document.getElementById('btn-trigger-spot-buy')?.addEventListener('click', () => {
-    document.getElementById('user-dropdown-menu')?.classList.remove('active');
+    document.getElementById('user-dropdown-menu')?.classList.remove('show');
     const prc = state.pricing || {};
     const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
     triggerCheckout(
@@ -7419,6 +7432,9 @@ window.spawnFloatingGift = spawnFloatingGift;
 // 11. UTILIDADES Y GESTIÓN DE VISTAS
 // ==========================================
 function showView(viewId) {
+  // Cerrar siempre el menú flotante de usuario al cambiar de vista
+  document.getElementById('user-dropdown-menu')?.classList.remove('show');
+
   if (viewId === 'spotplay-view') {
     showView('feed-view');
     return;
@@ -7801,7 +7817,10 @@ window.closeLegalTermsModal = function() {
   if (modal) modal.style.display = 'none';
 };
 
-document.getElementById('btn-open-legal-terms-logged')?.addEventListener('click', openLegalTermsModal);
+document.getElementById('btn-open-legal-terms-logged')?.addEventListener('click', () => {
+    document.getElementById('user-dropdown-menu')?.classList.remove('show');
+    openLegalTermsModal();
+  });
 document.getElementById('btn-guest-legal-terms')?.addEventListener('click', openLegalTermsModal);
 document.getElementById('link-upload-legal')?.addEventListener('click', openLegalTermsModal);
 document.getElementById('btn-close-legal-modal')?.addEventListener('click', closeLegalTermsModal);
