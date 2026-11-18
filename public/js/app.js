@@ -675,12 +675,31 @@ function renderStoriesBar() {
       `;
     }
 
-    // Escuchar clic en el Círculo Fijo #1 (Mi Negocio) -> Abre el menú de Mi Negocio
-    document.getElementById('story-my-business-btn')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const userDropdown = document.getElementById('user-dropdown-menu');
-      userDropdown?.classList.toggle('show');
-    });
+    // Escuchar clic y toque táctil en el Círculo Fijo #1 (Mi Negocio) -> Abre el menú de Mi Negocio
+    const myBizBtn = document.getElementById('story-my-business-btn');
+    if (myBizBtn) {
+      myBizBtn.style.cursor = 'pointer';
+      myBizBtn.setAttribute('role', 'button');
+      myBizBtn.setAttribute('tabindex', '0');
+
+      let touchMoved = false;
+      myBizBtn.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+      myBizBtn.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
+      myBizBtn.addEventListener('touchend', (e) => {
+        if (!touchMoved) {
+          e.preventDefault();
+          e.stopPropagation();
+          const userDropdown = document.getElementById('user-dropdown-menu');
+          userDropdown?.classList.toggle('show');
+        }
+      });
+
+      myBizBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const userDropdown = document.getElementById('user-dropdown-menu');
+        userDropdown?.classList.toggle('show');
+      });
+    }
   }
 
   // 2. Tiendas de la plataforma (las que sí se deslizan horizontalmente)
@@ -4966,6 +4985,14 @@ function setupEventListeners() {
       searchInput?.blur();
     }
   });
+
+  document.addEventListener('touchend', (e) => {
+    if (userDropdown && userDropdown.classList.contains('show')) {
+      if (!e.target.closest('#user-dropdown-menu') && !e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu')) {
+        userDropdown.classList.remove('show');
+      }
+    }
+  }, { passive: true });
 
   // Acceso privado a Mis SPOTS Guardados desde el menú de usuario / perfil
   document.getElementById('btn-open-saved-spots')?.addEventListener('click', () => {

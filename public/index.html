@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=23.6">
+  <link rel="stylesheet" href="css/style.css?v=23.7">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -114,91 +114,92 @@
             <span id="nav-store-name">Mi Negocio</span>
             <i class="fa-solid fa-chevron-down"></i>
           </button>
-
-          <div class="user-dropdown" id="user-dropdown-menu">
-            <!-- OPCIONES CUANDO EL VENDEDOR ESTÁ CONECTADO -->
-            <div id="user-menu-logged">
-              <div class="dropdown-header">
-                <strong id="dropdown-store-title">Mi Tienda</strong>
-                <span id="dropdown-store-city">Colombia • Verificado ☑️</span>
-              </div>
-              <hr class="dropdown-divider">
-              <button class="dropdown-link" id="btn-dropdown-upload-spot" style="color: var(--spot-gold); font-weight: 700;">
-                <i class="fa-solid fa-circle-plus text-gold"></i> Publicar Nuevo SPOT
-              </button>
-              <button class="dropdown-link" id="btn-open-seller-panel">
-                <i class="fa-solid fa-chart-line"></i> Panel de Mi Negocio
-              </button>
-              <button class="dropdown-link" id="btn-open-my-catalog">
-                <i class="fa-solid fa-store"></i> Mi Catálogo Público
-              </button>
-              <button class="dropdown-link" id="btn-open-saved-spots">
-                <i class="fa-solid fa-bookmark"></i>
-                <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
-                <span class="dropdown-counter-pill" id="saved-badge-logged">0</span>
-              </button>
-              <button class="dropdown-link" id="btn-trigger-spot-buy">
-                <i class="fa-solid fa-bolt text-gold"></i> Comprar SPOT Destacado
-              </button>
-              <button class="dropdown-link" id="btn-open-legal-terms-logged">
-                <i class="fa-solid fa-scale-balanced"></i> Políticas y Reglas de Oro
-              </button>
-              <button type="button" class="dropdown-link" id="btn-store-share-app" style="color: var(--spot-gold); font-weight: 700;">
-                <i class="fa-solid fa-share-nodes text-gold"></i>
-                <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
-              </button>
-              <button type="button" class="dropdown-link btn-shortcut-admin-panel" style="display: none !important; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
-                <i class="fa-solid fa-shield-halved text-gold"></i>
-                <span class="admin-btn-label" style="flex: 1; text-align: left;">🛡️ Panel Maestro Admin</span>
-                <span class="admin-btn-tag" style="font-size: 0.68rem; background: rgba(255,184,0,0.2); color: var(--spot-gold); padding: 2px 6px; border-radius: 4px;">ADMIN</span>
-              </button>
-              <hr class="dropdown-divider">
-              <button class="dropdown-link" id="btn-store-logout" style="color: #ff4757;">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión / Salir
-              </button>
-            </div>
-
-            <!-- OPCIONES CLARAS CUANDO EL USUARIO HA CERRADO SESIÓN -->
-            <div id="user-menu-guest" style="display: none; padding: 6px;">
-              <div style="margin-bottom: 12px; text-align: left;">
-                <strong style="display:block; color:#fff; font-size:0.95rem; margin-bottom:4px;">
-                  <i class="fa-solid fa-store"></i> Acceso a tu Negocio
-                </strong>
-                <span style="font-size:0.78rem; color:var(--text-muted); line-height:1.3; display:block;">
-                  Ingresa a tu cuenta para administrar tus productos o crea tu tienda gratis.
-                </span>
-              </div>
-              <button type="button" class="btn btn-spot w-100" id="btn-guest-register-trigger" style="margin-bottom: 8px; font-weight: 700;">
-                <i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (5 SPOTS $0 COP)
-              </button>
-              <button type="button" class="btn btn-ghost w-100" id="btn-guest-login-trigger" style="font-weight: 600; border: 1px solid rgba(255,255,255,0.15);">
-                <i class="fa-solid fa-right-to-bracket"></i> Ya tengo Tienda (Ingresar)
-              </button>
-              <hr class="dropdown-divider" style="margin: 10px 0;">
-              <button type="button" class="dropdown-link w-100" id="btn-guest-saved-spots" style="padding: 8px 10px;">
-                <i class="fa-solid fa-bookmark"></i>
-                <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
-                <span class="dropdown-counter-pill" id="saved-badge-guest">0</span>
-              </button>
-              <button type="button" class="dropdown-link w-100" id="btn-guest-legal-terms" style="padding: 8px 10px;">
-                <i class="fa-solid fa-scale-balanced"></i>
-                <span style="flex: 1; text-align: left;">Políticas y Reglas de Oro</span>
-              </button>
-              <button type="button" class="dropdown-link w-100" id="btn-guest-share-app" style="padding: 8px 10px; color: var(--spot-gold); font-weight: 700;">
-                <i class="fa-solid fa-share-nodes text-gold"></i>
-                <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
-              </button>
-              <button type="button" class="dropdown-link w-100 btn-shortcut-admin-panel" style="display: none !important; padding: 8px 10px; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
-                <i class="fa-solid fa-shield-halved text-gold"></i>
-                <span class="admin-btn-label" style="flex: 1; text-align: left;">🛡️ Panel Maestro Admin</span>
-                <span class="admin-btn-tag" style="font-size: 0.68rem; background: rgba(255,184,0,0.2); color: var(--spot-gold); padding: 2px 6px; border-radius: 4px;">ADMIN</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- MENÚ FLOTANTE INDEPENDIENTE DE MI NEGOCIO / PERFIL (FUERA DE NAVBAR PARA EVITAR CLIPPING Y BACKDROP-FILTER) -->
+  <div class="user-dropdown" id="user-dropdown-menu">
+    <!-- OPCIONES CUANDO EL VENDEDOR ESTÁ CONECTADO -->
+    <div id="user-menu-logged">
+      <div class="dropdown-header">
+        <strong id="dropdown-store-title">Mi Tienda</strong>
+        <span id="dropdown-store-city">Colombia • Verificado ☑️</span>
+      </div>
+      <hr class="dropdown-divider">
+      <button class="dropdown-link" id="btn-dropdown-upload-spot" style="color: var(--spot-gold); font-weight: 700;">
+        <i class="fa-solid fa-circle-plus text-gold"></i> Publicar Nuevo SPOT
+      </button>
+      <button class="dropdown-link" id="btn-open-seller-panel">
+        <i class="fa-solid fa-chart-line"></i> Panel de Mi Negocio
+      </button>
+      <button class="dropdown-link" id="btn-open-my-catalog">
+        <i class="fa-solid fa-store"></i> Mi Catálogo Público
+      </button>
+      <button class="dropdown-link" id="btn-open-saved-spots">
+        <i class="fa-solid fa-bookmark"></i>
+        <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
+        <span class="dropdown-counter-pill" id="saved-badge-logged">0</span>
+      </button>
+      <button class="dropdown-link" id="btn-trigger-spot-buy">
+        <i class="fa-solid fa-bolt text-gold"></i> Comprar SPOT Destacado
+      </button>
+      <button class="dropdown-link" id="btn-open-legal-terms-logged">
+        <i class="fa-solid fa-scale-balanced"></i> Políticas y Reglas de Oro
+      </button>
+      <button type="button" class="dropdown-link" id="btn-store-share-app" style="color: var(--spot-gold); font-weight: 700;">
+        <i class="fa-solid fa-share-nodes text-gold"></i>
+        <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
+      </button>
+      <button type="button" class="dropdown-link btn-shortcut-admin-panel" style="display: none !important; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
+        <i class="fa-solid fa-shield-halved text-gold"></i>
+        <span class="admin-btn-label" style="flex: 1; text-align: left;">🛡️ Panel Maestro Admin</span>
+        <span class="admin-btn-tag" style="font-size: 0.68rem; background: rgba(255,184,0,0.2); color: var(--spot-gold); padding: 2px 6px; border-radius: 4px;">ADMIN</span>
+      </button>
+      <hr class="dropdown-divider">
+      <button class="dropdown-link" id="btn-store-logout" style="color: #ff4757;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión / Salir
+      </button>
+    </div>
+
+    <!-- OPCIONES CLARAS CUANDO EL USUARIO HA CERRADO SESIÓN -->
+    <div id="user-menu-guest" style="display: none; padding: 6px;">
+      <div style="margin-bottom: 12px; text-align: left;">
+        <strong style="display:block; color:#fff; font-size:0.95rem; margin-bottom:4px;">
+          <i class="fa-solid fa-store"></i> Acceso a tu Negocio
+        </strong>
+        <span style="font-size:0.78rem; color:var(--text-muted); line-height:1.3; display:block;">
+          Ingresa a tu cuenta para administrar tus productos o crea tu tienda gratis.
+        </span>
+      </div>
+      <button type="button" class="btn btn-spot w-100" id="btn-guest-register-trigger" style="margin-bottom: 8px; font-weight: 700;">
+        <i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (5 SPOTS $0 COP)
+      </button>
+      <button type="button" class="btn btn-ghost w-100" id="btn-guest-login-trigger" style="font-weight: 600; border: 1px solid rgba(255,255,255,0.15);">
+        <i class="fa-solid fa-right-to-bracket"></i> Ya tengo Tienda (Ingresar)
+      </button>
+      <hr class="dropdown-divider" style="margin: 10px 0;">
+      <button type="button" class="dropdown-link w-100" id="btn-guest-saved-spots" style="padding: 8px 10px;">
+        <i class="fa-solid fa-bookmark"></i>
+        <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
+        <span class="dropdown-counter-pill" id="saved-badge-guest">0</span>
+      </button>
+      <button type="button" class="dropdown-link w-100" id="btn-guest-legal-terms" style="padding: 8px 10px;">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span style="flex: 1; text-align: left;">Políticas y Reglas de Oro</span>
+      </button>
+      <button type="button" class="dropdown-link w-100" id="btn-guest-share-app" style="padding: 8px 10px; color: var(--spot-gold); font-weight: 700;">
+        <i class="fa-solid fa-share-nodes text-gold"></i>
+        <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
+      </button>
+      <button type="button" class="dropdown-link w-100 btn-shortcut-admin-panel" style="display: none !important; padding: 8px 10px; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
+        <i class="fa-solid fa-shield-halved text-gold"></i>
+        <span class="admin-btn-label" style="flex: 1; text-align: left;">🛡️ Panel Maestro Admin</span>
+        <span class="admin-btn-tag" style="font-size: 0.68rem; background: rgba(255,184,0,0.2); color: var(--spot-gold); padding: 2px 6px; border-radius: 4px;">ADMIN</span>
+      </button>
+    </div>
+  </div>
 
   <!-- BARRA DE BÚSQUEDA FLOTANTE (SE ABRE AL TOCAR LA LUPA 🔍) -->
   <div class="floating-search-bar" id="floating-search-bar" style="display: none;">
@@ -2185,6 +2186,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=23.6"></script>
+  <script src="js/app.js?v=23.7"></script>
 </body>
 </html>
