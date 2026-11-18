@@ -1247,14 +1247,14 @@ app.post('/api/payments/checkout', (req, res) => {
     }
   }
 
-  // Registrar transacción en el libro de cuentas del administrador
+  // Registrar activación bonificada en el libro de eventos del administrador
   const tx = db.addTransaction({
     storeId,
     storeName: store.name,
     type,
-    typeLabel: boostedVideo ? `Impulso SPOT: ${boostedVideo.title}` : typeLabel,
-    amount: finalAmount,
-    method: method || 'wompi_nequi',
+    typeLabel: boostedVideo ? `Impulso SPOT (AdMob): ${boostedVideo.title}` : typeLabel,
+    amount: 0,
+    method: method || 'admob_rewarded_video',
     status: 'approved'
   });
 
@@ -1380,35 +1380,9 @@ app.post('/api/admin/clean-demo-data', (req, res) => {
   }
 });
 
-// Generar Firma de Integridad SHA-256 oficial para Wompi Bancolombia
+// Generar Firma de Integridad (Deprecada: VitrinaSpot opera 100% gratuito con Google AdMob)
 app.get('/api/wompi/signature', (req, res) => {
-  try {
-    const { reference, amountInCents, currency = 'COP' } = req.query;
-    if (!reference || !amountInCents) {
-      return res.status(400).json({ error: 'Faltan parámetros: reference y amountInCents son requeridos.' });
-    }
-
-    const wompiConfig = db.getConfig().wompi || {};
-    const integritySecret = wompiConfig.integritySecret || '';
-    const isLive = Boolean(wompiConfig.isLive || wompiConfig.publicKey?.startsWith('pub_prod_'));
-    
-    // Concatenación oficial Wompi: <Referencia><MontoEnCentavos><Moneda><SecretoDeIntegridad>
-    const stringToHash = `${reference}${amountInCents}${currency}${integritySecret}`;
-    const signature = crypto.createHash('sha256').update(stringToHash).digest('hex');
-
-    res.json({
-      success: true,
-      signature,
-      reference,
-      amountInCents: Number(amountInCents),
-      currency,
-      publicKey: wompiConfig.publicKey || '',
-      isLive
-    });
-  } catch (err) {
-    console.error('Error generando firma de integridad Wompi:', err);
-    res.status(500).json({ error: 'Error al generar firma Wompi.' });
-  }
+  res.json({ success: true, deprecated: true, message: 'Plataforma 100% gratuita financiada con Google AdMob.' });
 });
 
 // Verificación y Healthcheck para validación de URL de eventos de Wompi Bancolombia
@@ -1419,116 +1393,9 @@ app.head('/api/wompi/webhook', (req, res) => {
   res.status(200).end();
 });
 
-// Webhook para pagos en vivo de Wompi Bancolombia
+// Webhook de pagos deprecado (VitrinaSpot opera 100% gratuito financiado con Google AdMob)
 app.post('/api/wompi/webhook', (req, res) => {
-  try {
-    const event = req.body;
-    console.log('🔔 Evento Webhook Wompi recibido:', event?.event);
-
-    if (event && event.data && event.data.transaction) {
-      const txData = event.data.transaction;
-      const txStatus = (txData.status || '').toUpperCase();
-      const amountCOP = Math.round((txData.amount_in_cents || 0) / 100);
-      const reference = txData.reference || '';
-
-      console.log(`💳 Transacción Wompi ID [${txData.id}] - Estado: ${txStatus} - Ref: ${reference} - $${amountCOP} COP`);
-
-      if (txStatus === 'APPROVED') {
-        let storeId = null;
-        let planType = 'spot_boost_standard';
-        let videoId = null;
-
-        // Soporte para formato de referencia: REF__{storeId}__{planType}__{videoId}__{timestamp}
-        if (reference.startsWith('REF__')) {
-          const parts = reference.split('__');
-          storeId = parts[1] || null;
-          planType = parts[2] || 'spot_boost_standard';
-          videoId = parts[3] && parts[3] !== 'novid' ? parts[3] : null;
-        } else if (reference.startsWith('REF_')) {
-          const parts = reference.split('_');
-          storeId = parts[1] || null;
-          planType = parts[2] || 'spot_boost_standard';
-          videoId = parts[3] && parts[3] !== 'novid' ? parts[3] : null;
-        }
-
-        const store = storeId ? db.getStoreById(storeId) : null;
-        const config = db.getConfig();
-        const prc = config.pricing || {};
-        let typeLabel = 'Servicio Publicitario Wompi';
-
-        // Evitar duplicación si el webhook se reintenta
-        const existingTx = db.getTransactions().find(t => t.id === txData.id || t.reference === reference);
-
-        if (!existingTx && store) {
-          let days = 0;
-          let bLevel = 'standard';
-          if (planType === 'spot_boost_diamante' || planType === 'spot_boost_extreme' || planType === 'spot_7d') {
-            days = Number(prc.boost_diamante_days) || Number(prc.boost_extreme_days) || 8;
-            bLevel = 'diamante';
-            typeLabel = `Impulso Diamante VIP (${days} Días)`;
-          } else if (planType === 'spot_boost_platino') {
-            days = Number(prc.boost_platino_days) || 5;
-            bLevel = 'platino';
-            typeLabel = `Impulso Platino (${days} Días)`;
-          } else if (planType === 'boost_standard_standalone' || planType === 'spot_boost_standard_only') {
-            days = Number(prc.boost_standard_days) || 2;
-            bLevel = 'standard';
-            typeLabel = `Solo Impulso Estándar (${days} Días - Sin Spot)`;
-          } else if (planType === 'spot_boost_standard' || planType === 'spot_boost_15s' || planType === 'spot_boost_single_video') {
-            days = Number(prc.boost_standard_days) || 2;
-            bLevel = 'standard';
-            typeLabel = `Impulso Estándar (${days} Días)`;
-          } else if (planType === 'membership_pro_monthly') {
-            days = Number(prc.membership_pro_days) || 30;
-            const limit = Number(prc.membership_product_limit) || 100;
-            typeLabel = `Membresía Mensual Pro (${days} Días)`;
-            db.activateMembership(storeId, days, limit);
-          } else if (planType === 'spot_permanent' || planType === 'spot_permanent_pack') {
-            typeLabel = 'Spot Permanente 5 Fotos (Sin Impulso)';
-          } else if (planType === 'photos_7_pack' || planType === 'photos_5_pack') {
-            typeLabel = 'Publicación 5 Fotos Gratis (Permanente)';
-          }
-
-          // Si vino asociado a un video
-          let boostedVideo = null;
-          if (videoId) {
-            const vid = db.getVideoById(videoId);
-            if (vid) {
-              const vidExpiry = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-              vid.hasSpot = true;
-              vid.spotExpiresAt = vidExpiry;
-              vid.boostLevel = bLevel;
-              db.updateVideo(vid.id, { hasSpot: true, spotExpiresAt: vidExpiry, boostLevel: bLevel });
-              boostedVideo = vid;
-
-              db.recalculateStoreBoost(store.id);
-            }
-          } else if (days > 0 && !planType.includes('membership') && !planType.includes('permanent')) {
-            db.activateSpot(storeId, days, bLevel);
-          }
-
-          db.addTransaction({
-            id: txData.id || `tx-wompi-${Date.now()}`,
-            reference,
-            storeId,
-            storeName: store.name,
-            type: planType,
-            typeLabel: boostedVideo ? `Impulso SPOT: ${boostedVideo.title}` : typeLabel,
-            amount: amountCOP,
-            method: `wompi_${(txData.payment_method_type || 'online').toLowerCase()}`,
-            status: 'approved',
-            wompiTransactionId: txData.id
-          });
-
-          console.log(`✅ Webhook Wompi: Activación exitosa de ${typeLabel} para tienda "${store.name}".`);
-        }
-      }
-    }
-    res.status(200).json({ received: true });
-  } catch (err) {
-    console.error('Error procesando Webhook Wompi:', err);
-    res.status(200).json({ received: true, error: err.message });
-  }
+  res.status(200).json({ received: true, deprecated: true, message: 'Plataforma 100% gratuita financiada con Google AdMob.' });
 });
 
 // ==========================================
@@ -1587,12 +1454,14 @@ app.get('/api/admin/metrics', (req, res) => {
     .sort((a, b) => b.clicks - a.clicks)
     .slice(0, 10);
 
+  const totalBoosts = transactions.length;
+
   res.json({
     revenue: {
-      total: totalRevenue,
-      spots: spotsRevenue,
-      extendedVideos: videosRevenue,
-      formattedTotal: `$${totalRevenue.toLocaleString('es-CO')} COP`
+      total: totalBoosts,
+      spots: totalBoosts,
+      extendedVideos: 0,
+      formattedTotal: `${totalBoosts} Impulsos VIP AdMob`
     },
     telemetry: {
       totalWhatsAppClicks: config.telemetry.totalWhatsAppClicks,
@@ -1738,23 +1607,9 @@ app.post('/api/admin/launch-campaign', (req, res) => {
   res.json({ success: true, launch_campaign: updated });
 });
 
-// Actualizar llaves y credenciales de Wompi Bancolombia desde el panel de Administrador
+// Configuración de pasarela deprecada (VitrinaSpot opera 100% con Google AdMob)
 app.post('/api/admin/wompi-config', (req, res) => {
-  const token = req.headers['x-admin-token'];
-  if (token !== db.getConfig().admin.token) {
-    return res.status(403).json({ error: 'Acceso Denegado.' });
-  }
-
-  const updatedWompi = db.updateWompiConfig({
-    publicKey: req.body.publicKey,
-    integritySecret: req.body.integritySecret,
-    eventSecret: req.body.eventSecret,
-    isLive: typeof req.body.isLive === 'boolean' ? req.body.isLive : req.body.isLive === 'true',
-    nequiManualNumber: req.body.nequiManualNumber,
-    daviplataManualNumber: req.body.daviplataManualNumber
-  });
-
-  res.json({ success: true, wompi: updatedWompi });
+  res.json({ success: true, deprecated: true, message: 'VitrinaSpot monetiza exclusivamente con Google AdMob.' });
 });
 
 // Actualizar configuración oficial de Google AdMob desde el panel de Administrador

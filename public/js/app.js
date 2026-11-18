@@ -3071,7 +3071,7 @@ async function openSellerPanel() {
             </button>
             ${v.hasSpot
               ? `<span class="badge-seller-boosted" title="${v.boostLevel === 'diamante' ? 'Impulso Diamante VIP Activo' : (v.boostLevel === 'platino' ? 'Impulso Platino Activo' : 'Impulso Estándar Activo')}"><i class="fa-solid ${v.boostLevel === 'diamante' ? 'fa-crown text-gold' : (v.boostLevel === 'platino' ? 'fa-gem' : 'fa-bolt text-gold')}"></i> ${v.boostLevel === 'diamante' ? 'DIAMANTE VIP' : (v.boostLevel === 'platino' ? 'PLATINO' : 'IMPULSO')} Activo</span>`
-              : `<button type="button" class="btn-seller-boost btn-boost-spot" data-id="${v.id}" title="Impulsar a las primeras posiciones por $3.500 COP (2 días)"><i class="fa-solid fa-rocket"></i> Activar Impulso ($3.500)</button>`
+              : `<button type="button" class="btn-seller-boost btn-boost-spot" data-id="${v.id}" title="Impulsar a las primeras posiciones 100% GRATIS con Google AdMob"><i class="fa-solid fa-bolt text-gold"></i> Impulsar Gratis (AdMob)</button>`
             }
           </div>
         </div>
@@ -3184,7 +3184,7 @@ async function openSellerPanel() {
       });
     });
 
-    // Listener para comprar impulso de $3.500 para el video seleccionado
+    // Listener para activar impulso gratis con AdMob para el producto seleccionado
     vList.querySelectorAll('.btn-boost-spot').forEach(btn => {
       btn.addEventListener('click', () => {
         const vidId = btn.getAttribute('data-id');
@@ -3192,7 +3192,7 @@ async function openSellerPanel() {
         if (targetVid) {
           openBoostVideoModal(targetVid);
         } else {
-          triggerCheckout('boost_standard_standalone', 'Solo Impulso Estándar 2 Días ($3.500 COP)', 3500);
+          triggerCheckout('boost_standard_standalone', 'Impulso Estándar Gratis (Video AdMob)', 0);
         }
       });
     });
@@ -3848,20 +3848,6 @@ function triggerCheckout(type, title, price, customDesc) {
     refEl.textContent = 'VT-' + Math.floor(100000 + Math.random() * 900000);
   }
 
-  // Restablecer vista inicial a Nequi
-  const nequiRadio = document.querySelector('input[name="payMethod"][value="wompi_nequi"]');
-  if (nequiRadio) nequiRadio.checked = true;
-  document.querySelectorAll('.pay-method-option').forEach(o => {
-    if (o.getAttribute('data-target') === 'nequi') o.classList.add('active');
-    else o.classList.remove('active');
-  });
-  const detailNequi = document.getElementById('pay-detail-nequi');
-  const detailPse = document.getElementById('pay-detail-pse');
-  const detailCard = document.getElementById('pay-detail-card');
-  if (detailNequi) detailNequi.style.display = 'block';
-  if (detailPse) detailPse.style.display = 'none';
-  if (detailCard) detailCard.style.display = 'none';
-
   document.getElementById('modal-checkout').style.display = 'flex';
 }
 
@@ -3871,9 +3857,7 @@ function openBoostVideoModal(video) {
     return;
   }
   state.activeCheckout = { videoId: video.id };
-  const prc = state.pricing || {};
-  const price = prc.boost_standard_standalone_price || 3500;
-  triggerCheckout('boost_standard_standalone', `Impulsar "${video.title}"`, price);
+  triggerCheckout('boost_standard_standalone', `Impulsar "${video.title}" (Gratis con AdMob)`, 0);
 }
 
 function openCheckoutModal(type, title, price) {
@@ -3929,7 +3913,7 @@ async function finalizeCheckoutApproval(txId, method, amount) {
       videoId: state.activeCheckout.videoId || null,
       type: state.activeCheckout.type,
       amount: amount || state.activeCheckout.price,
-      method: method || 'wompi_nequi',
+      method: method || 'admob_rewarded_video',
       transactionId: txId || null
     })
   });
@@ -6265,55 +6249,31 @@ function setupEventListeners() {
   document.getElementById('btn-trigger-spot-buy')?.addEventListener('click', () => {
     document.getElementById('user-dropdown-menu')?.classList.remove('active');
     const prc = state.pricing || {};
-    const price = prc.boost_standard_standalone_price || 3500;
-    const days = prc.boost_standard_days || 2;
+    const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
     triggerCheckout(
       'boost_standard_standalone', 
-      `⚡ Impulso Estándar (${days} Días)`, 
-      price,
-      `Aumenta la frecuencia de rotación de tu anuncio en el feed comercial por ${days} días con aro ámbar.`
+      `⚡ Impulso Estándar Gratis (${days} Días)`, 
+      0,
+      `Aumenta la exposición de tu anuncio en el feed comercial por ${days} días con distintivo VIP patrocinado por Google AdMob.`
     );
   });
   document.getElementById('btn-seller-activate-spot')?.addEventListener('click', () => {
     const prc = state.pricing || {};
-    const price = prc.boost_standard_standalone_price || 3500;
-    const days = prc.boost_standard_days || 2;
+    const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
     triggerCheckout(
       'boost_standard_standalone', 
-      `⚡ Impulso Estándar (${days} Días)`, 
-      price,
-      `Aumenta la frecuencia de rotación de tu anuncio en el feed comercial por ${days} días con aro ámbar.`
+      `⚡ Impulso Estándar Gratis (${days} Días)`, 
+      0,
+      `Aumenta la exposición de tu anuncio en el feed comercial por ${days} días con distintivo VIP patrocinado por Google AdMob.`
     );
-  });
-  document.getElementById('btn-unlock-dur-checkout')?.addEventListener('click', () => {
-    triggerCheckout('video_30s', 'Video Extendido 30s', 10000);
   });
   document.getElementById('btn-confirm-checkout')?.addEventListener('click', confirmCheckout);
 
-  // Selección interactiva de paquetes en la ventana de Publicidad & SPOTS
+  // Selección interactiva de paquetes en la ventana de Publicidad & SPOTS AdMob
   document.querySelectorAll('.checkout-plan-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const p = btn.getAttribute('data-plan');
       selectCheckoutPlan(p);
-    });
-  });
-
-  // Selección visual de método de pago y cambio de pestañas de detalles
-  document.querySelectorAll('.pay-method-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('.pay-method-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      const radio = opt.querySelector('input[type="radio"]');
-      if (radio) radio.checked = true;
-
-      const target = opt.getAttribute('data-target');
-      const detailNequi = document.getElementById('pay-detail-nequi');
-      const detailPse = document.getElementById('pay-detail-pse');
-      const detailCard = document.getElementById('pay-detail-card');
-
-      if (detailNequi) detailNequi.style.display = target === 'nequi' ? 'block' : 'none';
-      if (detailPse) detailPse.style.display = target === 'pse' ? 'block' : 'none';
-      if (detailCard) detailCard.style.display = target === 'card' ? 'block' : 'none';
     });
   });
 
