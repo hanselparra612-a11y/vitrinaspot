@@ -1,3 +1,22 @@
+function triggerOpenUploadModal() {
+  document.getElementById('user-dropdown-menu')?.classList.remove('show');
+  const uploadModal = document.getElementById('modal-upload');
+  if (!uploadModal) return;
+  const nameInput = document.getElementById('upload-store-name');
+  const waInput = document.getElementById('upload-whatsapp');
+  if (state.currentStore) {
+    if (nameInput) nameInput.value = state.currentStore.name;
+    if (waInput) waInput.value = (state.currentStore.whatsapp || '').replace('+57', '').replace(/[^0-9]/g, '');
+  } else {
+    if (nameInput) nameInput.value = '';
+    if (waInput) waInput.value = '';
+  }
+  refreshUploadMembershipUI();
+  renderDynamicPlansUI();
+  uploadModal.style.display = 'flex';
+}
+window.triggerOpenUploadModal = triggerOpenUploadModal;
+
 /**
  * =========================================================
  * VITRINASPOT - OFFICIAL JAVASCRIPT ENGINE
@@ -4804,22 +4823,10 @@ function setupEventListeners() {
     userDropdown.classList.toggle('show');
   });
 
-  userDropdown?.addEventListener('click', (e) => {
-    // Si se toca cualquier botón o enlace dentro del menú, cerrarlo de inmediato
-    if (e.target.closest('.dropdown-link, button, a')) {
-      userDropdown.classList.remove('show');
-    }
-  });
-
-  userDropdown?.addEventListener('touchend', (e) => {
-    if (e.target.closest('.dropdown-link, button, a')) {
-      userDropdown.classList.remove('show');
-    }
-  }, { passive: true });
-
+  // Cierre limpio al hacer clic o tocar FUERA del menú
   document.addEventListener('click', (e) => {
     cityMenu?.classList.remove('show');
-    if (!e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu')) {
+    if (!e.target.closest('#user-dropdown-menu') && !e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu')) {
       userDropdown?.classList.remove('show');
     }
     if (floatingSearchBar && floatingSearchBar.style.display === 'block') {
@@ -4836,25 +4843,119 @@ function setupEventListeners() {
     }
   }, { passive: true });
 
-  // Acceso privado a Mis SPOTS Guardados desde el menú de usuario / perfil
-  document.getElementById('btn-open-saved-spots')?.addEventListener('click', () => {
-    userDropdown?.classList.remove('show');
-    openSavedView();
+  // Helper de enlace universal (Táctil Móvil + Clic de Escritorio con Cierre Automático)
+  function bindMenuAction(buttonId, actionFn) {
+    const el = document.getElementById(buttonId);
+    if (!el) return;
+    let touchMoved = false;
+    let lastTriggerTime = 0;
+    const run = () => {
+      const now = Date.now();
+      if (now - lastTriggerTime < 350) return;
+      lastTriggerTime = now;
+      document.getElementById('user-dropdown-menu')?.classList.remove('show');
+      actionFn();
+    };
+    el.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+    el.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
+    el.addEventListener('touchend', (e) => {
+      if (!touchMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        run();
+      }
+    });
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      run();
+    });
+  }
+
+  // 1. Publicar Nuevo SPOT
+  bindMenuAction('btn-dropdown-upload-spot', () => {
+    triggerOpenUploadModal();
   });
-  document.getElementById('btn-guest-saved-spots')?.addEventListener('click', () => {
-    userDropdown?.classList.remove('show');
-    openSavedView();
+
+  // 2. Panel de Mi Negocio
+  bindMenuAction('btn-open-seller-panel', () => {
+    openSellerPanel();
   });
+
+  // 3. Mi Catálogo Público
+  bindMenuAction('btn-open-my-catalog', () => {
+    if (state.currentStore) openStoreCatalog(state.currentStore.id);
+  });
+
+  // 4. Mis SPOTS Guardados (Comerciante y Visitante)
+  bindMenuAction('btn-open-saved-spots', () => { openSavedView(); });
+  bindMenuAction('btn-guest-saved-spots', () => { openSavedView(); });
   document.getElementById('btn-nav-saved')?.addEventListener('click', openSavedView);
 
-  // Recomendar VitrinaSpot a un amigo (Acceso directo tanto para comerciantes como para visitantes)
-  document.getElementById('btn-store-share-app')?.addEventListener('click', () => {
-    userDropdown?.classList.remove('show');
-    openShareAppModal();
+  // 5. Impulsar SPOT con AdMob (100% Gratis - Rewarded Video)
+  bindMenuAction('btn-trigger-spot-buy', () => {
+    const prc = state.pricing || {};
+    const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
+    triggerCheckout(
+      'boost_standard_standalone', 
+      `⚡ Impulso Estándar Gratis (${days} Días)`, 
+      0,
+      `Aumenta la exposición de tu anuncio en el feed comercial por ${days} días con distintivo VIP patrocinado por Google AdMob.`
+    );
   });
-  document.getElementById('btn-guest-share-app')?.addEventListener('click', () => {
-    userDropdown?.classList.remove('show');
-    openShareAppModal();
+
+  // 6. Políticas y Reglas de Oro
+  bindMenuAction('btn-open-legal-terms-logged', () => { openLegalTermsModal(); });
+  bindMenuAction('btn-guest-legal-terms', () => { openLegalTermsModal(); });
+
+  // 7. Recomendar VitrinaSpot
+  bindMenuAction('btn-store-share-app', () => { openShareAppModal(); });
+  bindMenuAction('btn-guest-share-app', () => { openShareAppModal(); });
+
+  // 8. Cerrar Sesión / Salir
+  bindMenuAction('btn-store-logout', () => {
+    state.currentStore = null;
+    localStorage.removeItem('vitrina_current_store_id');
+    updateNavStoreUI();
+    showToast('👋 Has cerrado sesión');
+    showView('feed-view');
+  });
+
+  // 9. Opciones de Invitado: Crear Tienda e Ingresar
+  bindMenuAction('btn-guest-register-trigger', () => {
+    const authModal = document.getElementById('modal-store-auth');
+    if (authModal) authModal.style.display = 'flex';
+    document.getElementById('auth-tab-register')?.click();
+  });
+  bindMenuAction('btn-guest-login-trigger', () => {
+    const authModal = document.getElementById('modal-store-auth');
+    if (authModal) authModal.style.display = 'flex';
+    document.getElementById('auth-tab-login')?.click();
+  });
+
+  // 10. Acceso al Panel Maestro Admin desde el menú
+  document.querySelectorAll('.btn-shortcut-admin-panel').forEach(btn => {
+    let touchMoved = false;
+    let lastTime = 0;
+    const runAdmin = () => {
+      const now = Date.now();
+      if (now - lastTime < 350) return;
+      lastTime = now;
+      document.getElementById('user-dropdown-menu')?.classList.remove('show');
+      openAdminPortal();
+    };
+    btn.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+    btn.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
+    btn.addEventListener('touchend', (e) => {
+      if (!touchMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        runAdmin();
+      }
+    });
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      runAdmin();
+    });
   });
 
   // Modal de Recomendar VitrinaSpot - Cierre
@@ -4946,7 +5047,7 @@ function setupEventListeners() {
       );
       if (!isMemActive && storeCount >= freeQuota) {
         updatePlanSelection('spot_permanent');
-        showToast(`🔒 Cupo gratuito completado (${storeCount}/${freeQuota} spots). Selecciona Spot Permanente ($3.500 COP) para este nuevo producto.`, 'warning');
+        showToast(`🔒 Has completado tus ${freeQuota} spots gratuitos.`, 'warning');
       } else {
         updatePlanSelection('photos_5');
       }
