@@ -4597,6 +4597,7 @@ body.admin-active-view .main-viewport {
     display: flex !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   /* LOGO A LA IZQUIERDA CON RESPIRO DE AIRE GARANTIZADO */
@@ -4669,20 +4670,17 @@ body.admin-active-view .main-viewport {
   }
 
   .category-nav-btn {
-    padding: 6px 10px;
+    padding: 6px 9px;
     font-size: 0.76rem;
     height: 32px;
-    gap: 5px;
-    max-width: 110px;
+    gap: 4px;
+    width: auto;
+    max-width: none;
+    flex-shrink: 0;
   }
 
   .category-nav-btn span {
-    display: inline-block !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 62px;
-    font-size: 0.75rem;
+    display: none !important;
   }
 
   /* BOTÓN ALTERNADOR DE VISTA (CUADRÍCULA 2x2) */
@@ -4729,7 +4727,7 @@ body.admin-active-view .main-viewport {
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
     color: #ffffff !important;
     flex-shrink: 0 !important;
-    margin-right: 6px !important; /* Despegar del filo de la pantalla */
+    margin-right: 0 !important;
     transition: all 0.2s ease !important;
   }
 
@@ -4779,7 +4777,7 @@ body.admin-active-view .main-viewport {
     gap: 8px !important;
     flex: 0 0 auto !important;
     margin-left: auto !important;
-    padding-right: 4px !important;
+    padding-right: 0 !important;
     z-index: 10;
   }
 
@@ -4846,8 +4844,7 @@ body.admin-active-view .main-viewport {
   }
 
   .user-menu-wrapper {
-    position: relative;
-    flex-shrink: 0;
+    display: none !important;
   }
 
   .btn-store-login {
