@@ -129,6 +129,9 @@ function setupAdminSecretTriggers() {
   let pressTimer = null;
 
   brandLogo.addEventListener('click', () => {
+    if (typeof window.expandVitrinaHeader === 'function') {
+      window.expandVitrinaHeader();
+    }
     tapCount++;
     if (tapTimer) clearTimeout(tapTimer);
     if (tapCount >= 4) {
@@ -1879,6 +1882,9 @@ function setupVitrinaHeaderAutoCollapse() {
     }
   };
 
+  window.expandVitrinaHeader = expandHeader;
+  window.collapseVitrinaHeader = collapseHeader;
+
   const handleScrollProgress = (currentScrollTop) => {
     if (state.currentAppMode === 'spotplay') {
       expandHeader();
@@ -1894,12 +1900,12 @@ function setupVitrinaHeaderAutoCollapse() {
 
     const delta = currentScrollTop - _lastVitrinaScrollTop;
 
-    // Desplazamiento hacia abajo (scroll down) -> recoger cabeceras hacia arriba
+    // Desplazamiento hacia abajo (scroll down / avanzar en el feed) -> recoger cabeceras hacia arriba
     if (delta > 15 && currentScrollTop > 40) {
       collapseHeader();
     }
-    // Desplazamiento hacia arriba al retornar al tope -> desplegar cabeceras suavemente
-    else if (delta < -20 && currentScrollTop < 120) {
+    // Desplazamiento hacia arriba (pull down / ver perfiles de tiendas) -> desplegar cabeceras suavemente en cualquier posición del feed
+    else if (delta < -15) {
       expandHeader();
     }
 
@@ -1933,8 +1939,8 @@ function setupVitrinaHeaderAutoCollapse() {
     // Deslizar dedo hacia arriba para avanzar publicaciones -> recoger historias
     if (diffY > 18) {
       collapseHeader();
-    } else if (diffY < -24 && st <= 25) {
-      // Deslizar dedo hacia abajo en el tope de la primera tarjeta -> desplegar historias
+    } else if (diffY < -18) {
+      // Deslizar dedo hacia abajo en cualquier posición del feed -> desplegar historias suavemente sin mover fotos
       expandHeader();
     }
   }, { passive: true });
@@ -1949,7 +1955,7 @@ function setupVitrinaHeaderAutoCollapse() {
     });
   }
 
-  // 5. Si el usuario toca la barra superior (navbar) mientras está colapsado, regresar arriba y desplegar historias
+  // 5. Si el usuario toca la barra superior (navbar o logo) mientras está colapsado, desplegar historias suavemente sin rebobinar
   const navBarEl = document.querySelector('.navbar');
   if (navBarEl && !navBarEl._autoCollapseTapBound) {
     navBarEl._autoCollapseTapBound = true;
@@ -1957,7 +1963,7 @@ function setupVitrinaHeaderAutoCollapse() {
       if (!e.target.closest('button, select, input, a, .nav-search-bar, .user-dropdown-menu')) {
         if (document.body.classList.contains('vitrina-header-collapsed')) {
           expandHeader();
-          feedContainer.scrollTo({ top: 0, behavior: 'smooth' });
+          // Cero rebobinado: el usuario permanece exactamente en su producto actual
         }
       }
     });
