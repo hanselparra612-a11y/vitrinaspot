@@ -1,4 +1,6 @@
 node_modules/
+uploads/
+*.mp4
 cloudflared.exe
 .DS_Store
 Thumbs.db
