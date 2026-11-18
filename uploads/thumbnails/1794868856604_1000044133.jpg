@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>VitrinaSpot - Tu vitrina digital, directo a WhatsApp</title>
+  
+  <!-- Font Awesome & Fuentes Modernas -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=21.9">
+ 
+  <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
+  <link rel="manifest" href="/manifest.json?v=21.9">
+  <meta name="theme-color" content="#0c0c0e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VitrinaSpot">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=21.9">
+  <link rel="icon" type="image/png" sizes="64x64" href="/icons/favicon.png?v=21.9">
+  <link rel="shortcut icon" href="/icons/favicon.png?v=21.9">
+
+  <!-- Metadatos SEO y Previsualización al Compartir (WhatsApp, Facebook, Twitter) -->
+  <meta name="description" content="VitrinaSpot Colombia - Tu vitrina comercial digital con contacto directo a WhatsApp. Descubre productos, promociones y tiendas locales en toda Colombia.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VitrinaSpot">
+  <meta property="og:title" content="VitrinaSpot Colombia - Tu Vitrina Digital a WhatsApp">
+  <meta property="og:description" content="Descubre tiendas y productos en Colombia con catálogo visual inmersivo y contacto directo a WhatsApp sin intermediarios ni comisiones.">
+  <meta property="og:image" content="/icons/app-icon-commerce.jpg">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VitrinaSpot Colombia - Tu Vitrina Digital a WhatsApp">
+  <meta name="twitter:description" content="Descubre tiendas y productos en Colombia con contacto directo a WhatsApp.">
+  <meta name="twitter:image" content="/icons/app-icon-commerce.jpg">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js?v=21.9').catch(function() {});
+    }
+  </script>
+
+  <!-- Pasarela Oficial Wompi Bancolombia (Widget Seguro) -->
+  <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
+</head>
+<body class="dark-theme">
+
+  <!-- =========================================================
+       1. CABECERA SUPERIOR (NAVBAR)
+       ========================================================= -->
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="brand-logo" id="brand-logo-display">
+        <span class="logo-title">Vitrina<span class="logo-highlight">Spot</span></span>
+      </div>
+    </div>
+
+    <!-- ACCIONES DE NAVEGACIÓN (1 Sola fila ultraligera y elegante) -->
+    <div class="nav-right">
+      <!-- ACCIONES ESTÁNDAR DE COMPRADORES Y VENDEDORES (SE OCULTAN EN EL PANEL MAESTRO) -->
+      <div id="standard-nav-actions" class="standard-nav-actions">
+        <!-- SELECTOR DE CIUDAD EN COLOMBIA -->
+        <div class="city-selector-wrapper">
+          <button class="city-btn" id="btn-city-dropdown" title="Filtrar por Ciudad">
+            <i class="fa-solid fa-location-dot city-pin-icon"></i>
+            <span id="current-city-label">Toda Colombia</span>
+            <i class="fa-solid fa-chevron-down city-arrow"></i>
+          </button>
+          <div class="city-dropdown" id="city-dropdown-menu">
+            <div class="city-item active" data-city="Toda Colombia">🇨🇴 Toda Colombia</div>
+            <div class="city-item" data-city="Bogotá">🏙️ Bogotá D.C.</div>
+            <div class="city-item" data-city="Medellín">🌸 Medellín & Antioquia</div>
+            <div class="city-item" data-city="Cali">☀️ Cali & Valle</div>
+            <div class="city-item" data-city="Popayán">🌄 Popayán & Cauca</div>
+            <div class="city-item" data-city="Barranquilla">🌊 Barranquilla & Costa</div>
+            <div class="city-item" data-city="Bucaramanga">⛰️ Bucaramanga & Santanderes</div>
+            <div class="city-item" data-city="Eje Cafetero">☕ Eje Cafetero</div>
+            <div class="city-item" data-city="Cartagena">🏰 Cartagena</div>
+            <div class="city-item" data-city="Meta & Llanos">🐎 Meta & Llanos Orientales</div>
+            <div class="city-item" data-city="Amazonas & Leticia">🌿 Amazonas & Leticia</div>
+          </div>
+        </div>
+
+        <!-- SELECTOR DE CATEGORÍA UNIFICADO EN BARRA SUPERIOR (31 CATEGORÍAS) -->
+        <button type="button" class="city-btn category-nav-btn" id="btn-nav-category-picker" title="Explorar 31 Categorías Comerciales">
+          <i class="fa-solid fa-layer-group" style="color: var(--spot-gold, #ffb800);"></i>
+          <span id="current-category-label">Categorías</span>
+          <i class="fa-solid fa-chevron-down city-arrow"></i>
+        </button>
+
+        <!-- BOTÓN ALTERNADOR DE VISTA (VITRINA 1x1 / CUADRÍCULA 2x2) -->
+        <button class="icon-nav-btn" id="btn-feed-view-toggle">
+          <i class="fa-solid fa-table-cells-large" id="feed-toggle-icon" style="color: #ffffff;"></i>
+        </button>
+
+        <!-- BOTÓN TOGGLE BÚSQUEDA FLOTANTE -->
+        <button class="icon-nav-btn" id="btn-nav-search-toggle">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <!-- BOTÓN SUBIR SPOT -->
+        <button class="btn btn-spot" id="btn-nav-upload" title="Publicar SPOT">
+          <i class="fa-solid fa-plus"></i>
+          <span>Publicar</span>
+        </button>
+
+        <!-- BOTÓN MI NEGOCIO / LOGIN -->
+        <div class="user-menu-wrapper">
+          <button class="btn btn-store-login" id="btn-nav-store-menu">
+            <img id="nav-store-avatar" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop&q=80" alt="Mi Tienda" class="nav-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop&q=80';" loading="lazy">
+            <i class="fa-solid fa-circle-user text-gold" id="nav-guest-icon" style="display: none; font-size: 1.15rem;"></i>
+            <span id="nav-store-name">Mi Negocio</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+
+          <div class="user-dropdown" id="user-dropdown-menu">
+            <!-- OPCIONES CUANDO EL VENDEDOR ESTÁ CONECTADO -->
+            <div id="user-menu-logged">
+              <div class="dropdown-header">
+                <strong id="dropdown-store-title">Mi Tienda</strong>
+                <span id="dropdown-store-city">Colombia • Verificado ☑️</span>
+              </div>
+              <hr class="dropdown-divider">
+              <button class="dropdown-link" id="btn-dropdown-upload-spot" style="color: var(--spot-gold); font-weight: 700;">
+                <i class="fa-solid fa-circle-plus text-gold"></i> Publicar Nuevo SPOT
+              </button>
+              <button class="dropdown-link" id="btn-open-seller-panel">
+                <i class="fa-solid fa-chart-line"></i> Panel de Mi Negocio
+              </button>
+              <button class="dropdown-link" id="btn-open-my-catalog">
+                <i class="fa-solid fa-store"></i> Mi Catálogo Público
+              </button>
+              <button class="dropdown-link" id="btn-open-saved-spots">
+                <i class="fa-solid fa-bookmark"></i>
+                <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
+                <span class="dropdown-counter-pill" id="saved-badge-logged">0</span>
+              </button>
+              <button class="dropdown-link" id="btn-trigger-spot-buy">
+                <i class="fa-solid fa-bolt text-gold"></i> Comprar SPOT Destacado
+              </button>
+              <button class="dropdown-link" id="btn-open-legal-terms-logged">
+                <i class="fa-solid fa-scale-balanced"></i> Políticas y Reglas de Oro
+              </button>
+              <button type="button" class="dropdown-link" id="btn-store-share-app" style="color: var(--spot-gold); font-weight: 700;">
+                <i class="fa-solid fa-share-nodes text-gold"></i>
+                <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
+              </button>
+              <button type="button" class="dropdown-link btn-shortcut-admin-panel" style="display: none !important; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
+                <i class="fa-solid fa-shield-halved text-gold"></i>
+                <span class="admin-btn-label" style="flex: 1; text-align: left;">🛡️ Panel Maestro Admin</span>
+                <span class="admin-btn-tag" style="font-size: 0.68rem; background: rgba(255,184,0,0.2); color: var(--spot-gold); padding: 2px 6px; border-radius: 4px;">ADMIN</span>
+              </button>
+              <hr class="dropdown-divider">
+              <button class="dropdown-link" id="btn-store-logout" style="color: #ff4757;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión / Salir
+              </button>
+            </div>
+
+            <!-- OPCIONES CLARAS CUANDO EL USUARIO HA CERRADO SESIÓN -->
+            <div id="user-menu-guest" style="display: none; padding: 6px;">
+              <div style="margin-bottom: 12px; text-align: left;">
+                <strong style="display:block; color:#fff; font-size:0.95rem; margin-bottom:4px;">
+                  <i class="fa-solid fa-store"></i> Acceso a tu Negocio
+                </strong>
+                <span style="font-size:0.78rem; color:var(--text-muted); line-height:1.3; display:block;">
+                  Ingresa a tu cuenta para administrar tus productos o crea tu tienda gratis.
+                </span>
+              </div>
+              <button type="button" class="btn btn-spot w-100" id="btn-guest-register-trigger" style="margin-bottom: 8px; font-weight: 700;">
+                <i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (5 SPOTS $0 COP)
+              </button>
+              <button type="button" class="btn btn-ghost w-100" id="btn-guest-login-trigger" style="font-weight: 600; border: 1px solid rgba(255,255,255,0.15);">
+                <i class="fa-solid fa-right-to-bracket"></i> Ya tengo Tienda (Ingresar)
+              </button>
+              <hr class="dropdown-divider" style="margin: 10px 0;">
+              <button type="button" class="dropdown-link w-100" id="btn-guest-saved-spots" style="padding: 8px 10px;">
+                <i class="fa-solid fa-bookmark"></i>
+                <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
+                <span class="dropdown-counter-pill" id="saved-badge-guest">0</span>
+              </button>
+              <button type="button" class="dropdown-link w-100" id="btn-guest-legal-terms" style="padding: 8px 10px;">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span style="flex: 1; text-align: left;">Políticas y Reglas de Oro</span>
+              </button>
+              <button type="button" class="dropdown-link w-100" id="btn-guest-share-app" style="padding: 8px 10px; color: var(--spot-gold); font-weight: 700;">
+                <i class="fa-solid fa-share-nodes text-gold"></i>
+                <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
+              </button>
+              <button type="button" class="dropdown-link w-100 btn-shortcut-admin-panel" style="display: none !important; padding: 8px 10px; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
+                <i class="fa-solid fa-shield-halved text-gold"></i>
+                <span class="admin-btn-label" style="flex: 1; text-align: left;">🛡️ Panel Maestro Admin</span>
+                <span class="admin-btn-tag" style="font-size: 0.68rem; background: rgba(255,184,0,0.2); color: var(--spot-gold); padding: 2px 6px; border-radius: 4px;">ADMIN</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BARRA DE BÚSQUEDA FLOTANTE (SE ABRE AL TOCAR LA LUPA 🔍) -->
+  <div class="floating-search-bar" id="floating-search-bar" style="display: none;">
+    <div class="floating-search-inner">
+      <form class="search-form" id="search-form">
+        <div class="search-box">
+          <button type="submit" class="search-submit-btn" id="btn-submit-search" title="Buscar productos o tiendas">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </button>
+          <input type="text" id="search-input" placeholder="Buscar autos, electrodomésticos, comida, moda, oficios..." autocomplete="off">
+          <button type="button" id="btn-clear-search" class="clear-search-btn" style="display: none;" title="Borrar búsqueda">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </form>
+      <button type="button" class="btn-close-floating-search" id="btn-close-floating-search" title="Cerrar buscador">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       2 y 3. CABECERA COLAPSABLE INTELIGENTE DE VITRINA (HISTORIAS + CATEGORÍAS)
+       Al deslizar el feed hacia abajo se recoge suavemente para dar altura completa a las fotos
+       ========================================================= -->
+  <div id="vitrina-collapsible-header" class="vitrina-collapsible-header">
+    <!-- 2. BARRA DE SPOTS DESTACADOS (HISTORIAS VIP) -->
+    <section class="stories-bar-section" id="stories-section">
+      <!-- PERFIL FIJO DEL USUARIO / MI NEGOCIO (ANCLADO A LA IZQUIERDA, NUNCA SE DESPLAZA) -->
+      <div class="my-profile-pinned-slot" id="my-profile-pinned-slot">
+        <!-- Se inyecta dinámicamente Mi Negocio fijo -->
+      </div>
+      <!-- RIEL HORIZONTAL DE LAS DEMÁS TIENDAS (DESLIZABLE) -->
+      <div class="stories-scroll-container" id="stories-container">
+        <!-- Se cargan dinámicamente las tiendas que se deslizan -->
+      </div>
+    </section>
+  </div>
+
+  <!-- =========================================================
+       4. CONTENIDO PRINCIPAL: VISTAS INTERCAMBIABLES
+       ========================================================= -->
+  <main class="main-viewport">
+
+    <!-- VISTA 1: FEED VERTICAL TIKTOK/REELS (EXPERIENCIA NATIVA) -->
+    <section id="feed-view" class="view-panel active">
+      <!-- CONTENEDOR CINE AMBILIGHT EN PC Y FULL-SCREEN EN MÓVIL -->
+      <div class="feed-stage">
+        
+        <!-- FONDO DINÁMICO AMBILIGHT -->
+        <div class="ambilight-bg" id="ambilight-backdrop"></div>
+
+        <!-- COLUMNA PRINCIPAL DE FEED VERTICAL (SCROLL CONTINUO NATIVO) -->
+        <div class="feed-main-col">
+          <!-- 1. MODO VITRINA 1X1 (INMERSIVO - EXPERIENCIA PRINCIPAL) -->
+          <div class="feed-scroll-container" id="feed-scroll-container">
+            <!-- Tarjetas de anuncios apiladas dinámicamente con CSS Scroll Snap -->
+          </div>
+
+          <!-- 2. MODO CUADRÍCULA 2X2 (MOSAICO RÁPIDO) -->
+          <div class="feed-grid-container" id="feed-grid-container" style="display: none;">
+            <div class="feed-2col-grid" id="feed-2col-grid">
+              <!-- Tarjetas en cuadrícula 2x2 generadas dinámicamente -->
+            </div>
+          </div>
+
+          <!-- CONTROLES DE NAVEGACIÓN FLOTANTES PARA COMPUTADORA -->
+          <div class="pc-nav-arrows">
+            <button class="arrow-nav-btn btn-prev-video" id="btn-prev-video" title="Anuncio Anterior (Flecha Arriba)">
+              <i class="fa-solid fa-chevron-up"></i>
+            </button>
+            <button class="arrow-nav-btn btn-next-video" id="btn-next-video" title="Siguiente Anuncio (Flecha Abajo)">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- PANEL LATERAL DERECHO PARA COMPUTADORAS (DETALLES AMPLIADOS) -->
+        <aside class="desktop-details-panel">
+          <div class="desk-store-card">
+            <div class="desk-store-header">
+              <img id="desk-store-avatar" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80" alt="Logo" class="desk-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80';" loading="lazy">
+              <div>
+                <h3 id="desk-store-name">Tienda</h3>
+                <div class="desk-meta-badges">
+                  <span class="badge-verified"><i class="fa-solid fa-circle-check"></i> Verificada</span>
+                  <span class="badge-rating" id="desk-store-stars">⭐ 4.9 (84)</span>
+                </div>
+              </div>
+            </div>
+            <p id="desk-store-bio" class="desk-bio">Descripción de la tienda...</p>
+            <div class="desk-hours-row">
+              <i class="fa-regular fa-clock"></i> <span id="desk-store-hours">Lun - Sáb: 8am - 7pm</span>
+            </div>
+            <button class="btn btn-outline w-100" id="btn-desk-view-catalog">
+              <i class="fa-solid fa-store"></i> Ver Catálogo Completo
+            </button>
+          </div>
+
+          <div class="desk-comments-widget">
+            <h4><i class="fa-solid fa-comments"></i> Preguntas y Comentarios</h4>
+            <div class="desk-comments-scroll" id="desk-comments-list">
+              <!-- Comentarios cargados dinámicamente -->
+            </div>
+            <form id="desk-comment-form" class="quick-comment-form">
+              <input type="text" id="desk-comment-input" placeholder="Escribe una pregunta pública..." autocomplete="off">
+              <button type="submit" class="btn btn-spot btn-sm">Enviar</button>
+            </form>
+          </div>
+        </aside>
+
+      </div>
+
+      <!-- PANTALLA DE RESULTADOS VACÍOS CON GANCHO DE REGISTRO -->
+      <div class="empty-state-card" id="feed-empty-state" style="display: none;">
+        <div class="empty-icon-box"><i class="fa-solid fa-bullhorn"></i></div>
+        <h3>Aún no hay anuncios aquí...</h3>
+        <p>¿Tienes un negocio, vendes productos o prestas servicios en esta categoría?</p>
+        <button class="btn btn-spot btn-large" id="btn-empty-register">
+          <i class="fa-solid fa-rocket"></i> ¡Sé el primero en anunciar GRATIS!
+        </button>
+      </div>
+    </section>
+
+    <!-- VISTA 2: CATÁLOGO COMPLETO DE LA TIENDA -->
+    <section id="store-catalog-view" class="view-panel" style="display: none;">
+      <div class="catalog-container">
+        <!-- BOTÓN VOLVER -->
+        <button class="btn btn-ghost btn-back-nav" id="btn-back-from-catalog">
+          <i class="fa-solid fa-arrow-left"></i> Volver a la Vitrina Principal
+        </button>
+
+        <!-- CABECERA DE LA TIENDA -->
+        <div class="catalog-hero-card">
+          <div class="catalog-hero-main">
+            <div class="catalog-logo-wrapper">
+              <img id="cat-store-avatar" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=160&auto=format&fit=crop&q=80" alt="Tienda" class="catalog-logo-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=160&auto=format&fit=crop&q=80';" loading="lazy">
+            </div>
+            <div class="catalog-hero-text">
+              <div class="catalog-name-row">
+                <h1 id="cat-store-name">Nombre de la Tienda</h1>
+                <span class="verified-pill"><i class="fa-solid fa-check"></i> Verificada</span>
+              </div>
+              <div class="catalog-meta-row">
+                <span class="cat-rating-pill" id="cat-store-rating"><i class="fa-solid fa-star"></i> 5.0 (12 opiniones)</span>
+                <span class="cat-city-pill"><i class="fa-solid fa-location-dot"></i> <span id="cat-store-city">Bogotá</span></span>
+                <span class="cat-address-pill" id="cat-store-address"><i class="fa-solid fa-map-pin"></i> Carrera 15 # 34-20</span>
+                <span class="cat-hours-pill" id="cat-store-hours" style="display: none;"><i class="fa-regular fa-clock"></i> <span id="cat-store-hours-text"></span></span>
+              </div>
+              <p class="cat-description" id="cat-store-desc">Descripción oficial de la tienda...</p>
+            </div>
+          </div>
+
+          <!-- ACCIONES RÁPIDAS DE LA TIENDA (TARJETA DIGITAL VIP) -->
+          <div class="catalog-hero-actions">
+            <div class="catalog-actions-primary-row" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+              <a href="#" target="_blank" class="btn btn-wa-giant" id="btn-cat-whatsapp" style="flex: 2; min-width: 200px;">
+                <i class="fa-brands fa-whatsapp"></i> Chatear por WhatsApp
+              </a>
+              <button type="button" class="btn btn-spot" id="btn-cat-share" style="flex: 1; min-width: 160px; padding: 14px 18px; font-weight: 700; border-radius: 12px; gap: 8px; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-share-nodes"></i> Compartir Catálogo
+              </button>
+            </div>
+            
+            <div class="catalog-actions-secondary-row" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap; margin-top: 6px;">
+              <a href="#" target="_blank" class="btn btn-ghost" id="btn-cat-maps" style="flex: 1; min-width: 140px; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,184,0,0.3); color: var(--spot-gold);">
+                <i class="fa-solid fa-location-arrow"></i> Cómo Llegar (Maps)
+              </a>
+              <a href="#" class="btn btn-ghost" id="btn-cat-call" style="flex: 1; min-width: 140px; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); color: #fff;">
+                <i class="fa-solid fa-phone"></i> Llamar al Comercio
+              </a>
+            </div>
+
+            <div class="accepted-payments-box" style="margin-top: 10px;">
+              <span class="payments-title">Medios de pago que recibe:</span>
+              <div class="payment-chips" id="cat-payment-chips">
+                <span class="pay-chip">Nequi</span>
+                <span class="pay-chip">Daviplata</span>
+                <span class="pay-chip">Contraentrega</span>
+                <span class="pay-chip">Efectivo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUADRÍCULA DE VIDEOS DE LA TIENDA -->
+        <div class="catalog-gallery-heading">
+          <h2>Todos los Productos de esta Tienda</h2>
+          <span id="cat-videos-count">0 productos</span>
+        </div>
+        <div class="catalog-grid" id="catalog-videos-grid">
+          <!-- Videos en cuadrícula vertical cargados dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 3: MIS GUARDADOS (LISTA DE DESEOS) -->
+    <section id="saved-view" class="view-panel" style="display: none;">
+      <div class="saved-container">
+        <button class="btn btn-ghost btn-back-nav" id="btn-back-from-saved">
+          <i class="fa-solid fa-arrow-left"></i> Volver a la Vitrina Principal
+        </button>
+        <div class="saved-header">
+          <h2><i class="fa-solid fa-bookmark text-gold"></i> Mis Guardados (Lista de Deseos)</h2>
+          <p>Productos y negocios que guardaste para contactar y comprar por WhatsApp.</p>
+        </div>
+        <div class="catalog-grid" id="saved-videos-grid">
+          <!-- Videos guardados -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 4: PANEL PRIVADO DEL VENDEDOR (MI NEGOCIO) -->
+    <section id="seller-panel-view" class="view-panel" style="display: none;">
+      <div class="seller-dashboard">
+        <div class="dashboard-header-bar">
+          <div>
+            <h2 id="seller-dash-title">Panel de Control: Mi Negocio</h2>
+            <p id="seller-dash-subtitle">Gestiona tus publicaciones, revisa reproducciones y activa SPOTS.</p>
+          </div>
+          <div class="dash-top-actions">
+            <!-- BOTÓN CAMPANA DE NOTIFICACIONES CON CONTADOR FLOTANTE -->
+            <div class="seller-notif-bell-wrapper">
+              <button class="btn btn-outline btn-seller-bell" id="btn-seller-notif-bell" title="Alertas y Preguntas de Clientes">
+                <i class="fa-solid fa-bell"></i>
+                <span class="seller-bell-label">Notificaciones</span>
+                <span class="seller-notif-badge" id="seller-notif-badge" style="display: none;">0</span>
+              </button>
+
+              <!-- MENÚ FLOTANTE DROPDOWN DE NOTIFICACIONES -->
+              <div class="seller-notif-dropdown" id="seller-notif-dropdown" style="display: none;">
+                <div class="notif-dropdown-header">
+                  <div class="notif-header-title">
+                    <i class="fa-solid fa-bell text-gold"></i>
+                    <span>Notificaciones Recientes</span>
+                    <span class="notif-count-tag" id="notif-count-tag">0</span>
+                  </div>
+                  <button type="button" class="btn-clear-all-notifs" id="btn-clear-all-notifs" title="Limpiar y borrar todas">
+                    <i class="fa-solid fa-trash-can"></i> Limpiar
+                  </button>
+                </div>
+                <div class="notif-dropdown-body" id="seller-notif-list">
+                  <!-- Alertas dinámicas -->
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-spot" id="btn-seller-new-video" title="Publicar Nuevo Producto">
+              <i class="fa-solid fa-cloud-arrow-up"></i> <span>Subir Anuncio</span>
+            </button>
+            <button class="btn btn-gold" id="btn-seller-activate-spot" title="Adquirir Impulso SPOT con Nequi">
+              <i class="fa-solid fa-bolt"></i> <span>Activar SPOT</span>
+            </button>
+            <button class="btn btn-ghost" id="btn-back-from-seller" title="Volver al Feed">
+              <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TARJETA DESTACADA: FOTO DE PERFIL Y DATOS DEL NEGOCIO -->
+        <div class="seller-profile-banner">
+          <div class="seller-avatar-wrapper">
+            <img id="seller-profile-avatar" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80" alt="Foto de Perfil" class="seller-avatar-large" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80';" loading="lazy">
+            <button type="button" class="btn-avatar-camera-overlay" id="btn-quick-change-avatar" title="Cambiar foto de perfil / logo">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+          <div class="seller-info-col">
+            <div class="seller-title-badge-row">
+              <h3 id="seller-profile-name">Mi Negocio</h3>
+              <span class="badge-verified"><i class="fa-solid fa-circle-check"></i> Verificado</span>
+            </div>
+            <p id="seller-profile-desc" class="text-muted seller-bio-text">Sin descripción de tienda configurada.</p>
+            <div class="seller-contact-meta">
+              <span><i class="fa-brands fa-whatsapp text-green"></i> <span id="seller-profile-wa">+57...</span></span>
+              <span><i class="fa-solid fa-location-dot"></i> <span id="seller-profile-city">Colombia</span></span>
+              <span><i class="fa-regular fa-clock"></i> <span id="seller-profile-hours">Lun - Sáb: 8am - 7pm</span></span>
+            </div>
+          </div>
+          <div class="seller-profile-cta">
+            <button class="btn btn-outline" id="btn-open-edit-profile-dash">
+              <i class="fa-solid fa-user-pen"></i> Editar Perfil & Foto
+            </button>
+          </div>
+        </div>
+
+        <!-- 🚀 TARJETA PROTAGONISTA: TU ENLACE OFICIAL DE NEGOCIO / CATÁLOGO DIGITAL -->
+        <div class="seller-share-card">
+          <div class="seller-share-header">
+            <div class="seller-share-title-box">
+              <div class="seller-share-icon-circle">
+                <i class="fa-solid fa-link"></i>
+              </div>
+              <div>
+                <h4>Tu Enlace Oficial de Tienda y Catálogo Digital</h4>
+                <p>Comparte este link en tus estados de WhatsApp, Instagram, TikTok o Facebook para que tus clientes vean todo tu catálogo y te hagan pedidos directamente al chat.</p>
+              </div>
+            </div>
+            <span class="share-badge-live"><i class="fa-solid fa-signal"></i> Catálogo Activo</span>
+          </div>
+
+          <div class="seller-share-body">
+            <div class="seller-share-input-wrapper">
+              <i class="fa-solid fa-globe input-globe-icon"></i>
+              <input type="text" id="seller-store-share-url" readonly value="" onclick="this.select()" title="Haz clic para seleccionar o copiar enlace">
+            </div>
+            <div class="seller-share-actions-row">
+              <button type="button" class="btn btn-spot" id="btn-seller-copy-link" title="Copiar enlace directo">
+                <i class="fa-solid fa-copy"></i> Copiar Link
+              </button>
+              <button type="button" class="btn btn-wa-share-action" id="btn-seller-share-wa-catalog" title="Compartir catálogo por WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i> Compartir por WhatsApp
+              </button>
+              <button type="button" class="btn btn-ghost" id="btn-seller-preview-catalog" title="Ver mi catálogo como cliente">
+                <i class="fa-solid fa-store"></i> Ver Mi Catálogo Público
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TARJETAS DE MÉTRICAS DEL VENDEDOR -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon bg-blue"><i class="fa-solid fa-eye"></i></div>
+            <div class="metric-data">
+              <span class="metric-value" id="seller-stat-views">0</span>
+              <span class="metric-label">Vistas Totales de tus SPOTS</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon bg-red"><i class="fa-solid fa-heart"></i></div>
+            <div class="metric-data">
+              <span class="metric-value" id="seller-stat-likes">0</span>
+              <span class="metric-label">Likes Acumulados</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon bg-gold"><i class="fa-solid fa-bookmark"></i></div>
+            <div class="metric-data">
+              <span class="metric-value" id="seller-stat-saved">0</span>
+              <span class="metric-label">Veces Guardado en Lista de Deseos</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon bg-green"><i class="fa-solid fa-bolt"></i></div>
+            <div class="metric-data">
+              <span class="metric-value" id="seller-stat-spot">Inactivo</span>
+              <span class="metric-label">Estado de tu SPOT Publicitario</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;"><i class="fa-solid fa-crown"></i></div>
+            <div class="metric-data">
+              <span class="metric-value" id="seller-stat-membership">Inactiva</span>
+              <span class="metric-label" id="seller-stat-membership-label">Membresía Pro</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon" id="seller-stat-welcome-icon" style="background: rgba(0, 200, 83, 0.2); color: #00ff88;"><i class="fa-solid fa-gift"></i></div>
+            <div class="metric-data">
+              <span class="metric-value" id="seller-stat-welcome" style="color: #00ff88;">0 de 5</span>
+              <span class="metric-label" id="seller-stat-welcome-label">Cupo de Spots Gratuitos</span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- GESTIÓN DE MIS ANUNCIOS (LISTA, PAUSAR, ELIMINAR) -->
+        <div class="seller-videos-section">
+          <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h3 style="margin: 0;">Mis SPOTS Publicados</h3>
+              <span class="text-muted" id="seller-quota-subtitle" style="font-size: 0.85rem;">Tus SPOTS permanecen activos en la vitrina comercial</span>
+            </div>
+            <span class="badge" id="seller-quota-badge" style="background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); font-weight: 800; font-size: 0.8rem; padding: 6px 12px; border-radius: 8px;">
+              Spots Gratuitos: 0 / 5
+            </span>
+          </div>
+          <div class="seller-videos-grid" id="seller-videos-list">
+            <!-- Tarjetas de gestión con botón de Borrar y Pausar -->
+          </div>
+        </div>
+
+        <!-- ZONA DE CUENTA / ELIMINACIÓN SEGURA DE PERFIL -->
+        <div class="seller-account-danger-zone" style="margin-top: 36px; padding: 18px 20px; border-radius: 12px; background: rgba(255, 71, 87, 0.05); border: 1px dashed rgba(255, 71, 87, 0.28); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h4 style="margin: 0 0 4px 0; color: #ff6b6b; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-user-xmark"></i> Gestión de Cuenta y Datos Personales
+            </h4>
+            <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+              Puedes dar de baja tu perfil de negocio y retirar tus productos de la plataforma en cualquier momento.
+            </p>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-open-delete-account-modal" style="color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.4); font-size: 0.8rem; padding: 8px 14px; font-weight: 700;">
+            <i class="fa-solid fa-trash-can"></i> Eliminar Mi Cuenta
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 5: PANEL MAESTRO DE ADMINISTRADOR (/ADMIN) -->
+    <section id="admin-panel-view" class="view-panel" style="display: none;">
+      <div class="admin-dashboard">
+        
+        <!-- PANTALLA DE LOGIN ADMIN (SI NO ESTÁ AUTENTICADO) -->
+        <div class="admin-login-box" id="admin-login-screen">
+          <div class="admin-lock-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <h2>Acceso al Panel Maestro VitrinaSpot</h2>
+          <p>Área confidencial exclusiva para administración financiera y control de plataforma.</p>
+          <form id="admin-login-form">
+            <div class="form-group">
+              <label>Correo Electrónico de Administrador</label>
+              <input type="email" id="admin-email-input" value="admin@vitrinaspot.com" required>
+            </div>
+            <div class="form-group">
+              <label>Contraseña Maestra</label>
+              <input type="password" id="admin-pass-input" value="admin123vitrina" required>
+            </div>
+            <button type="submit" class="btn btn-spot btn-large w-100">
+              <i class="fa-solid fa-key"></i> Entrar al Panel de Control
+            </button>
+            <button type="button" class="btn btn-ghost w-100 mt-2" id="btn-admin-cancel">Volver a la App</button>
+          </form>
+        </div>
+
+        <!-- DASHBOARD EJECUTIVO ADMIN (UNA VEZ LOGUEADO) -->
+        <div class="admin-exec-screen" id="admin-exec-screen" style="display: none;">
+          <div class="admin-top-bar">
+            <div>
+              <h2>🏛️ Bóveda Ejecutiva & Control Maestro VitrinaSpot</h2>
+              <span class="text-muted">Super-Admin Conectado • Modo Seguro 256-bit</span>
+            </div>
+            <div class="admin-top-btns">
+              <button class="btn btn-ghost btn-sm" id="btn-admin-logout">Cerrar Sesión Admin</button>
+              <button class="btn btn-primary btn-sm" id="btn-admin-exit-feed">Ver Feed Público</button>
+            </div>
+          </div>
+
+          <!-- MÉTRICAS FINANCIERAS Y TELEMETRÍA -->
+          <div class="admin-metrics-grid">
+            <div class="admin-stat-card border-gold">
+              <span class="stat-title">Ingresos Totales Recaudados</span>
+              <h2 class="stat-number text-gold" id="adm-revenue-total">$0 COP</h2>
+              <span class="stat-sub">Por SPOTS y Anuncios con Wompi/Nequi</span>
+            </div>
+            <div class="admin-stat-card border-green">
+              <span class="stat-title">Telemetría de Clics a WhatsApp</span>
+              <h2 class="stat-number text-green" id="adm-wa-clicks">0</h2>
+              <span class="stat-sub">Compradores conectados con negocios</span>
+            </div>
+            <div class="admin-stat-card">
+              <span class="stat-title">SPOTS Activos Hoy</span>
+              <h2 class="stat-number" id="adm-spots-active">0</h2>
+              <span class="stat-sub">Negocios con doble visibilidad</span>
+            </div>
+            <div class="admin-stat-card">
+              <span class="stat-title">Total Negocios / Anuncios</span>
+              <h2 class="stat-number" id="adm-stores-count">0 / 0</h2>
+              <span class="stat-sub">Tiendas registradas y catálogo total</span>
+            </div>
+          </div>
+
+          <!-- HERRAMIENTA OFICIAL DE LIMPIEZA DE DATOS (MODO VIRGEN) -->
+          <div class="admin-stat-card border-gold" style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: rgba(255, 184, 0, 0.08);">
+            <div>
+              <h3 style="color: #fff; margin-bottom: 4px;"><i class="fa-solid fa-sparkles text-gold"></i> Purgar Todo a Cero (Modo Virgen)</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Deja la plataforma con 0 perfiles, 0 tiendas y 0 anuncios para recibir suscriptores reales. Tu cuenta de Administrador se conserva intacta.</p>
+            </div>
+            <button type="button" class="btn btn-spot" id="btn-admin-clean-demo" style="background: linear-gradient(135deg, #e63946, #c1121f); border-color: #e63946; color: #fff;">
+              <i class="fa-solid fa-broom"></i> Dejar con Cero Perfiles
+            </button>
+          </div>
+
+          <!-- TABLA DE CONTROL DE TARIFAS DINÁMICAS Y TIEMPOS DE IMPULSO -->
+          <div class="admin-pricing-card">
+            <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador Dinámico de Tarifas y Tiempos de Impulso</h3>
+            <p class="text-muted" id="adm-pricing-header-desc">Como Administrador, modifica aquí los precios y la duración de los impulsos comerciales. Cada comercio cuenta con <strong id="adm-header-quota-val">100 SPOTS GRATIS</strong> con carrusel de fotos. A partir del siguiente spot, el costo es de $3.500 COP (o mediante impulsos/membresía).</p>
+            <form id="admin-pricing-form" class="pricing-edit-grid">
+              <!-- 1. Cupo de Spots Gratuitos -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-gift text-gold"></i> 1. Cupo de Spots Gratuitos por Tienda</label>
+                <input type="number" id="adm-quota-free-spots" value="100" min="1" max="1000" required>
+                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">🎁 Cada tienda publica gratis hasta <strong id="adm-helper-quota-val" style="color:var(--spot-gold); font-weight:800;">100</strong> spots (cada producto incluye carrusel de hasta 7 fotos a $0 COP).</small>
+              </div>
+
+              <!-- 2. Spot Permanente (Sin Impulso) -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-image text-gold"></i> 2. Precio por Spot Permanente Adicional ($ COP)</label>
+                <input type="number" id="adm-price-spot-perm" value="3500" min="0" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">📸 Tarifa para publicar 1 spot adicional cuando el comercio agote su cupo gratuito (permanente).</small>
+              </div>
+
+              <!-- 2.1 Solo Impulso Estándar (Sin Spot) -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-bolt text-gold"></i> 2.1 Solo Impulso Estándar Sin Spot ($ COP)</label>
+                <input type="number" id="adm-price-boost-standalone" value="3500" min="0" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">⚡ Para impulsar un producto existente durante los días fijados (no incluye spot nuevo).</small>
+              </div>
+
+              <!-- 3. Combo Spot Nuevo + Impulso Estándar -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-boxes-stacked text-gold"></i> 3. Precio Combo Spot + Impulso ($ COP)</label>
+                <input type="number" id="adm-price-boost-std" value="5000" min="0" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">📦 1 Spot permanente + impulso destacado en el feed.</small>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-regular fa-clock text-gold"></i> Duración Impulso Estándar (Días)</label>
+                <input type="number" id="adm-days-boost-std" value="2" min="1" max="90" required>
+              </div>
+
+              <!-- 4. Impulso Platino -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-gem" style="color: #00d2ff;"></i> 4. Precio Impulso Platino ($ COP)</label>
+                <input type="number" id="adm-price-boost-plat" value="10000" min="0" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-regular fa-clock" style="color: #00d2ff;"></i> Duración Impulso Platino (Días)</label>
+                <input type="number" id="adm-days-boost-plat" value="5" min="1" max="90" required>
+              </div>
+
+              <!-- 5. Impulso Diamante VIP -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-crown text-gold"></i> 5. Precio Impulso Diamante VIP ($ COP)</label>
+                <input type="number" id="adm-price-boost-diam" value="15000" min="0" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-regular fa-clock text-gold"></i> Duración Impulso Diamante (Días)</label>
+                <input type="number" id="adm-days-boost-diam" value="8" min="1" max="90" required>
+              </div>
+
+              <!-- 6. Membresía Mensual Pro -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-certificate text-spot"></i> 6. Precio Membresía ($ COP / mes)</label>
+                <input type="number" id="adm-price-membership" value="29000" min="0" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">👑 Tarifa plana mensual para tiendas con gran catálogo.</small>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-regular fa-calendar-days text-spot"></i> Duración Membresía (Días)</label>
+                <input type="number" id="adm-days-membership" value="30" min="1" max="365" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-boxes-stacked text-spot"></i> Cupo Máximo de Productos (Membresía)</label>
+                <input type="number" id="adm-membership-limit" value="100" min="1" max="1000" required>
+                <small class="text-muted" style="display:block; margin-top:3px;">Límite de productos que la tienda puede tener publicados mientras mantenga su suscripción activa.</small>
+              </div>
+
+              <div class="pricing-btn-col" style="grid-column: 1 / -1; margin-top: 10px;">
+                <button type="submit" class="btn btn-spot w-100" style="padding: 12px; font-size: 1rem; font-weight: 700;">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Nuevas Tarifas y Tiempos
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- CONFIGURACIÓN DE PASARELA DE PAGOS WOMPI BANCOLOMBIA -->
+          <div class="admin-pricing-card" style="border: 1px solid rgba(0, 210, 255, 0.35); background: linear-gradient(180deg, #101524 0%, #0d111c 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+              <div>
+                <h3 style="color: #00d2ff; margin-bottom: 4px;"><i class="fa-solid fa-credit-card"></i> Pasarela de Pagos Wompi Bancolombia</h3>
+                <p class="text-muted" style="margin: 0;">Configura aquí tus llaves de Wompi (Nequi, Bancolombia QR, PSE y Tarjetas). Vinculadas directamente a tu cuenta comercial.</p>
+              </div>
+              <span class="badge" id="adm-wompi-status-badge" style="background: rgba(0,210,255,0.15); color: #00d2ff; border: 1px solid rgba(0,210,255,0.4); padding: 6px 12px; font-size: 0.85rem; font-weight: 700;">
+                MODO SANDBOX (PRUEBAS)
+              </span>
+            </div>
+
+            <form id="admin-wompi-form" class="pricing-edit-grid">
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label><i class="fa-solid fa-toggle-on text-gold"></i> Entorno de Pagos (Modo)</label>
+                <select id="adm-wompi-mode" style="background: #181d2a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px; border-radius: 8px; width: 100%; font-weight: 700;">
+                  <option value="false">Sandbox / Laboratorio de Pruebas (pub_test_...)</option>
+                  <option value="true">Producción en Vivo (Cobros y Ventas Reales) (pub_prod_...)</option>
+                </select>
+                <small class="text-muted" style="display:block; margin-top:4px;">Usa Sandbox para verificar sin dinero real, y Producción para recibir dinero en tu cuenta de Bancolombia/Nequi.</small>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-key text-gold"></i> Llave Pública (Public Key)</label>
+                <input type="text" id="adm-wompi-public-key" placeholder="pub_prod_... o pub_test_..." required style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Visible en Wompi > Desarrolladores > Llaves de API</small>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-shield-halved text-gold"></i> Secreto de Integridad (Integrity Secret)</label>
+                <input type="text" id="adm-wompi-integrity-secret" placeholder="prod_integrity_... o test_integrity_..." required style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Utilizado para firmar cada transacción con SHA-256 e impedir fraudes</small>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-bell text-gold"></i> Secreto de Eventos (Event Secret - Webhooks)</label>
+                <input type="text" id="adm-wompi-event-secret" placeholder="prod_events_... o test_events_..." style="font-family: monospace;">
+                <small class="text-muted" style="display:block; margin-top:3px;">Opcional: Para corroborar la firma de los eventos enviados por Wompi</small>
+              </div>
+
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label><i class="fa-solid fa-link text-gold"></i> URL de Eventos (Webhook) para registrar en Wompi</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="adm-wompi-webhook-url" readonly style="background: #0d111a; color: #00ff88; font-family: monospace; font-size: 0.95rem; font-weight: 700; cursor: copy; flex: 1;" title="Haz clic para copiar">
+                  <button type="button" id="btn-copy-wompi-webhook" class="btn" style="background: #1e2638; color: #00d2ff; border: 1px solid rgba(0,210,255,0.4); padding: 0 16px; white-space: nowrap; font-weight: 700;">
+                    <i class="fa-solid fa-copy"></i> Copiar URL
+                  </button>
+                </div>
+                <small class="text-muted" style="display:block; margin-top:6px; line-height: 1.4;">
+                  ⚠️ <strong>Regla de Wompi:</strong> Wompi rechaza enlaces con <code>http://localhost</code>. Debe ser siempre una URL pública y segura con <code>https://</code> (como tu túnel de Cloudflare o dominio propio).
+                </small>
+              </div>
+
+              <div class="pricing-btn-col" style="grid-column: 1 / -1; margin-top: 10px;">
+                <button type="submit" class="btn btn-spot w-100" style="padding: 12px; font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, #00d2ff, #0070f3); border: none;">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Credenciales Oficiales de Wompi
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- TOP 10 TIENDAS CON MÁS CONTACTOS Y TRANSACCIONES -->
+          <div class="admin-split-grid">
+            <div class="admin-box">
+              <h4>🏆 Top Negocios con Más Clientes a WhatsApp</h4>
+              <div class="top-stores-list" id="adm-top-stores-list">
+                <!-- Lista de tiendas líderes -->
+              </div>
+            </div>
+            <div class="admin-box">
+              <h4>💵 Historial Reciente de Pagos (Nequi / Wompi)</h4>
+              <div class="transactions-list-scroll" id="adm-tx-list">
+                <!-- Lista de cobros -->
+              </div>
+            </div>
+          </div>
+
+          <!-- CENTRO DE MODERACIÓN Y SEGURIDAD COMUNITARIA (NIVEL 2) -->
+          <div class="admin-pricing-card" id="admin-moderation-card" style="margin-top: 24px; border: 1px solid rgba(239, 68, 68, 0.45); background: linear-gradient(180deg, #181116 0%, #110d14 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+              <div>
+                <h3 style="color: #ff6b6b; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-shield-halved"></i> Centro de Control & Moderación Rápida
+                </h3>
+                <p class="text-muted" style="margin: 0; font-size: 0.85rem;">
+                  Revisa, aprueba, pausa o elimina spots directamente desde tu celular. También puedes contactar al vendedor por WhatsApp en 1 toque.
+                </p>
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-refresh-moderation" style="font-size: 0.78rem;">
+                <i class="fa-solid fa-arrows-rotate"></i> Actualizar
+              </button>
+            </div>
+
+            <!-- FILTROS Y PESTAÑAS DE MODERACIÓN RÁPIDA -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+              <button type="button" class="btn btn-sm btn-mod-tab active" id="tab-mod-reported" style="background: rgba(239, 68, 68, 0.25); color: #ff6b6b; border: 1px solid rgba(239, 68, 68, 0.5); font-weight: 700; border-radius: 8px; padding: 6px 12px;">
+                <i class="fa-solid fa-flag"></i> Reportados (<span id="mod-badge-reported">0</span>)
+              </button>
+              <button type="button" class="btn btn-sm btn-mod-tab" id="tab-mod-all" style="background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.15); font-weight: 700; border-radius: 8px; padding: 6px 12px;">
+                <i class="fa-solid fa-bolt text-gold"></i> Todos los Spots (<span id="mod-badge-all">0</span>)
+              </button>
+              <button type="button" class="btn btn-sm btn-mod-tab" id="tab-mod-stores" style="background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.15); font-weight: 700; border-radius: 8px; padding: 6px 12px;">
+                <i class="fa-solid fa-store"></i> Comercios (<span id="mod-badge-stores">0</span>)
+              </button>
+            </div>
+
+            <!-- BUSCADOR RÁPIDO DE MODERACIÓN -->
+            <div style="margin-bottom: 14px;">
+              <input type="text" id="adm-mod-search" placeholder="🔍 Buscar por tienda, producto o ciudad..." style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.88rem;">
+            </div>
+
+            <div id="adm-moderation-list" style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">
+                Cargando reportes y anuncios...
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- =========================================================
+       5. MODALES INTERACTIVOS
+       ========================================================= -->
+
+  <!-- MODAL 1: PUBLICAR SPOT (CARRUSEL DE FOTOS HD) -->
+  <div class="modal-overlay" id="modal-upload" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-camera-retro text-spot"></i> Publicar SPOT en VitrinaSpot</h3>
+        <button class="close-modal-btn" id="btn-close-upload">&times;</button>
+      </div>
+
+      <form id="upload-video-form" class="modal-body" enctype="multipart/form-data" novalidate>
+        <!-- BANNER DINÁMICO DE BENEFICIO MEMBRESÍA PRO ACTIVA -->
+        <div class="membership-active-alert" id="upload-membership-banner" style="display: none; background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(99, 102, 241, 0.18)); border: 1px solid rgba(168, 85, 247, 0.45); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; align-items: center; justify-content: space-between; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #6366f1); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: #fff; box-shadow: 0 0 12px rgba(168, 85, 247, 0.5); flex-shrink: 0;">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <div>
+              <div style="font-weight: 800; font-size: 0.95rem; color: #fff; display: flex; align-items: center; gap: 6px;">
+                <span>👑 Tu Tienda tiene Membresía Pro Activa</span>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-dim);" id="upload-membership-quota-text">
+                Cupo utilizado: <strong class="text-spot" id="upload-membership-used">0</strong> de <strong id="upload-membership-total">100</strong> productos incluidos
+              </div>
+            </div>
+          </div>
+          <span class="badge" style="background: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.6); font-size: 0.78rem; padding: 5px 10px; border-radius: 8px; font-weight: 800; white-space: nowrap;">
+            7 IMÁGENES $0 COP
+          </span>
+        </div>
+
+        <!-- SELECTOR DE PLAN PUBLICITARIO -->
+        <div class="video-plan-selector-container">
+          <label class="form-section-title"><i class="fa-solid fa-layer-group text-spot"></i> Elige tu Tipo de Publicación:</label>
+
+          <!-- BANNER DE BLOQUEO DE CUPO GRATUITO (5/5 SPOTS COMPLETADOS) -->
+          <div id="upload-free-quota-locked-banner" style="display: none; background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.5); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; align-items: center; gap: 12px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="fa-solid fa-lock" style="font-size: 1.2rem; color: #ef4444;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <strong style="color: #ef4444; font-size: 0.9rem;">🔒 Cupo Gratuito Bloqueado (5 de 5 Spots Usados)</strong>
+                <span style="background: #ef4444; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 99px;">LÍMITE ALCANZADO</span>
+              </div>
+              <p style="margin: 3px 0 0; font-size: 0.8rem; color: #e2e8f0; line-height: 1.3;">
+                Has utilizado todos tus 5 spots gratuitos. Para subir este nuevo spot de 7 imágenes debes adquirir <strong>1 Spot Permanente por $3.500 COP</strong> o activar un <strong>Impulso Comercial</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="video-plans-grid" id="video-plans-grid">
+            <!-- 1. PUBLICACIÓN GRATUITA (HASTA 5 SPOTS GRATIS) -->
+            <div class="video-plan-card active" data-plan="photos_5" data-price="0">
+              <span class="plan-badge-pill" id="plan-card-badge-free" style="background: linear-gradient(135deg, var(--wa-green), #00c853); color: #000; font-weight: 800;">5 SPOTS GRATIS</span>
+              <div class="plan-icon"><i class="fa-solid fa-gift text-gold"></i></div>
+              <strong class="plan-title">Spot Gratuito</strong>
+              <span class="plan-price" id="plan-card-price-photos">$0 COP</span>
+              <p class="plan-desc" id="plan-card-desc-photos">Tus primeros 5 spots con 7 imágenes son 100% gratis. 1 Portada + 6 Detalle permanentes.</p>
+            </div>
+
+            <!-- 2. SPOT PERMANENTE (7 IMÁGENES SIN IMPULSO - $3.500 COP) -->
+            <div class="video-plan-card" data-plan="spot_permanent" data-price="3500">
+              <span class="plan-badge-pill" id="plan-card-badge-perm" style="background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid rgba(0,255,136,0.5); font-weight: 800;">SOLO PUBLICACIÓN</span>
+              <div class="plan-icon"><i class="fa-solid fa-image text-gold"></i></div>
+              <strong class="plan-title">Spot Permanente</strong>
+              <span class="plan-price" id="plan-card-price-perm">$3.500 COP</span>
+              <p class="plan-desc">1 Spot permanente de 7 imágenes sin caducidad (sin impulso publicitario).</p>
+            </div>
+
+            <!-- 2.1 IMPULSO ESTÁNDAR (2 DÍAS - $3.500 COP) -->
+            <div class="video-plan-card" data-plan="boost_standard_standalone" data-price="3500">
+              <span class="plan-badge-pill" id="plan-card-badge-boost-std" style="background: linear-gradient(135deg, #ffb800, #ff8800); color: #000; font-weight: 800;">IMPULSO 2 DÍAS</span>
+              <div class="plan-icon"><i class="fa-solid fa-bolt text-gold"></i></div>
+              <strong class="plan-title">Impulso Estándar</strong>
+              <span class="plan-price" id="plan-card-price-boost-std">$3.500 COP</span>
+              <p class="plan-desc">Aumenta la visibilidad y rotación de tu anuncio en el feed por 2 días con aro ámbar.</p>
+            </div>
+
+            <!-- 3. COMBO SPOT + IMPULSO ESTÁNDAR (2 DÍAS - $5.000 COP) -->
+            <div class="video-plan-card" data-plan="boost_standard" data-price="5000">
+              <span class="plan-badge-pill" id="plan-card-badge-std" style="background: linear-gradient(135deg, #00d2ff, #0072ff); color: #fff; font-weight: 800;">COMBO + 2 DÍAS IMPULSO</span>
+              <div class="plan-icon"><i class="fa-solid fa-boxes-stacked text-gold"></i></div>
+              <strong class="plan-title">Spot + Impulso Estándar</strong>
+              <span class="plan-price" id="plan-card-price-std">$5.000 COP</span>
+              <p class="plan-desc">Publicación fija permanente + 2 días de rotación destacada en feed con aro ámbar.</p>
+            </div>
+
+            <!-- 4. IMPULSO PLATINO (5 DÍAS - $10.000 COP) -->
+            <div class="video-plan-card" data-plan="boost_platino" data-price="10000">
+              <span class="plan-badge-pill" id="plan-card-badge-plat" style="background: linear-gradient(135deg, #e0e7ff, #6366f1); color: #1e1b4b; font-weight: 800;">5 DÍAS PLATINO</span>
+              <div class="plan-icon"><i class="fa-solid fa-gem" style="color: #6366f1;"></i></div>
+              <strong class="plan-title">Impulso Platino</strong>
+              <span class="plan-price" id="plan-card-price-plat">$10.000 COP</span>
+              <p class="plan-desc">Alta visibilidad prioritaria en carrusel de productos y búsquedas por 5 días.</p>
+            </div>
+
+            <!-- 5. IMPULSO DIAMANTE (8 DÍAS VIP - $15.000 COP) -->
+            <div class="video-plan-card" data-plan="boost_diamante" data-price="15000">
+              <span class="plan-badge-pill" id="plan-card-badge-diam" style="background: linear-gradient(135deg, var(--spot-gold), #ff8800); color: #000; font-weight: 800;">8 DÍAS VIP</span>
+              <div class="plan-icon"><i class="fa-solid fa-crown text-gold"></i></div>
+              <strong class="plan-title">Impulso Diamante</strong>
+              <span class="plan-price" id="plan-card-price-diam">$15.000 COP</span>
+              <p class="plan-desc">Máxima exposición: Posición #1 en feed e historias VIP por 8 días con aro neón brillante.</p>
+            </div>
+
+            <!-- 5. PAQUETE DE MEMBRESÍA PRO (30 DÍAS - $29.000 COP) -->
+            <div class="video-plan-card" data-plan="membership_pro" data-price="29000">
+              <span class="plan-badge-pill" id="plan-card-badge-mem" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; font-weight: 800;">MEMBRESÍA 30 DÍAS</span>
+              <div class="plan-icon"><i class="fa-solid fa-certificate text-spot"></i></div>
+              <strong class="plan-title">Membresía Mensual</strong>
+              <span class="plan-price" id="plan-card-price-mem">$29.000 COP/mes</span>
+              <p class="plan-desc">Catálogo ilimitado de 7 imágenes gratis + Tienda Verificada + Métricas (⚠️ Sin impulsos).</p>
+            </div>
+          </div>
+          <input type="hidden" name="selectedPlan" id="upload-selected-plan" value="photos_5">
+        </div>
+
+        <!-- 1. FOTO PRINCIPAL / PORTADA (LA QUE SALE EN GRANDE EN EL FEED) -->
+        <div class="form-group">
+          <label class="form-section-title"><i class="fa-solid fa-star text-gold"></i> 1. Foto de Portada Principal * <small class="text-muted">(La primera que verán los clientes en grande)</small></label>
+          <div class="photo-hero-dropzone" id="cover-dropzone-box">
+            <i class="fa-solid fa-cloud-arrow-up photo-hero-icon"></i>
+            <h4 id="cover-dropzone-title">Toca aquí para elegir la Foto de Portada</h4>
+            <p>Formato vertical o cuadrado nítido de tu producto o servicio.</p>
+            <input type="file" id="upload-cover-photo" name="coverPhoto" accept="image/*" required>
+            <div class="cover-preview-wrapper" id="cover-preview-wrapper" style="display: none;">
+              <img id="cover-preview-img" src="" alt="Vista previa portada">
+              <span class="cover-preview-badge">✓ Foto Portada Seleccionada</span>
+              <button type="button" class="cover-remove-btn" id="btn-remove-cover-photo" title="Quitar foto de portada">&times;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. LAS 6 FOTOS DE DETALLE (SECUNDARIAS / GALERÍA - 7 IMÁGENES EN TOTAL) -->
+        <div class="form-group">
+          <label class="form-section-title"><i class="fa-solid fa-images text-spot"></i> 2. Seis Fotos de Detalle <small class="text-muted">(Ángulos, colores, empaque o carta - 7 imágenes en total)</small></label>
+          <div class="four-photos-grid six-photos-grid">
+            <div class="mini-photo-picker" id="picker-wrapper-2">
+              <label for="upload-photo-2" class="mini-picker-label" id="label-photo-2">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 2</span>
+                <img id="preview-photo-2" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-2" style="display: none;" title="Quitar Foto 2">&times;</button>
+              <input type="file" id="upload-photo-2" name="photo2" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-3">
+              <label for="upload-photo-3" class="mini-picker-label" id="label-photo-3">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 3</span>
+                <img id="preview-photo-3" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-3" style="display: none;" title="Quitar Foto 3">&times;</button>
+              <input type="file" id="upload-photo-3" name="photo3" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-4">
+              <label for="upload-photo-4" class="mini-picker-label" id="label-photo-4">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 4</span>
+                <img id="preview-photo-4" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-4" style="display: none;" title="Quitar Foto 4">&times;</button>
+              <input type="file" id="upload-photo-4" name="photo4" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-5">
+              <label for="upload-photo-5" class="mini-picker-label" id="label-photo-5">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 5</span>
+                <img id="preview-photo-5" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-5" style="display: none;" title="Quitar Foto 5">&times;</button>
+              <input type="file" id="upload-photo-5" name="photo5" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-6">
+              <label for="upload-photo-6" class="mini-picker-label" id="label-photo-6">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 6</span>
+                <img id="preview-photo-6" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-6" style="display: none;" title="Quitar Foto 6">&times;</button>
+              <input type="file" id="upload-photo-6" name="photo6" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-7">
+              <label for="upload-photo-7" class="mini-picker-label" id="label-photo-7">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 7</span>
+                <img id="preview-photo-7" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-7" style="display: none;" title="Quitar Foto 7">&times;</button>
+              <input type="file" id="upload-photo-7" name="photo7" accept="image/*">
+            </div>
+          </div>
+        </div>
+
+        <!-- DATOS DEL NEGOCIO Y WHATSAPP DIRECTO -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Nombre de tu Tienda o Negocio *</label>
+            <input type="text" id="upload-store-name" name="storeName" placeholder="Ej: Calzados Bucaramanga" required>
+          </div>
+          <div class="form-group flex-1">
+            <label>Tu WhatsApp de Ventas (10 dígitos) *</label>
+            <input type="tel" id="upload-whatsapp" name="whatsapp" placeholder="Ej: 312 456 7890" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Nombre del Producto o Servicio *</label>
+          <input type="text" id="upload-title" name="title" placeholder="Ej: Zapatos Oxford de Cuero Suela Confort" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Precio en COP (Opcional)</label>
+            <input type="number" id="upload-price" name="price" placeholder="Ej: 139900 (Deja en 0 si es a cotizar)">
+          </div>
+          <div class="form-group flex-1">
+            <label>Ciudad *</label>
+            <select id="upload-city" name="city">
+              <option value="Bogotá">Bogotá D.C.</option>
+              <option value="Medellín">Medellín</option>
+              <option value="Cali">Cali</option>
+              <option value="Popayán">Popayán (Cauca)</option>
+              <option value="Barranquilla">Barranquilla</option>
+              <option value="Bucaramanga">Bucaramanga</option>
+              <option value="Eje Cafetero">Eje Cafetero</option>
+              <option value="Cartagena">Cartagena</option>
+            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label><i class="fa-solid fa-shapes text-gold"></i> Categoría del Producto *</label>
+            <button type="button" class="btn-category-picker-trigger" id="btn-open-category-picker" title="Toca para elegir la categoría de tu producto">
+              <span class="cat-picker-preview-left">
+                <span class="cat-picker-preview-icon" id="cat-picker-preview-icon">🍔</span>
+                <span class="cat-picker-preview-text" id="cat-picker-preview-text">Comida & Domicilios</span>
+              </span>
+              <span class="cat-picker-preview-action">
+                <span class="cat-picker-btn-hint">Elegir</span>
+                <i class="fa-solid fa-chevron-right cat-picker-arrow"></i>
+              </span>
+            </button>
+            <input type="hidden" id="upload-cat" name="category" value="Comida & Domicilios">
+          </div>
+
+          <div class="form-group flex-1">
+            <label>Condiciones de Domicilio</label>
+            <select id="upload-delivery-type" name="deliveryType">
+              <option value="gratis">Domicilio Gratis</option>
+              <option value="custom">Tarifa Personalizada</option>
+              <option value="local">🏪 Recogida en Local Físico</option>
+              <option value="nacional">🇨🇴 Envíos a Todo el País</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- CASILLA DINÁMICA DE VALOR DE DOMICILIO PERSONALIZADO -->
+        <div class="form-group" id="custom-delivery-price-box" style="display: none;">
+          <label>Valor exacto del Domicilio en COP *</label>
+          <input type="number" id="upload-custom-delivery" name="customDelivery" placeholder="Ej: 7000 (Escribe el valor que cobras por carrera)">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Etiqueta Promocional</label>
+            <select id="upload-badge" name="promoBadge">
+              <option value="none">Sin etiqueta</option>
+              <option value="¡EN OFERTA!">🏷️ ¡EN OFERTA!</option>
+              <option value="ENVÍO GRATIS">🚚 ENVÍO GRATIS</option>
+              <option value="ÚLTIMAS UNIDADES">⚡ ÚLTIMAS UNIDADES</option>
+              <option value="🛠️ A DOMICILIO">🛠️ A DOMICILIO</option>
+              <option value="📢 SE BUSCA PERSONAL">📢 SE BUSCA PERSONAL</option>
+              <option value="🙋 OFREZCO MI TRABAJO">🙋 OFREZCO MI TRABAJO</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label>Palabras clave (para búsquedas rápidas)</label>
+            <input type="text" id="upload-keywords" name="keywords" placeholder="ej: cuero, elegante, dama, domicilio">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción del producto o servicio</label>
+          <textarea id="upload-desc" name="description" rows="2" placeholder="Tallas, colores, garantía, detalles de la oferta..."></textarea>
+        </div>
+
+        <!-- BARRA DE SUBIDA RÁPIDA -->
+        <div class="upload-progress-card" id="upload-progress-card" style="display: none;">
+          <div class="prog-info">
+            <span>Publicando anuncio de 7 imágenes gratis...</span>
+            <span id="upload-pct">0%</span>
+          </div>
+          <div class="prog-bg"><div class="prog-fill" id="upload-fill"></div></div>
+        </div>
+
+        <div class="modal-footer" style="flex-direction: column; align-items: stretch; gap: 12px;">
+          <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline" id="btn-preview-spot-mockup" title="Ver cómo lucirá tu SPOT en la pantalla del celular">
+              <i class="fa-solid fa-mobile-screen-button text-gold"></i> <span>Vista Previa en Celular</span>
+            </button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-ghost" id="btn-cancel-upload">Cancelar</button>
+              <button type="button" class="btn btn-spot" id="btn-submit-upload">
+                <i class="fa-solid fa-camera"></i> <span id="submit-upload-btn-text">Publicar 7 Imágenes Gratis ($0 COP)</span>
+              </button>
+            </div>
+          </div>
+          <div style="text-align: center; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+            <i class="fa-solid fa-shield-halved text-gold"></i> Al publicar aceptas nuestras <a href="javascript:void(0)" id="link-upload-legal" style="color: #00d2ff; text-decoration: underline;">Políticas de Seguridad y Reglas de Oro</a> (Vitrina familiar, sin armas ni adultos).
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SELECTOR VISUAL DE CATEGORÍAS (HOJA FLOTANTE ESTILO TIKTOK) -->
+  <div class="modal-overlay" id="modal-category-picker" style="display: none; z-index: 10500;">
+    <div class="category-picker-sheet">
+      <div class="cat-sheet-drag-handle"></div>
+      <div class="cat-sheet-header">
+        <div class="cat-sheet-title-box">
+          <div class="cat-sheet-icon-circle"><i class="fa-solid fa-shapes"></i></div>
+          <div>
+            <h3 class="cat-sheet-title">Elige la Categoría de tu SPOT</h3>
+            <p class="cat-sheet-sub">Toca el rubro donde tus clientes encontrarán tu producto</p>
+          </div>
+        </div>
+        <button type="button" class="close-modal-btn cat-sheet-close" id="btn-close-category-picker" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <!-- BUSCADOR RÁPIDO DE CATEGORÍAS -->
+      <div class="cat-picker-search-wrapper">
+        <div style="position: relative; display: flex; align-items: center;">
+          <i class="fa-solid fa-magnifying-glass cat-search-icon"></i>
+          <input type="text" id="cat-picker-search-input" class="cat-picker-search-field" placeholder="Buscar categoría (ej: calzado, ropa, comida)..." autocomplete="off" enterkeyhint="search" autocapitalize="none" spellcheck="false" style="padding-right: 80px;">
+          <button type="button" class="btn-hide-keyboard" id="btn-hide-keyboard-picker" style="display: none; position: absolute; right: 38px; top: 50%; transform: translateY(-50%); background: rgba(255,184,0,0.22); border: 1px solid rgba(255,184,0,0.5); border-radius: 6px; color: var(--spot-gold); font-size: 0.75rem; padding: 4px 8px; font-weight: 700; cursor: pointer;" title="Ocultar teclado">Listo ✓</button>
+          <button type="button" class="cat-search-clear-btn" id="btn-clear-cat-search" style="display: none;" title="Borrar búsqueda">&times;</button>
+        </div>
+
+        <!-- CHIPS DE ACCESO RÁPIDO -->
+        <div class="cat-quick-chips-row" id="cat-picker-quick-chips">
+          <button type="button" class="cat-chip-btn active" data-chip="">⚡ Todas</button>
+          <button type="button" class="cat-chip-btn" data-chip="comida">🍔 Comida</button>
+          <button type="button" class="cat-chip-btn" data-chip="ropa">👗 Ropa</button>
+          <button type="button" class="cat-chip-btn" data-chip="calzado">👟 Calzado</button>
+          <button type="button" class="cat-chip-btn" data-chip="tecnologia">📱 Tecnología</button>
+          <button type="button" class="cat-chip-btn" data-chip="belleza">💄 Belleza</button>
+          <button type="button" class="cat-chip-btn" data-chip="vehiculos">🚗 Vehículos</button>
+          <button type="button" class="cat-chip-btn" data-chip="hogar">🍳 Hogar</button>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR CON SCROLL DE BOTONES DE CATEGORÍAS -->
+      <div class="cat-picker-scroll-area">
+        <div class="cat-picker-grid" id="cat-picker-buttons-grid">
+          <!-- Renderizado dinámico de los 29 botones táctiles -->
+        </div>
+        <div class="cat-picker-empty" id="cat-picker-no-results" style="display: none;">
+          <i class="fa-regular fa-face-frown"></i>
+          <p>No encontramos ninguna categoría con ese nombre.</p>
+          <button type="button" class="btn btn-ghost" id="btn-reset-cat-search">Ver todas las 29 categorías</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VISTA PREVIA EN CELULAR (SMARTPHONE MOCKUP ANTES DE PUBLICAR) -->
+  <div class="modal-overlay" id="modal-spot-preview-mockup" style="display: none; z-index: 10600;">
+    <div class="spot-mockup-dialog">
+      <div class="spot-mockup-header">
+        <div class="mockup-header-title">
+          <i class="fa-solid fa-mobile-screen-button text-gold"></i>
+          <span>Vista Previa: Así se verá tu SPOT</span>
+        </div>
+        <button type="button" class="close-modal-btn" id="btn-close-spot-mockup" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <div class="spot-mockup-body">
+        <div class="phone-mockup-bezel">
+          <div class="phone-mockup-speaker"></div>
+          <div class="phone-mockup-screen" id="mockup-screen-container">
+            <!-- Contenido dinámico del SPOT renderizado en tiempo real por app.js -->
+          </div>
+        </div>
+      </div>
+
+      <div class="spot-mockup-footer">
+        <button type="button" class="btn btn-ghost" id="btn-mockup-back-edit">
+          <i class="fa-solid fa-arrow-left"></i> Volver a Editar
+        </button>
+        <button type="button" class="btn btn-spot" id="btn-mockup-publish-now">
+          <i class="fa-solid fa-rocket"></i> ¡Se ve genial, Publicar Ahora!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: REGISTRO / LOGIN RÁPIDO DE TIENDA -->
+  <div class="modal-overlay" id="modal-store-auth" style="display: none;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-store text-spot"></i> Acceso a tu Negocio</h3>
+        <button type="button" class="close-modal-btn" id="btn-close-store-auth" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <!-- PESTAÑAS LOGIN / REGISTRO -->
+      <div class="auth-tabs-row">
+        <button type="button" class="auth-tab-btn active" id="tab-btn-register">Crear Tienda Gratis</button>
+        <button type="button" class="auth-tab-btn" id="tab-btn-login">Ya tengo Tienda (Ingresar)</button>
+      </div>
+
+      <!-- FORMULARIO 1: REGISTRAR TIENDA -->
+      <form id="store-register-form" class="modal-body">
+        <p class="modal-intro-text">Crea tu propia tienda gratis, publica tus productos y recibe clientes calificados en tu WhatsApp.</p>
+
+        <!-- ANUNCIO EN ROJO: NOMBRE DE TIENDA YA EXISTE -->
+        <div id="reg-store-name-error" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1.5px solid #ef4444; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 0.85rem; color: #fca5a5; line-height: 1.4; animation: fadeIn 0.25s ease;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 1.25rem; margin-top: 2px; flex-shrink: 0;"></i>
+            <div>
+              <strong style="color: #fff; display: block; font-size: 0.9rem; margin-bottom: 2px;">Este nombre de usuario ya existe</strong>
+              <span id="reg-store-name-error-text">Este nombre de tienda ya existe en esta ciudad. Debes colocar otro nombre para continuar.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Nombre de tu Tienda o Negocio *</label>
+          <input type="text" id="reg-store-name" placeholder="Ej: Mi Tienda Virtual" required>
+        </div>
+        <div class="form-group">
+          <label>Número de WhatsApp para Ventas (10 dígitos) *</label>
+          <input type="tel" id="reg-store-whatsapp" placeholder="Ej: 312 456 7890" required>
+        </div>
+        <div class="form-group">
+          <label>Ciudad Principal</label>
+          <select id="reg-store-city">
+            <option value="Bogotá">Bogotá D.C.</option>
+            <option value="Medellín">Medellín</option>
+            <option value="Cali">Cali</option>
+            <option value="Popayán">Popayán (Cauca)</option>
+            <option value="Barranquilla">Barranquilla</option>
+            <option value="Bucaramanga">Bucaramanga</option>
+            <option value="Eje Cafetero">Eje Cafetero</option>
+            <option value="Cartagena">Cartagena</option>
+            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Contraseña para tu Panel <small class="text-muted">(Crea tu clave secreta)</small> *</label>
+          <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center;">
+            <input type="password" id="reg-store-pass" placeholder="••••••••" required style="width: 100%; padding-right: 42px;">
+            <button type="button" class="btn-password-eye" id="btn-toggle-reg-pass" style="position: absolute; right: 8px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.05rem; padding: 6px; display: flex; align-items: center; justify-content: center;" title="Mostrar u ocultar contraseña">
+              <i class="fa-solid fa-eye" id="icon-toggle-reg-pass"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- CAJA DE POLÍTICAS DE SEGURIDAD Y REGLAS DE ORO OBLIGATORIAS -->
+        <div style="background: rgba(255, 184, 0, 0.08); border: 1px solid rgba(255, 184, 0, 0.35); border-radius: 10px; padding: 12px; margin: 6px 0;">
+          <div style="font-weight: 800; font-size: 0.85rem; color: #fff; display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <span><i class="fa-solid fa-scale-balanced text-gold"></i> Políticas & Reglas de Oro</span>
+            <button type="button" id="btn-read-rules-reg" style="background: none; border: none; color: #00d2ff; text-decoration: underline; font-size: 0.75rem; cursor: pointer; padding: 0;">
+              Leer completas
+            </button>
+          </div>
+          <ul style="margin: 0 0 10px 0; padding-left: 18px; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">
+            <li>Vitrina 100% comercial y familiar (cero contenido para adultos).</li>
+            <li>Cero armas, municiones, violencia o sustancias ilícitas.</li>
+            <li><strong>Respaldo a tu inversión:</strong> Si tus fotos requieren ajuste, puedes cambiarlas gratis sin perder tu dinero.</li>
+          </ul>
+          <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.8rem; color: #fff; cursor: pointer; user-select: none;">
+            <input type="checkbox" id="reg-store-accept-rules" required style="margin-top: 2px; width: 16px; height: 16px; accent-color: var(--spot-gold); cursor: pointer;">
+            <span>He leído y acepto las <strong style="color: var(--spot-gold);">Reglas de Oro</strong> y Políticas de VitrinaSpot para activar mi tienda. *</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-spot btn-large w-100 mt-2">
+          <i class="fa-solid fa-check"></i> Crear Mi Tienda y Empezar
+        </button>
+      </form>
+
+      <!-- FORMULARIO 2: INICIAR SESIÓN -->
+      <form id="store-login-form" class="modal-body" style="display: none;">
+        <p class="modal-intro-text">Ingresa tu número de WhatsApp para entrar a tu perfil y panel de negocio.</p>
+        <div class="form-group">
+          <label>Número de WhatsApp registrado *</label>
+          <input type="tel" id="login-store-whatsapp" placeholder="Ej: 312 456 7890" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña *</label>
+          <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center;">
+            <input type="password" id="login-store-pass" placeholder="••••••••" required style="width: 100%; padding-right: 42px;">
+            <button type="button" class="btn-password-eye" id="btn-toggle-login-pass" style="position: absolute; right: 8px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.05rem; padding: 6px; display: flex; align-items: center; justify-content: center;" title="Mostrar u ocultar contraseña">
+              <i class="fa-solid fa-eye" id="icon-toggle-login-pass"></i>
+            </button>
+          </div>
+        </div>
+        <div class="forgot-pass-row">
+          <button type="button" class="btn-link-forgot" id="btn-goto-forgot-pass">
+            <i class="fa-solid fa-key text-gold"></i> ¿Olvidaste tu contraseña? Toca aquí
+          </button>
+        </div>
+        <button type="submit" class="btn btn-gold btn-large w-100 mt-2">
+          <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión en Mi Negocio
+        </button>
+      </form>
+
+      <!-- FORMULARIO 3: RECUPERAR CONTRASEÑA POR WHATSAPP -->
+      <form id="store-forgot-form" class="modal-body" style="display: none;">
+        <!-- PASO 1: SOLICITAR CÓDIGO -->
+        <div id="forgot-step-1">
+          <p class="modal-intro-text">
+            Ingresa tu número de WhatsApp registrado para recibir un <strong>código de seguridad de 4 dígitos</strong> y restablecer tu contraseña.
+          </p>
+          <div class="form-group">
+            <label>Número de WhatsApp Registrado *</label>
+            <input type="tel" id="forgot-store-whatsapp" placeholder="Ej: 312 852 5929" required>
+          </div>
+          <button type="button" class="btn btn-spot btn-large w-100 mt-2" id="btn-request-recovery-code">
+            <i class="fa-brands fa-whatsapp"></i> Enviar Código por WhatsApp
+          </button>
+        </div>
+
+        <!-- PASO 2: INGRESAR CÓDIGO Y NUEVA CONTRASEÑA -->
+        <div id="forgot-step-2" style="display: none;">
+          <div class="recovery-badge-info">
+            <i class="fa-solid fa-shield-halved text-gold"></i>
+            <span>Código de recuperación generado para: <strong id="forgot-target-wa">+57...</strong></span>
+          </div>
+          <div class="form-group mt-3">
+            <label>Código de Seguridad de 4 Dígitos *</label>
+            <input type="text" id="forgot-input-code" placeholder="Ej: 4829" maxlength="4" class="code-digit-input" required>
+          </div>
+          <div class="form-group">
+            <label>Nueva Contraseña *</label>
+            <input type="password" id="forgot-new-password" placeholder="Mínimo 3 caracteres" required>
+          </div>
+          <div class="form-group">
+            <label>Confirmar Nueva Contraseña *</label>
+            <input type="password" id="forgot-confirm-password" placeholder="Repite tu nueva clave" required>
+          </div>
+          <button type="button" class="btn btn-gold btn-large w-100 mt-2" id="btn-submit-reset-password">
+            <i class="fa-solid fa-lock-open"></i> Actualizar Contraseña y Entrar
+          </button>
+          <div class="mt-2 text-center">
+            <a href="#" class="btn-wa-direct-link" id="btn-reopen-wa-code" target="_blank">
+              <i class="fa-brands fa-whatsapp"></i> Toca aquí para ver el código en tu WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- VOLVER AL LOGIN -->
+        <div class="mt-3 text-center">
+          <button type="button" class="btn-link-back" id="btn-back-to-login">
+            <i class="fa-solid fa-arrow-left"></i> Volver a Iniciar Sesión
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CHECKOUT WOMPI & NEQUI (COMPRA DE SPOTS O EXTENSIONES) -->
+  <div class="modal-overlay" id="modal-checkout" style="display: none;">
+    <div class="modal-dialog modal-checkout-card">
+      <div class="modal-header">
+        <div class="checkout-title-row">
+          <i class="fa-solid fa-bolt text-gold"></i>
+          <h3>Activar Publicidad & SPOTS en VitrinaSpot</h3>
+        </div>
+        <button class="close-modal-btn" id="btn-close-checkout">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- SELECTOR INTERACTIVO DE PLANES DE IMPULSO Y PUBLICIDAD -->
+        <div class="checkout-plan-selector" id="checkout-plan-selector-container">
+          <label class="checkout-selector-label">
+            <i class="fa-solid fa-layer-group text-gold"></i> Elige tu Plan de Publicidad o Impulso:
+          </label>
+          <div class="checkout-plans-grid" id="checkout-plans-grid">
+            <!-- 0. IMPULSO ESTÁNDAR (2 DÍAS - $3.500 COP) -->
+            <div class="checkout-plan-btn" data-plan="boost_standard_standalone">
+              <div class="chk-plan-icon"><i class="fa-solid fa-bolt text-gold"></i></div>
+              <div class="chk-plan-info">
+                <strong>Impulso Estándar</strong>
+                <span class="chk-plan-badge badge-perm" id="chk-badge-boost-standalone">2 DÍAS</span>
+              </div>
+              <span class="chk-plan-price" id="chk-price-boost-standalone">$3.500 COP</span>
+            </div>
+
+            <!-- 1. SPOT PERMANENTE (7 IMÁGENES SIN IMPULSO - $3.500 COP) -->
+            <div class="checkout-plan-btn" data-plan="spot_permanent">
+              <div class="chk-plan-icon"><i class="fa-solid fa-image text-gold"></i></div>
+              <div class="chk-plan-info">
+                <strong>Spot Permanente</strong>
+                <span class="chk-plan-badge badge-perm" id="chk-badge-spot-perm">7 FOTOS</span>
+              </div>
+              <span class="chk-plan-price" id="chk-price-spot-perm">$3.500 COP</span>
+            </div>
+
+            <!-- 2. COMBO SPOT NUEVO + IMPULSO ESTÁNDAR (2 DÍAS - $5.000 COP) -->
+            <div class="checkout-plan-btn" data-plan="boost_standard">
+              <div class="chk-plan-icon"><i class="fa-solid fa-boxes-stacked text-gold"></i></div>
+              <div class="chk-plan-info">
+                <strong>Combo Spot + Impulso</strong>
+                <span class="chk-plan-badge" id="chk-badge-boost-std">SPOT + 2 DÍAS</span>
+              </div>
+              <span class="chk-plan-price" id="chk-price-boost-std">$5.000 COP</span>
+            </div>
+
+            <!-- 2. IMPULSO PLATINO (5 DÍAS - $10.000 COP) -->
+            <div class="checkout-plan-btn" data-plan="boost_platino">
+              <div class="chk-plan-icon"><i class="fa-solid fa-gem" style="color: #6366f1;"></i></div>
+              <div class="chk-plan-info">
+                <strong>Impulso Platino</strong>
+                <span class="chk-plan-badge badge-platino" id="chk-badge-boost-plat">5 DÍAS</span>
+              </div>
+              <span class="chk-plan-price" id="chk-price-boost-plat">$10.000 COP</span>
+            </div>
+
+            <!-- 3. IMPULSO DIAMANTE (8 DÍAS VIP - $15.000 COP) -->
+            <div class="checkout-plan-btn active" data-plan="boost_diamante">
+              <div class="chk-plan-icon"><i class="fa-solid fa-crown text-gold"></i></div>
+              <div class="chk-plan-info">
+                <strong>Impulso Diamante</strong>
+                <span class="chk-plan-badge badge-diamante" id="chk-badge-boost-diam">8 DÍAS VIP</span>
+              </div>
+              <span class="chk-plan-price" id="chk-price-boost-diam">$15.000 COP</span>
+            </div>
+
+            <!-- 4. MEMBRESÍA MENSUAL PRO (30 DÍAS - $29.000 COP) -->
+            <div class="checkout-plan-btn" data-plan="membership_pro">
+              <div class="chk-plan-icon"><i class="fa-solid fa-certificate text-spot"></i></div>
+              <div class="chk-plan-info">
+                <strong>Membresía Mensual</strong>
+                <span class="chk-plan-badge badge-pro" id="chk-badge-membership">30 DÍAS</span>
+              </div>
+              <span class="chk-plan-price" id="chk-price-membership">$29.000 COP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-product-preview">
+          <span class="preview-tag">Servicio Seleccionado</span>
+          <h2 id="checkout-item-title">⭐ Impulso Extremo SPOT VIP</h2>
+          <div class="checkout-price-tag" id="checkout-item-price">$15.000 COP</div>
+          <p id="checkout-item-desc">Máxima exposición: Posición #1 en el feed y presencia en Historias VIP superiores.</p>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">
+            Referencia de Transacción: <strong id="checkout-ref-code" class="text-gold">VT-2026</strong>
+          </div>
+        </div>
+
+        <!-- MEDIOS DE PAGO COLOMBIANOS -->
+        <div class="checkout-payment-methods">
+          <label>Elige tu método de pago preferido:</label>
+          <div class="pay-methods-grid">
+            <label class="pay-method-option active" data-target="nequi">
+              <input type="radio" name="payMethod" value="wompi_nequi" checked>
+              <div class="pay-option-card">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span>Nequi Directo</span>
+              </div>
+            </label>
+            <label class="pay-method-option" data-target="pse">
+              <input type="radio" name="payMethod" value="wompi_pse">
+              <div class="pay-option-card">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>Daviplata / PSE</span>
+              </div>
+            </label>
+            <label class="pay-method-option" data-target="card">
+              <input type="radio" name="payMethod" value="wompi_card">
+              <div class="pay-option-card">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Tarjeta Crédito/Débito</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- DETALLES DEL MEDIO DE PAGO SELECCIONADO -->
+        <div class="checkout-details-box" id="checkout-details-box">
+          <div id="pay-detail-nequi" class="pay-detail-pane">
+            <div class="pay-detail-header">
+              <i class="fa-solid fa-mobile-screen-button text-gold"></i>
+              <strong>Pago Rápido con Nequi Colombia</strong>
+            </div>
+            <p>1. Transfiere desde tu App Nequi al número oficial de recargas VitrinaSpot:</p>
+            <div class="nequi-number-pill">
+              <span>📱 Nequi: <strong>312 852 5929</strong></span>
+            </div>
+            <div class="form-group mt-2">
+              <label>Tu número de celular Nequi (para validar tu pago):</label>
+              <input type="tel" id="checkout-nequi-phone" placeholder="Ej: 300 123 4567" maxlength="10">
+            </div>
+          </div>
+
+          <div id="pay-detail-pse" class="pay-detail-pane" style="display: none;">
+            <div class="pay-detail-header">
+              <i class="fa-solid fa-building-columns text-green"></i>
+              <strong>Transferencia Daviplata / Bancolombia</strong>
+            </div>
+            <p>Transfiere el valor exacto a la llave comercial VitrinaSpot o escanea el QR en tu app bancaria.</p>
+            <div class="nequi-number-pill">
+              <span>🏦 Llave Bancolombia / Daviplata: <strong>312 852 5929</strong></span>
+            </div>
+          </div>
+
+          <div id="pay-detail-card" class="pay-detail-pane" style="display: none;">
+            <div class="pay-detail-header">
+              <i class="fa-solid fa-shield-halved text-gold"></i>
+              <strong>Pago Seguro con Tarjeta o Wompi</strong>
+            </div>
+            <p>Conexión cifrada de 256-bit certificada por Bancolombia para pagos con Visa, Mastercard y Débito.</p>
+          </div>
+        </div>
+
+        <!-- BOTÓN DE CONFIRMACIÓN AUTOMÁTICA -->
+        <button type="button" class="btn btn-gold btn-large w-100" id="btn-confirm-checkout">
+          <i class="fa-solid fa-lock"></i> Pagar y Activar al Instante
+        </button>
+
+        <div class="checkout-security-note">
+          <i class="fa-solid fa-shield-halved"></i> Transacción 100% Segura procesada mediante Wompi Bancolombia.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: PANEL DE COMENTARIOS DESLIZABLE (BOTTOM SHEET EN MÓVIL) -->
+  <div class="modal-overlay" id="modal-comments-sheet" style="display: none !important;">
+    <div class="comments-sheet-dialog">
+      <!-- Barra superior táctil tipo pill para deslizar hacia abajo o tocar para cerrar -->
+      <div class="sheet-drag-handle-bar" id="sheet-drag-close-trigger" title="Toca o desliza hacia abajo para cerrar">
+        <div class="sheet-drag-pill"></div>
+      </div>
+      <div class="sheet-header">
+        <h4><i class="fa-solid fa-comment-dots text-spot"></i> Preguntas y Comentarios</h4>
+        <button type="button" class="btn-close-comments-round" id="btn-close-comments-sheet" title="Cerrar Comentarios" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="sheet-comments-list" id="sheet-comments-container">
+        <!-- Comentarios dinámicos -->
+      </div>
+
+      <form id="sheet-comment-form" class="sheet-input-bar">
+        <img id="sheet-current-user-avatar" src="" alt="Mi Foto" class="sheet-comment-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80';" style="display: none; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--spot-gold); flex-shrink: 0;">
+        <input type="text" id="sheet-comment-input" placeholder="Pregúntale al vendedor sobre este producto..." autocomplete="off">
+        <button type="submit" class="btn btn-spot btn-sm">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: CALIFICAR TIENDA (1 A 5 ESTRELLAS) -->
+  <div class="modal-overlay" id="modal-rate-store" style="display: none;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-star text-gold"></i> Calificar Tienda</h3>
+        <button class="close-modal-btn" id="btn-close-rate">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <h4 id="rate-modal-store-name" style="margin: 0 0 6px 0; color: var(--spot-gold); font-size: 1.15rem; font-weight: 800;">Nombre del Negocio</h4>
+        <p id="rate-modal-desc" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">¿Cómo calificarías la atención, seriedad y productos de este comercio?</p>
+        
+        <div class="stars-picker-row" id="stars-picker" style="font-size: 2.2rem; gap: 12px; margin: 12px 0;">
+          <i class="fa-solid fa-star star-pick active" data-val="1"></i>
+          <i class="fa-solid fa-star star-pick active" data-val="2"></i>
+          <i class="fa-solid fa-star star-pick active" data-val="3"></i>
+          <i class="fa-solid fa-star star-pick active" data-val="4"></i>
+          <i class="fa-solid fa-star star-pick active" data-val="5"></i>
+        </div>
+
+        <div id="rate-stars-score-label" style="font-weight: 800; font-size: 0.95rem; color: #fff; margin: 8px 0 16px 0; min-height: 24px;">
+          ⭐⭐⭐⭐⭐ 5.0 - ¡Excelente atención y productos!
+        </div>
+
+        <button class="btn btn-spot btn-large w-100" id="btn-submit-rating">
+          <i class="fa-solid fa-check"></i> Confirmar Calificación
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: EDITAR PERFIL & FOTO DE PERFIL / LOGO -->
+  <div class="modal-overlay" id="modal-edit-profile" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-camera text-spot"></i> Editar Perfil & Foto de mi Tienda</h3>
+        <button class="close-modal-btn" id="btn-close-edit-profile">&times;</button>
+      </div>
+
+      <form id="edit-profile-form" class="modal-body" enctype="multipart/form-data">
+        <!-- ZONA DE FOTO DE PERFIL CON PREVIEW INTERACTIVO -->
+        <div class="profile-photo-selector-box">
+          <div class="photo-preview-circle">
+            <img id="edit-preview-avatar" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80" alt="Vista previa avatar" class="avatar-preview-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80';">
+            <label for="edit-profile-avatar-input" class="photo-badge-label" title="Haz clic para elegir foto o logo">
+              <i class="fa-solid fa-camera"></i>
+            </label>
+          </div>
+          <div class="photo-selector-text">
+            <h4>Foto de Perfil o Logo del Negocio</h4>
+            <p class="text-muted">Se mostrará en la barra de tiendas, tus anuncios y en tu catálogo público.</p>
+            <label for="edit-profile-avatar-input" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-image"></i> Seleccionar Foto desde mi Galería / Archivos
+            </label>
+            <input type="file" id="edit-profile-avatar-input" name="avatar" accept="image/*" style="display: none;">
+            <div id="edit-avatar-filename" class="text-green mt-1" style="font-size:0.78rem; font-weight:600;"></div>
+          </div>
+        </div>
+
+        <!-- ANUNCIO EN ROJO: NOMBRE DE TIENDA YA EXISTE AL EDITAR -->
+        <div id="edit-store-name-error" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1.5px solid #ef4444; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 0.85rem; color: #fca5a5; line-height: 1.4; animation: fadeIn 0.25s ease;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 1.25rem; margin-top: 2px; flex-shrink: 0;"></i>
+            <div>
+              <strong style="color: #fff; display: block; font-size: 0.9rem; margin-bottom: 2px;">Este nombre de usuario ya existe</strong>
+              <span id="edit-store-name-error-text">Este nombre de tienda ya existe en esta ciudad. Debes colocar otro nombre para continuar.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Nombre de la Tienda / Negocio *</label>
+          <input type="text" id="edit-store-name" name="name" required placeholder="Ej: Calzados Bucaramanga">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>WhatsApp de Contacto (10 dígitos) *</label>
+            <div class="phone-input-wrap">
+              <span class="country-prefix">🇨🇴 +57</span>
+              <input type="tel" id="edit-store-whatsapp" name="whatsapp" required placeholder="312 345 6789">
+            </div>
+          </div>
+
+          <div class="form-group flex-1">
+            <label>Ciudad Principal</label>
+            <select id="edit-store-city" name="city">
+              <option value="Bogotá">Bogotá D.C.</option>
+              <option value="Medellín">Medellín</option>
+              <option value="Cali">Cali</option>
+              <option value="Popayán">Popayán (Cauca)</option>
+              <option value="Barranquilla">Barranquilla</option>
+              <option value="Bucaramanga">Bucaramanga</option>
+              <option value="Eje Cafetero">Eje Cafetero</option>
+              <option value="Cartagena">Cartagena</option>
+            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción / Biografía del Negocio</label>
+          <textarea id="edit-store-desc" name="description" rows="2" placeholder="¿Qué vendes? ¿Por qué los clientes deberían comprarte?"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Horario de Atención</label>
+            <input type="text" id="edit-store-hours" name="hours" placeholder="Ej: Lun - Sáb: 8:00 AM - 7:00 PM">
+          </div>
+
+          <div class="form-group flex-1">
+            <label>Dirección física o Punto de venta</label>
+            <input type="text" id="edit-store-address" name="address" placeholder="Ej: Cll 45 # 12-34 o Ventas Online">
+          </div>
+        </div>
+
+        <div class="modal-actions-row mt-3">
+          <button type="button" class="btn btn-ghost" id="btn-cancel-edit-profile">Cancelar</button>
+          <button type="submit" class="btn btn-spot" id="btn-submit-edit-profile">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios de Perfil
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 7: VISOR DE FOTOS DE DETALLE EN ALTA RESOLUCIÓN (LIGHTBOX) -->
+  <div class="modal-overlay" id="modal-photo-viewer" style="display: none;">
+    <div class="modal-dialog modal-lightbox">
+      <div class="modal-header">
+        <h4 id="photo-viewer-title"><i class="fa-solid fa-camera text-spot"></i> Fotos de Detalle del Producto</h4>
+        <button class="close-modal-btn" id="btn-close-photo-viewer">&times;</button>
+      </div>
+      <div class="modal-body text-center" style="padding: 14px;">
+        <div class="lightbox-img-container">
+          <img id="photo-viewer-main-img" src="" alt="Foto de detalle" class="lightbox-main-img">
+        </div>
+        <div class="lightbox-thumbs-row" id="photo-viewer-thumbs">
+          <!-- Miniaturas dinámicas -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7.5: FICHA DE DETALLE DE PRODUCTO EN CATÁLOGO DE TIENDA (IN-STORE PRODUCT SHEET) -->
+  <div class="modal-overlay" id="modal-catalog-product-detail" style="display: none; z-index: 10200; align-items: center; justify-content: center;">
+    <div class="modal-dialog modal-product-sheet" style="max-width: 460px; width: 92%; padding: 0; overflow: hidden; border-radius: 20px; background: #11141c; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 25px 70px rgba(0,0,0,0.9); position: relative;">
+      
+      <!-- CABECERA FLOTANTE CON BOTÓN CERRAR -->
+      <div class="product-sheet-header" style="position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 30; pointer-events: none;">
+        <span class="product-sheet-store-badge" id="sheet-store-badge" style="background: rgba(12,15,20,0.85); backdrop-filter: blur(10px); padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; color: #fff; border: 1px solid rgba(255,255,255,0.18); pointer-events: auto;">
+          🏪 <span id="sheet-store-name">Tienda</span>
+        </span>
+        <button type="button" class="close-modal-btn" id="btn-close-product-sheet" style="background: rgba(12,15,20,0.85); backdrop-filter: blur(10px); width: 34px; height: 34px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); font-size: 1.1rem; cursor: pointer; pointer-events: auto;">
+          &times;
+        </button>
+      </div>
+
+      <!-- VISOR FOTOGRÁFICO INTERACTIVO CON CARRUSEL -->
+      <div class="product-sheet-carousel" id="sheet-carousel-viewport" style="position: relative; width: 100%; aspect-ratio: 1 / 1; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+        <img id="sheet-product-main-img" src="" alt="Producto" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.22s ease, opacity 0.22s ease;">
+        
+        <!-- DOTS DEL CARRUSEL -->
+        <div class="product-sheet-dots" id="sheet-carousel-dots" style="position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 20;"></div>
+        
+        <!-- CONTADOR COMPACTO -->
+        <span class="product-sheet-counter" id="sheet-photo-counter" style="position: absolute; top: 14px; right: 54px; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 3px 8px; border-radius: 12px; font-size: 0.72rem; color: #fff; font-weight: 700; border: 1px solid rgba(255,255,255,0.15); z-index: 20;">1/1</span>
+
+        <!-- FLECHAS DE NAVEGACIÓN -->
+        <button type="button" id="btn-sheet-prev-photo" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; cursor: pointer; z-index: 20;">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button type="button" id="btn-sheet-next-photo" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; cursor: pointer; z-index: 20;">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- CUERPO DE DETALLES DEL PRODUCTO -->
+      <div class="product-sheet-body" style="padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+        
+        <!-- FILA PRECIO Y ENTREGA -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div id="sheet-product-price" style="font-size: 1.4rem; font-weight: 800; color: var(--spot-gold); letter-spacing: -0.3px;">$0 COP</div>
+          <span id="sheet-product-delivery" style="font-size: 0.76rem; background: rgba(37,211,102,0.15); color: #25d366; border: 1px solid rgba(37,211,102,0.3); padding: 3px 10px; border-radius: 20px; font-weight: 700;">Domicilio Gratis</span>
+        </div>
+
+        <!-- TÍTULO -->
+        <h3 id="sheet-product-title" style="margin: 0; color: #fff; font-size: 1.05rem; font-weight: 700; line-height: 1.3;">Título del Producto</h3>
+
+        <!-- DESCRIPCIÓN -->
+        <p id="sheet-product-desc" style="margin: 0; color: var(--text-dim); font-size: 0.84rem; line-height: 1.45; max-height: 95px; overflow-y: auto; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);"></p>
+
+        <!-- BOTÓN PROTAGONISTA: WHATSAPP DIRECTO DE ESTE PRODUCTO -->
+        <a href="#" target="_blank" rel="noopener noreferrer" id="btn-sheet-whatsapp" class="btn btn-wa-giant w-100" style="padding: 12px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-top: 4px;">
+          <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Pedir por WhatsApp a la Tienda
+        </a>
+
+        <!-- ACCIONES SECUNDARIAS (COMPARTIR SPOT & CERRAR) -->
+        <div style="display: flex; gap: 8px; margin-top: 2px;">
+          <button type="button" class="btn btn-ghost w-100" id="btn-sheet-share" style="padding: 8px; font-size: 0.82rem; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,255,255,0.12); color: #fff;">
+            <i class="fa-solid fa-share-nodes text-gold"></i> Compartir Producto
+          </button>
+          <button type="button" class="btn btn-ghost w-100" id="btn-sheet-back-catalog" style="padding: 8px; font-size: 0.82rem; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,255,255,0.12); color: var(--text-muted);">
+            <i class="fa-solid fa-store"></i> Ver más productos
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 8: CELEBRACIÓN Y BUCLE VIRAL POST-PUBLICACIÓN -->
+  <div class="modal-overlay" id="modal-upload-success" style="display: none; z-index: 10000;">
+    <div class="modal-dialog modal-upload-success-dialog">
+      <div class="modal-header" style="justify-content: flex-end; padding-bottom: 0; border-bottom: none;">
+        <button class="close-modal-btn" id="btn-close-upload-success">&times;</button>
+      </div>
+
+      <div class="modal-body text-center" style="padding: 10px 24px 28px;">
+        <div class="success-rocket-icon">
+          <i class="fa-solid fa-rocket"></i>
+        </div>
+
+        <h3 class="success-title">¡Tu SPOT Ya Está al Aire! 🎉</h3>
+        <p class="success-subtitle">
+          Tu producto está visible para compradores en toda Colombia. Los clientes interesados te escribirán directamente a tu WhatsApp.
+        </p>
+
+        <!-- TARJETA VIRAL: MOMENTO DE GRATIFICACIÓN -->
+        <div class="viral-share-card">
+          <div class="viral-share-badge">
+            <i class="fa-solid fa-gift"></i> PUBLICACIONES 100% GRATIS
+          </div>
+          <h4>¿Conoces a otros amigos con negocio?</h4>
+          <p>
+            Invítalos a publicar sus productos y catálogos en VitrinaSpot <strong>100% GRATIS</strong> sin comisiones ni mensualidades.
+          </p>
+          <button type="button" class="btn-viral-wa-share" id="btn-viral-share-wa">
+            <i class="fa-brands fa-whatsapp"></i> Invitar Comercios por WhatsApp
+          </button>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN RÁPIDA -->
+        <div class="success-actions-row">
+          <button type="button" class="btn btn-spot w-100" id="btn-success-view-product">
+            <i class="fa-solid fa-eye"></i> Ver Mi SPOT en el Feed
+          </button>
+          <button type="button" class="btn btn-ghost w-100 mt-2" id="btn-success-open-panel">
+            <i class="fa-solid fa-store"></i> Ir a Mi Panel de Negocio
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 8: EDITAR PRODUCTO / ANUNCIO COMERCIAL (BLINDAJE DE SPOT PAGADO) -->
+  <div class="modal-overlay" id="modal-edit-product" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square text-spot"></i> Editar SPOT</h3>
+        <button type="button" class="close-modal-btn" id="btn-close-edit-product">&times;</button>
+      </div>
+
+      <form id="form-edit-product" class="modal-body" novalidate>
+        <input type="hidden" id="edit-prod-id" value="">
+
+        <!-- BANNER DE SPOT ACTIVO BLINDADO (SI EL PRODUCTO TIENE SPOT) -->
+        <div id="edit-prod-spot-banner" style="display: none; background: linear-gradient(135deg, rgba(255, 184, 0, 0.15), rgba(255, 136, 0, 0.15)); border: 1px solid var(--spot-gold); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; align-items: center; gap: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--spot-gold), #ff8800); display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #000; flex-shrink: 0;">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <div style="font-size: 0.82rem; color: #fff; line-height: 1.35;">
+            <strong style="color: var(--spot-gold); display: block; font-size: 0.88rem;">👑 SPOT VIP Protegido</strong>
+            Tus cambios se actualizarán al instante sin afectar la vigencia ni el podio VIP de tu SPOT pagado.
+          </div>
+        </div>
+
+        <!-- GESTOR VISUAL DE FOTOS DEL SPOT -->
+        <div class="form-group" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label style="font-weight: 700; color: #fff; margin: 0; font-size: 0.88rem;">
+              <i class="fa-solid fa-images text-spot"></i> Fotos del SPOT (<span id="edit-prod-photos-count">0</span>/3)
+            </label>
+            <span style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 700;">3 fotos máx.</span>
+          </div>
+
+          <div id="edit-prod-photos-strip" style="display: flex; gap: 10px; align-items: center; overflow-x: auto; padding: 4px 0;">
+            <!-- Miniaturas dinámicas generadas en JS -->
+          </div>
+
+          <input type="file" id="edit-prod-file-input" accept="image/*" style="display: none;">
+          
+          <div id="edit-prod-photos-hint" style="font-size: 0.76rem; color: var(--text-muted); margin-top: 8px; line-height: 1.35;">
+            💡 <em>La foto #1 es la portada principal. Puedes borrar fotos tocando la <strong>X</strong> roja o agregar nuevas. Presiona <strong>"Guardar Cambios"</strong> para confirmar y actualizar tu anuncio.</em>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Título del Producto o Servicio *</label>
+          <input type="text" id="edit-prod-title" required placeholder="Ej: Drone Profesional HD">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Precio en COP (Deja 0 si es a cotizar)</label>
+            <input type="number" id="edit-prod-price" placeholder="Ej: 75000">
+          </div>
+          <div class="form-group flex-1">
+            <label>Condiciones de Domicilio / Entrega</label>
+            <input type="text" id="edit-prod-delivery" placeholder="Ej: Domicilio Gratis">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Ciudad *</label>
+            <select id="edit-prod-city">
+              <option value="Bogotá">Bogotá D.C.</option>
+              <option value="Medellín">Medellín</option>
+              <option value="Cali">Cali</option>
+              <option value="Popayán">Popayán (Cauca)</option>
+              <option value="Barranquilla">Barranquilla</option>
+              <option value="Bucaramanga">Bucaramanga</option>
+              <option value="Eje Cafetero">Eje Cafetero</option>
+              <option value="Cartagena">Cartagena</option>
+            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label>Categoría</label>
+            <select id="edit-prod-category">
+              <option value="Comida & Domicilios">🍔 Comida & Domicilios (Restaurantes, Postres, Bebidas)</option>
+              <option value="Ropa de Mujer">👗 Ropa de Mujer (Vestidos, Blusas, Pantalones)</option>
+              <option value="Ropa de Hombre">👔 Ropa de Hombre (Camisas, Chaquetas, Jeans)</option>
+              <option value="Ropa para Niños & Bebés">👶 Ropa para Niños & Bebés</option>
+              <option value="Bebés & Maternidad">🍼 Bebés & Maternidad (Coches, Cunas, Accesorios)</option>
+              <option value="Electrónica & Tecnología">📱 Electrónica & Tecnología (Celulares, Computadores, Audio)</option>
+              <option value="Electrodomésticos">🔌 Electrodomésticos (Neveras, Lavadoras, Cocina)</option>
+              <option value="Muebles">🛋️ Muebles (Salas, Comedores, Camas, Clósets)</option>
+              <option value="Hogar & Cocina">🍳 Hogar & Cocina (Menaje, Decoración, Utensilios)</option>
+              <option value="Patio & Jardín">🌿 Patio & Jardín (Plantas, Viveros, Exteriores)</option>
+              <option value="Salud & Belleza">💄 Salud & Belleza (Cuidado Facial, Peluquería, Bienestar)</option>
+              <option value="Joyas, Relojes & Accesorios">⌚ Joyas, Relojes & Accesorios</option>
+              <option value="Equipaje & Bolsos">🎒 Equipaje & Bolsos (Morrales, Maletas, Carteras)</option>
+              <option value="Vehículos & Motos">🚗 Vehículos & Motos (Carros, Motos, Camionetas)</option>
+              <option value="Autopartes & Repuestos">⚙️ Autopartes & Repuestos (Llantas, Lujos, Mecánica)</option>
+              <option value="Artículos Deportivos">⚽ Artículos Deportivos (Bicicletas, Fitness, Gimnasio)</option>
+              <option value="Productos para Mascotas">🐾 Productos para Mascotas (Alimento, Camas, Accesorios)</option>
+              <option value="Juguetes & Juegos">🧸 Juguetes & Juegos (Videojuegos, Didácticos, Mesa)</option>
+              <option value="Alquileres & Arriendos">🔑 Alquileres & Arriendos (Apartamentos, Habitaciones, Locales)</option>
+              <option value="Propiedades en Venta">🏢 Propiedades en Venta (Casas, Apartamentos, Lotes, Fincas)</option>
+              <option value="Remodelaciones & Oficios">🧱 Remodelaciones & Oficios (Pintura, Drywall, Plomería, Talleres)</option>
+              <option value="Acarreos & Mudanzas">🚚 Acarreos & Mudanzas (Fletes, Trasteos, Carga)</option>
+              <option value="Empleo & Vacantes">📢 Empleo & Vacantes (Ofertas Laborales, Contratación)</option>
+              <option value="Instrumentos Musicales">🎸 Instrumentos Musicales (Guitarras, Teclados, Sonido)</option>
+              <option value="Arte & Manualidades">🎨 Arte & Manualidades (Pinturas, Esculturas, Tejidos)</option>
+              <option value="Antigüedades & Colección">🏺 Antigüedades & Colección (Monedas, Vinilos, Reliquias)</option>
+              <option value="Libros, Películas & Música">📚 Libros, Películas & Música</option>
+              <option value="Venta de Garaje">🏷️ Venta de Garaje (Segunda mano, Liquidación)</option>
+              <option value="Varios">📦 Varios (Otros productos y servicios)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fa-solid fa-tags text-spot"></i> Palabras clave (para búsquedas rápidas)</label>
+          <input type="text" id="edit-prod-keywords" placeholder="ej: cuero, elegante, dama, domicilio, oferta">
+          <small class="text-muted" style="display: block; margin-top: 4px; font-size: 0.78rem;">Separa cada palabra con comas para que los compradores encuentren tu SPOT fácilmente en el buscador.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción / Detalles adicionales</label>
+          <textarea id="edit-prod-desc" rows="3" placeholder="Detalles de tu producto o servicio..."></textarea>
+        </div>
+
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+          <button type="button" class="btn btn-ghost" id="btn-cancel-edit-product">Cancelar</button>
+          <button type="submit" class="btn btn-spot" id="btn-save-edit-product">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BANNER FLOTANTE DE INSTALACIÓN PWA (1-CLIC EN CELULARES) -->
+  <div id="pwa-install-banner" style="display: none; position: fixed; bottom: 85px; left: 16px; right: 16px; max-width: 420px; margin: 0 auto; background: linear-gradient(135deg, rgba(20, 26, 38, 0.96), rgba(12, 15, 20, 0.98)); border: 1px solid var(--spot-gold); border-radius: 16px; padding: 12px 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 184, 0, 0.3); backdrop-filter: blur(12px); align-items: center; justify-content: space-between; gap: 12px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <img src="/icons/icon-192.png" alt="VitrinaSpot" style="width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255,184,0,0.5);">
+      <div>
+        <div style="font-weight: 800; font-size: 0.92rem; color: #fff;">Instalar VitrinaSpot</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Acceso directo como App en tu celular</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button type="button" id="btn-pwa-dismiss" style="background: none; border: none; color: var(--text-muted); font-size: 1.1rem; padding: 4px 8px; cursor: pointer;">&times;</button>
+      <button type="button" id="btn-pwa-install" class="btn btn-spot btn-sm" style="font-size: 0.78rem; padding: 6px 14px; white-space: nowrap;">
+        <i class="fa-solid fa-download"></i> Instalar
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: REPORTAR CONTENIDO INAPROPIADO (NIVEL 1) -->
+  <div class="modal-overlay" id="modal-report-video" style="display: none;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-flag" style="color: #ef4444;"></i> Reportar Anuncio</h3>
+        <button type="button" class="close-modal-btn" id="btn-close-report-modal">&times;</button>
+      </div>
+      <form id="form-report-video" class="modal-body">
+        <input type="hidden" id="report-video-id" value="">
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; color: #fca5a5;">
+          <strong id="report-video-title" style="color: #fff; display: block; margin-bottom: 2px;">Título del producto</strong>
+          Ayúdanos a mantener VitrinaSpot 100% familiar, legal y segura para toda Colombia.
+        </div>
+        <div class="form-group">
+          <label style="font-weight: 700; color: #fff;">¿Cuál es el motivo del reporte?</label>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; margin-top: 4px;">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.03);">
+              <input type="radio" name="reportReason" value="adult" required checked>
+              <span>🔞 Pornografía, desnudos o contenido sexual</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.03);">
+              <input type="radio" name="reportReason" value="weapons">
+              <span>🔫 Armas, violencia o contenido ilícito</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.03);">
+              <input type="radio" name="reportReason" value="drugs">
+              <span>💊 Drogas o sustancias no autorizadas</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.03);">
+              <input type="radio" name="reportReason" value="scam">
+              <span>⚠️ Estafa, pirámide o fraude financiero</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.03);">
+              <input type="radio" name="reportReason" value="spam">
+              <span>🚫 Spam, producto falso o engañoso</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="report-details" style="font-size: 0.8rem; color: var(--text-muted);">Detalles adicionales (opcional)</label>
+          <textarea id="report-details" rows="2" placeholder="Explica brevemente lo que viste..." style="width: 100%; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); color: #fff; padding: 8px; font-size: 0.85rem;"></textarea>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; padding: 0;">
+          <button type="button" class="btn btn-ghost" id="btn-cancel-report">Cancelar</button>
+          <button type="submit" class="btn btn-danger" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+            <i class="fa-solid fa-flag"></i> Enviar Reporte
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: POLÍTICAS DE SEGURIDAD Y LAS 4 REGLAS DE ORO -->
+  <div class="modal-overlay" id="modal-legal-terms" style="display: none;">
+    <div class="modal-dialog" style="max-width: 580px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-scale-balanced text-gold"></i> Políticas de Seguridad & Reglas de Oro</h3>
+        <button type="button" class="close-modal-btn" id="btn-close-legal-modal">&times;</button>
+      </div>
+      <div class="modal-body" style="line-height: 1.5; font-size: 0.88rem; color: var(--text-dim); gap: 14px;">
+        <div style="background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(0, 210, 255, 0.08)); border: 1px solid rgba(255, 184, 0, 0.35); border-radius: 12px; padding: 14px; color: #fff;">
+          <strong style="font-size: 1rem; color: var(--spot-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <i class="fa-solid fa-shield-halved"></i> Compromiso Comunitario VitrinaSpot
+          </strong>
+          VitrinaSpot es la plataforma de vitrinas comerciales de Colombia diseñada para conectar a familias, compradores y comerciantes de manera transparente, segura y directa a WhatsApp.
+        </div>
+
+        <!-- REGLA 1 -->
+        <div style="background: rgba(255,255,255,0.03); border-left: 3px solid #00d2ff; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+          <h4 style="color: #fff; margin: 0 0 4px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #00d2ff; font-weight: 800;">1.</span> Vitrina 100% Comercial y Familiar
+          </h4>
+          <p style="margin: 0; font-size: 0.82rem; color: var(--text-muted);">
+            Todos los spots deben mostrar productos, servicios o emprendimientos reales. No se permite contenido fuera de tono, ofensivo o inapropiado para una audiencia general y familiar.
+          </p>
+        </div>
+
+        <!-- REGLA 2 -->
+        <div style="background: rgba(255,255,255,0.03); border-left: 3px solid #ef4444; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+          <h4 style="color: #fff; margin: 0 0 4px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #ef4444; font-weight: 800;">2.</span> Cero Tolerancia a Contenidos Prohibidos
+          </h4>
+          <p style="margin: 0; font-size: 0.82rem; color: var(--text-muted);">
+            Queda estrictamente prohibida la publicación de: (a) Pornografía, desnudos o contenido sexual; (b) Armas de fuego, armas blancas, municiones o explosivos; (c) Drogas, narcóticos o medicamentos sin fórmula; (d) Esquemas piramidales o promesas fraudulentas de dinero fácil.
+          </p>
+        </div>
+
+        <!-- REGLA 3: LA IDEA CLAVE DEL USUARIO: RESPALDO AL PAGO -->
+        <div style="background: rgba(0, 255, 136, 0.05); border-left: 3px solid #00ff88; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+          <h4 style="color: #00ff88; margin: 0 0 4px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #00ff88; font-weight: 800;">3.</span> Política de Respaldo al Pago (Segunda Oportunidad)
+          </h4>
+          <p style="margin: 0; font-size: 0.82rem; color: #d1fae5;">
+            Si compraste un SPOT o un plan de Impulso y tus imágenes fueron rechazadas por no cumplir con la nitidez o normas visuales, <strong>¡NO pierdes tu dinero!</strong> Tu anuncio entrará en estado de <em>Corrección Requerida</em> y podrás subir nuevas fotografías gratis para reactivarlo de inmediato conservando la totalidad de tus días de impulso adquiridos.
+          </p>
+        </div>
+
+        <!-- REGLA 4 -->
+        <div style="background: rgba(255,255,255,0.03); border-left: 3px solid #a855f7; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+          <h4 style="color: #fff; margin: 0 0 4px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #c084fc; font-weight: 800;">4.</span> Cero Tolerancia a Actos Delictivos Deliberados
+          </h4>
+          <p style="margin: 0; font-size: 0.82rem; color: var(--text-muted);">
+            Comercios o usuarios que suban deliberadamente material delictivo, estafas comprobadas o pornografía infantil serán bloqueados permanentemente, perdiendo el acceso a la plataforma de forma inmediata y reportados ante las autoridades competentes.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch;">
+        <div style="font-size: 0.76rem; color: var(--text-muted); text-align: center; line-height: 1.4;">
+          Para consultar el marco legal completo, visita nuestra <a href="/privacidad" target="_blank" style="color: #00d2ff; text-decoration: underline;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Política de Privacidad y Términos</a> o la <a href="/eliminar-cuenta" target="_blank" style="color: #ff6b6b; text-decoration: underline;"><i class="fa-solid fa-trash-can"></i> Gestión y Supresión de Datos</a>.
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+          <button type="button" class="btn btn-spot" id="btn-accept-legal-terms" style="padding: 8px 20px;">
+            <i class="fa-solid fa-check"></i> He leído y Acepto las Reglas de Oro
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REEMPLAZAR FOTOS RECHAZADAS GRATIS ($0 COP) -->
+  <div class="modal-overlay" id="modal-fix-rejected-spot" style="display: none;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-camera-rotate text-gold"></i> Reemplazar Fotos Rechazadas</h3>
+        <button type="button" class="close-modal-btn" id="btn-close-fix-modal">&times;</button>
+      </div>
+      <form id="form-fix-rejected-spot" class="modal-body" enctype="multipart/form-data">
+        <input type="hidden" id="fix-video-id" value="">
+        <div style="background: rgba(0, 255, 136, 0.08); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; color: #a7f3d0;">
+          <strong>✅ Respaldo a tu inversión ($0 COP):</strong> Sube tus nuevas fotos de producto o servicio para reactivar este anuncio en el Feed público de inmediato.
+        </div>
+        <div class="form-group">
+          <label style="font-weight: 700; color: #fff;">1. Nueva Foto de Portada Principal *</label>
+          <input type="file" id="fix-cover-photo" name="coverPhoto" accept="image/*" required style="width: 100%; font-size: 0.85rem; color: var(--text-muted);">
+        </div>
+        <div class="form-group">
+          <label style="font-weight: 700; color: #fff;">2. Nuevas Fotos de Detalle (Opcional, hasta 6)</label>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+            <input type="file" id="fix-photo-2" name="photo2" accept="image/*" style="font-size: 0.72rem;">
+            <input type="file" id="fix-photo-3" name="photo3" accept="image/*" style="font-size: 0.72rem;">
+            <input type="file" id="fix-photo-4" name="photo4" accept="image/*" style="font-size: 0.72rem;">
+            <input type="file" id="fix-photo-5" name="photo5" accept="image/*" style="font-size: 0.72rem;">
+            <input type="file" id="fix-photo-6" name="photo6" accept="image/*" style="font-size: 0.72rem;">
+            <input type="file" id="fix-photo-7" name="photo7" accept="image/*" style="font-size: 0.72rem;">
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; padding: 0; margin-top: 10px;">
+          <button type="button" class="btn btn-ghost" id="btn-cancel-fix-modal">Cancelar</button>
+          <button type="submit" class="btn btn-spot" id="btn-submit-fix-spot">
+            <i class="fa-solid fa-check"></i> Reactivar Spot Gratis
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ELIMINACIÓN SEGURA DE CUENTA / COMERCIO -->
+  <div class="modal-overlay" id="modal-delete-account" style="display: none;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3 style="color: #ff4757;"><i class="fa-solid fa-triangle-exclamation"></i> Eliminar Cuenta</h3>
+        <button type="button" class="close-modal-btn" id="btn-close-delete-account">&times;</button>
+      </div>
+      <form id="form-delete-account" class="modal-body">
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 12px; font-size: 0.84rem; color: #fca5a5; line-height: 1.4;">
+          <strong style="display: block; color: #fff; margin-bottom: 4px; font-size: 0.92rem;">
+            ⚠️ Esta acción es permanente e irreversible
+          </strong>
+          Al eliminar tu cuenta:
+          <ul style="margin: 6px 0 0 0; padding-left: 18px; font-size: 0.78rem;">
+            <li>Tu tienda y catálogo público se darán de baja de inmediato.</li>
+            <li>Todos tus spots activos o guardados se retirarán de VitrinaSpot.</li>
+            <li>Tu número de WhatsApp se desvinculará de la plataforma.</li>
+          </ul>
+        </div>
+
+        <div class="form-group" style="margin-top: 4px;">
+          <label style="font-size: 0.82rem; color: #fff; font-weight: 700;">Para confirmar, escribe tu contraseña de acceso: *</label>
+          <div class="password-input-wrapper" style="position: relative; display: flex; align-items: center;">
+            <input type="password" id="delete-account-password" placeholder="Tu contraseña actual" required style="width: 100%; padding-right: 44px;">
+            <button type="button" class="btn-password-eye" id="btn-toggle-delete-pass" title="Ver u ocultar contraseña" style="position: absolute; right: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.05rem; padding: 6px; display: flex; align-items: center; justify-content: center; z-index: 10;">
+              <i class="fa-solid fa-eye" id="icon-toggle-delete-pass" style="pointer-events: none;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; padding: 0; margin-top: 8px;">
+          <button type="button" class="btn btn-ghost" id="btn-cancel-delete-account">Cancelar</button>
+          <button type="submit" class="btn btn-danger" id="btn-confirm-delete-account" style="background: #ef4444; color: #fff; font-weight: 800; border: none; padding: 9px 18px; border-radius: 8px; cursor: pointer;">
+            <i class="fa-solid fa-trash-can"></i> Confirmar y Eliminar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: RECOMENDAR / COMPARTIR VITRINASPOT GENERAL -->
+  <div class="modal-overlay" id="modal-share-app" style="display: none; z-index: 10000;">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-share-nodes text-spot"></i> Recomendar VitrinaSpot
+        </h3>
+        <button type="button" class="close-modal-btn" id="btn-close-share-app">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 20px;">
+        <div style="text-align: center; margin-bottom: 16px;">
+          <div style="width: 58px; height: 58px; margin: 0 auto 12px; background: linear-gradient(135deg, var(--spot-gold), #ff8800); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #000; box-shadow: 0 4px 18px var(--spot-glow);">
+            <i class="fa-solid fa-store"></i>
+          </div>
+          <h4 style="margin: 0 0 6px; font-size: 1.05rem; color: #fff;">Tu Vitrina Digital de Colombia 🇨🇴</h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+            Invita a amigos, familiares o clientes a descubrir productos, tiendas y servicios con contacto directo a WhatsApp sin intermediarios.
+          </p>
+        </div>
+
+        <div class="share-app-card">
+          <button type="button" class="share-channel-btn share-channel-wa" id="btn-share-app-wa">
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Compartir por WhatsApp
+          </button>
+
+          <button type="button" class="share-channel-btn share-channel-copy" id="btn-share-app-copy">
+            <i class="fa-solid fa-copy"></i> Copiar Enlace de VitrinaSpot
+          </button>
+
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <button type="button" class="share-channel-btn share-channel-fb" id="btn-share-app-fb" style="flex: 1; font-size: 0.85rem; padding: 10px;">
+              <i class="fa-brands fa-facebook-f"></i> Facebook
+            </button>
+            <button type="button" class="share-channel-btn share-channel-tg" id="btn-share-app-tg" style="flex: 1; font-size: 0.85rem; padding: 10px;">
+              <i class="fa-brands fa-telegram"></i> Telegram
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 6px;">
+          <label style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 4px; display: block;">Enlace Oficial de VitrinaSpot:</label>
+          <div style="display: flex; gap: 6px;">
+            <input type="text" id="share-app-url-input" readonly style="flex: 1; font-size: 0.82rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 10px; color: #fff;">
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-copy-share-app-input" title="Copiar"><i class="fa-solid fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DIRECTORIO COMPLETO DE CATEGORÍAS (31) GLASSMORPHISM & BOTONES FLOTANTES -->
+  <div class="modal-overlay" id="modal-all-categories" style="display: none; z-index: 10000;">
+    <div class="modal-dialog modal-categories-dialog">
+      <div class="modal-header" style="flex-shrink: 0; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <!-- Título a la izquierda (flexible con elipsis para nunca empujar la X) -->
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,184,0,0.15); border: 1px solid rgba(255,184,0,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-layer-group text-spot" style="font-size: 1rem;"></i>
+          </div>
+          <h3 style="margin: 0; font-size: 1.02rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;">Directorio de Categorías</h3>
+        </div>
+
+        <!-- Número 32 dorado separado en el centro (Dinámico) -->
+        <div style="display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin: 0 8px;">
+          <span id="cat-dir-counter-badge" style="font-size: 0.75rem; background: rgba(255,184,0,0.22); color: var(--spot-gold); border: 1px solid rgba(255,184,0,0.5); border-radius: 12px; padding: 3px 10px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 0 12px rgba(255,184,0,0.25);">32</span>
+        </div>
+
+        <!-- Botón cerrar (X) claramente visible y destacado a la derecha -->
+        <button type="button" class="close-modal-btn" id="btn-close-all-categories" title="Cerrar directorio" aria-label="Cerrar" style="flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; cursor: pointer; transition: all 0.2s ease;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- BUSCADOR RÁPIDO DENTRO DEL DIRECTORIO DE CATEGORÍAS -->
+      <div class="cat-search-glass-zone" style="padding: 10px 18px 8px; flex-shrink: 0;">
+        <div style="position: relative; display: flex; align-items: center;">
+          <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; color: var(--text-muted); font-size: 0.9rem;"></i>
+          <input type="text" id="filter-categories-input" placeholder="Buscar categoría (ej: calzado, ropa, comida)..." autocomplete="off" enterkeyhint="search" autocapitalize="none" spellcheck="false" style="width: 100%; padding: 9px 80px 9px 36px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #fff; font-size: 0.88rem; outline: none;">
+          <button type="button" class="btn-hide-keyboard" id="btn-hide-keyboard-dir" style="display: none; position: absolute; right: 38px; top: 50%; transform: translateY(-50%); background: rgba(255,184,0,0.22); border: 1px solid rgba(255,184,0,0.5); border-radius: 6px; color: var(--spot-gold); font-size: 0.75rem; padding: 4px 8px; font-weight: 700; cursor: pointer;" title="Ocultar teclado">Listo ✓</button>
+          <button type="button" class="cat-search-clear-btn" id="btn-clear-cat-dir-search" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 2px 6px;" title="Borrar búsqueda">&times;</button>
+        </div>
+
+        <!-- CHIPS POPULARES RÁPIDOS EN DIRECTORIO GENERAL -->
+        <div class="cat-quick-chips-row" id="cat-dir-quick-chips" style="margin-top: 8px;">
+          <button type="button" class="cat-chip-btn active" data-chip="">⚡ Todas (32)</button>
+          <button type="button" class="cat-chip-btn" data-chip="ofertas">🔥 Ofertas</button>
+          <button type="button" class="cat-chip-btn" data-chip="comida">🍔 Comida</button>
+          <button type="button" class="cat-chip-btn" data-chip="ropa">👗 Ropa</button>
+          <button type="button" class="cat-chip-btn" data-chip="calzado">👟 Calzado</button>
+          <button type="button" class="cat-chip-btn" data-chip="tecnologia">📱 Tecnología</button>
+          <button type="button" class="cat-chip-btn" data-chip="belleza">💄 Belleza</button>
+          <button type="button" class="cat-chip-btn" data-chip="vehiculos">🚗 Vehículos</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding: 14px 18px; overflow-y: auto; flex: 1;">
+        <div class="all-categories-grid" id="all-categories-grid">
+          <!-- Tarjetas de categorías generadas dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN FLOTANTE VIP DE PUBLICACIÓN EN MÓVILES (FAB TIKTOK/INSTAGRAM) -->
+  <button type="button" class="floating-fab-upload" id="btn-floating-fab-upload" title="Publicar SPOT">
+    <i class="fa-solid fa-plus"></i>
+  </button>
+
+  <!-- TOAST FLOTANTE DE NOTIFICACIONES -->
+  <div class="toast-bubble" id="app-toast" style="display: none;">
+    <i class="fa-solid fa-circle-check toast-bubble-icon" id="toast-icon"></i>
+    <span id="toast-msg">Notificación</span>
+  </div>
+
+  <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="js/app.js?v=22.5"></script>
+</body>
+</html>
