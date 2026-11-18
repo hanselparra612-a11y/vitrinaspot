@@ -83,6 +83,23 @@ async function ensureJpegCompatible(filePath) {
   return filePath;
 }
 
+// Helper: Convertir archivo de imagen a Base64 Data URI permanente si <= 850KB para persistencia total en PostgreSQL Cloud
+function fileToDataUriIfReasonable(filePath, maxBytes = 850 * 1024) {
+  try {
+    if (!filePath || !fs.existsSync(filePath)) return null;
+    const stat = fs.statSync(filePath);
+    if (stat.size <= maxBytes) {
+      const buf = fs.readFileSync(filePath);
+      const ext = path.extname(filePath).toLowerCase().replace('.', '') || 'jpeg';
+      const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
+      return `data:${mime};base64,${buf.toString('base64')}`;
+    }
+  } catch (err) {
+    console.error('⚠️ Error convirtiendo archivo a Data URI:', err.message);
+  }
+  return null;
+}
+
 [uploadsDir, videosDir, thumbsDir].forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
@@ -348,7 +365,8 @@ app.post('/api/videos', upload.fields([
         const fileObj = req.files[fName][0];
         const finalPath = await ensureJpegCompatible(fileObj.path);
         const finalFilename = path.basename(finalPath);
-        detailPhotos.push(`/uploads/thumbnails/${finalFilename}`);
+        const dataUri = fileToDataUriIfReasonable(finalPath);
+        detailPhotos.push(dataUri || `/uploads/thumbnails/${finalFilename}`);
       }
     }
 
@@ -702,7 +720,8 @@ app.post('/api/videos/:id/fix-rejected', upload.fields([
         const fileObj = req.files[fName][0];
         const finalPath = await ensureJpegCompatible(fileObj.path);
         const finalFilename = path.basename(finalPath);
-        detailPhotos[i] = `/uploads/thumbnails/${finalFilename}`;
+        const dataUri = fileToDataUriIfReasonable(finalPath);
+        detailPhotos[i] = dataUri || `/uploads/thumbnails/${finalFilename}`;
       }
     }
 
@@ -735,7 +754,8 @@ app.post('/api/upload-photo', upload.single('photo'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'Debes seleccionar una imagen.' });
     const finalPath = await ensureJpegCompatible(req.file.path);
-    const photoUrl = `/uploads/thumbnails/${path.basename(finalPath)}`;
+    const dataUri = fileToDataUriIfReasonable(finalPath);
+    const photoUrl = dataUri || `/uploads/thumbnails/${path.basename(finalPath)}`;
     res.json({ success: true, photoUrl });
   } catch (err) {
     console.error('Error al subir foto:', err);
@@ -751,7 +771,8 @@ app.post('/api/videos/:id/photos', upload.single('photo'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Debes seleccionar una imagen.' });
 
     const finalPath = await ensureJpegCompatible(req.file.path);
-    const photoUrl = `/uploads/thumbnails/${path.basename(finalPath)}`;
+    const dataUri = fileToDataUriIfReasonable(finalPath);
+    const photoUrl = dataUri || `/uploads/thumbnails/${path.basename(finalPath)}`;
     const photos = Array.isArray(video.detailPhotos) ? [...video.detailPhotos] : [];
     const index = parseInt(req.body.index, 10);
 
@@ -1085,7 +1106,8 @@ const handleStoreUpdate = async (req, res) => {
 
   if (req.file) {
     const finalPath = await ensureJpegCompatible(req.file.path);
-    updates.avatar = `/uploads/thumbnails/${path.basename(finalPath)}`;
+    const dataUri = fileToDataUriIfReasonable(finalPath);
+    updates.avatar = dataUri || `/uploads/thumbnails/${path.basename(finalPath)}`;
   }
   const updated = db.updateStore(storeId, updates);
   res.json({ success: true, store: updated });
@@ -1122,7 +1144,8 @@ app.delete('/api/stores/:id', (req, res) => {
 app.post('/api/stores/:id/avatar', upload.single('avatar'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No se envió ninguna foto.' });
   const finalPath = await ensureJpegCompatible(req.file.path);
-  const avatarUrl = `/uploads/thumbnails/${path.basename(finalPath)}`;
+  const dataUri = fileToDataUriIfReasonable(finalPath);
+  const avatarUrl = dataUri || `/uploads/thumbnails/${path.basename(finalPath)}`;
   const updated = db.updateStore(req.params.id, { avatar: avatarUrl });
   if (!updated) return res.status(404).json({ error: 'Tienda no encontrada.' });
   res.json({ success: true, avatar: avatarUrl, store: updated });

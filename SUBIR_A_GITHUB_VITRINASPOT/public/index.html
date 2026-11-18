@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=22.7">
+  <link rel="stylesheet" href="css/style.css?v=22.9">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -327,8 +327,8 @@
     <section id="store-catalog-view" class="view-panel" style="display: none;">
       <div class="catalog-container">
         <!-- BOTÓN VOLVER -->
-        <button class="btn btn-ghost btn-back-nav" id="btn-back-from-catalog">
-          <i class="fa-solid fa-arrow-left"></i> Volver a la Vitrina Principal
+        <button class="btn btn-gold-ring btn-back-nav" id="btn-back-from-catalog" title="Volver al Feed">
+          <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
         </button>
 
         <!-- CABECERA DE LA TIENDA -->
@@ -398,8 +398,8 @@
     <!-- VISTA 3: MIS GUARDADOS (LISTA DE DESEOS) -->
     <section id="saved-view" class="view-panel" style="display: none;">
       <div class="saved-container">
-        <button class="btn btn-ghost btn-back-nav" id="btn-back-from-saved">
-          <i class="fa-solid fa-arrow-left"></i> Volver a la Vitrina Principal
+        <button class="btn btn-gold-ring btn-back-nav" id="btn-back-from-saved" title="Volver al Feed">
+          <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
         </button>
         <div class="saved-header">
           <h2><i class="fa-solid fa-bookmark text-gold"></i> Mis Guardados (Lista de Deseos)</h2>
@@ -452,7 +452,7 @@
             <button class="btn btn-gold" id="btn-seller-activate-spot" title="Adquirir Impulso SPOT con Nequi">
               <i class="fa-solid fa-bolt"></i> <span>Activar SPOT</span>
             </button>
-            <button class="btn btn-ghost" id="btn-back-from-seller" title="Volver al Feed">
+            <button class="btn btn-gold-ring" id="btn-back-from-seller" title="Volver al Feed">
               <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
             </button>
           </div>
@@ -620,7 +620,9 @@
             <button type="submit" class="btn btn-spot btn-large w-100">
               <i class="fa-solid fa-key"></i> Entrar al Panel de Control
             </button>
-            <button type="button" class="btn btn-ghost w-100 mt-2" id="btn-admin-cancel">Volver a la App</button>
+            <button type="button" class="btn btn-gold-ring w-100 mt-2" id="btn-admin-cancel" title="Volver al Feed">
+              <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
+            </button>
           </form>
         </div>
 
@@ -633,7 +635,9 @@
             </div>
             <div class="admin-top-btns">
               <button class="btn btn-ghost btn-sm" id="btn-admin-logout">Cerrar Sesión Admin</button>
-              <button class="btn btn-primary btn-sm" id="btn-admin-exit-feed">Ver Feed Público</button>
+              <button class="btn btn-gold-ring btn-sm" id="btn-admin-exit-feed" title="Volver al Feed">
+                <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
+              </button>
             </div>
           </div>
 
@@ -2365,6 +2369,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=22.7"></script>
+  <script src="js/app.js?v=22.9"></script>
 </body>
 </html>
