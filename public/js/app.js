@@ -26,9 +26,9 @@ const state = {
   adminToken: localStorage.getItem('vitrina_admin_token') || null,
   activeCheckout: null, // Item en proceso de compra (spot o video)
   pricing: {
-    free_spots_quota: 5,
-    spot_permanent_price: 3500,
-    boost_standard_standalone_price: 3500,
+    free_spots_quota: 100,
+    spot_permanent_price: 0,
+    boost_standard_standalone_price: 0,
     photos_5_price: 0,
     boost_standard_price: 5000,
     boost_standard_days: 2,
@@ -286,8 +286,7 @@ function renderDynamicPlansUI() {
       const lockStrong = lockedBanner.querySelector('strong');
       if (lockStrong) lockStrong.textContent = `🔒 Cupo Gratuito Bloqueado (${storeCount} de ${freeQuota} Spots Usados)`;
       const lockP = lockedBanner.querySelector('p');
-      const permPrice = Number(p.spot_permanent_price) || 3500;
-      if (lockP) lockP.innerHTML = `Has utilizado todos tus ${freeQuota} spots gratuitos. Para subir este nuevo spot de 5 fotos puedes activar un <strong>Impulso Comercial VIP</strong>.`;
+      if (lockP) lockP.innerHTML = `Has utilizado tus ${freeQuota} spots gratuitos con carrusel de hasta 5 fotos a $0 COP. Para destacar tu vitrina puedes activar un <strong>Impulso Comercial VIP</strong> bonificado con Google AdMob.`;
     }
   }
 
@@ -333,143 +332,16 @@ function renderDynamicPlansUI() {
     }
   }
 
-  // Card 2: Spot Permanente 5 Fotos Sin Impulso
-  const cPerm = document.querySelector('.video-plan-card[data-plan="spot_permanent"]');
-  if (cPerm) {
-    const permPrice = Number(p.spot_permanent_price) || 3500;
-    cPerm.setAttribute('data-price', permPrice);
-    const prEl = cPerm.querySelector('.plan-price');
-    if (prEl) prEl.textContent = `$${permPrice.toLocaleString('es-CO')} COP`;
-    const bEl = cPerm.querySelector('.plan-badge-pill');
-    if (bEl) {
-      bEl.textContent = 'SOLO PUBLICACIÓN';
-    }
-    const dEl = cPerm.querySelector('.plan-desc');
-    if (dEl) {
-      dEl.textContent = `1 Spot adicional permanente con carrusel de hasta 5 fotos sin fecha de caducidad (sin impulso publicitario).`;
-    }
-  }
-
-  // Card 2.1: Impulso Estándar (2 Días - $3.500 COP)
-  const cBoostStd = document.querySelector('.video-plan-card[data-plan="boost_standard_standalone"]');
-  if (cBoostStd) {
-    const bStdPrice = p.boost_standard_standalone_price || 3500;
-    const bStdDays = p.boost_standard_days || 2;
-    cBoostStd.setAttribute('data-price', bStdPrice);
-    const prEl = cBoostStd.querySelector('.plan-price');
-    if (prEl) prEl.textContent = `$${bStdPrice.toLocaleString('es-CO')} COP`;
-    const bEl = cBoostStd.querySelector('.plan-badge-pill');
-    if (bEl) {
-      bEl.textContent = `IMPULSO ${bStdDays} DÍAS`;
-      bEl.style.background = 'linear-gradient(135deg, #ffb800, #ff8800)';
-      bEl.style.color = '#000';
-    }
-    const tEl = cBoostStd.querySelector('.plan-title');
-    if (tEl) tEl.textContent = 'Impulso Estándar';
-    const dEl = cBoostStd.querySelector('.plan-desc');
-    if (dEl) dEl.textContent = `Aumenta la visibilidad y rotación de tu anuncio en el feed por ${bStdDays} días con aro ámbar.`;
-  }
-
-  // Card 3: Combo Spot + Boost Estándar (2 Días - $5.000 COP)
-  const c2 = document.querySelector('.video-plan-card[data-plan="boost_standard"]');
-  if (c2) {
-    c2.classList.remove('plan-locked');
-    c2.setAttribute('data-price', p.boost_standard_price);
-    const prEl = c2.querySelector('.plan-price');
-    if (prEl) prEl.textContent = `$${p.boost_standard_price.toLocaleString('es-CO')} COP`;
-    const bEl = c2.querySelector('.plan-badge-pill');
-    const dEl = c2.querySelector('.plan-desc');
-    if (bEl) {
-      bEl.textContent = `COMBO + ${p.boost_standard_days || 2} DÍAS IMPULSO`;
-      bEl.style.background = 'linear-gradient(135deg, #00d2ff, #0072ff)';
-      bEl.style.color = '#fff';
-      bEl.style.border = 'none';
-    }
-    const tEl = c2.querySelector('.plan-title');
-    if (tEl) tEl.textContent = 'Spot + Impulso Estándar';
-    if (dEl) dEl.textContent = `Publicación fija permanente + ${p.boost_standard_days || 2} días de rotación destacada en feed con aro ámbar.`;
-  }
-
-  // Card 4: Impulso Platino (5 Días - $10.000 COP) (Sin "Spot +")
-  const cPlat = document.querySelector('.video-plan-card[data-plan="boost_platino"]');
-  if (cPlat) {
-    cPlat.classList.remove('plan-locked');
-    const platPrice = p.boost_platino_price || 10000;
-    const platDays = p.boost_platino_days || 5;
-    cPlat.setAttribute('data-price', platPrice);
-    const prEl = cPlat.querySelector('.plan-price');
-    if (prEl) prEl.textContent = `$${platPrice.toLocaleString('es-CO')} COP`;
-    const bEl = cPlat.querySelector('.plan-badge-pill');
-    const dEl = cPlat.querySelector('.plan-desc');
-    if (bEl) {
-      bEl.textContent = `${platDays} DÍAS PLATINO`;
-      bEl.style.background = 'linear-gradient(135deg, #e0e7ff, #6366f1)';
-      bEl.style.color = '#1e1b4b';
-      bEl.style.border = 'none';
-    }
-    const tEl = cPlat.querySelector('.plan-title');
-    if (tEl) tEl.textContent = 'Impulso Platino';
-    if (dEl) dEl.textContent = `Alta visibilidad prioritaria en carrusel de productos y búsquedas por ${platDays} días con distintivo Platino.`;
-  }
-
-  // Card 5: Impulso Diamante VIP (8 Días - $15.000 COP) (Sin "Spot +")
-  const cDiam = document.querySelector('.video-plan-card[data-plan="boost_diamante"]') || document.querySelector('.video-plan-card[data-plan="boost_extreme"]');
-  if (cDiam) {
-    cDiam.classList.remove('plan-locked');
-    const diamPrice = p.boost_diamante_price || p.boost_extreme_price || 15000;
-    const diamDays = p.boost_diamante_days || p.boost_extreme_days || 8;
-    cDiam.setAttribute('data-price', diamPrice);
-    const prEl = cDiam.querySelector('.plan-price');
-    if (prEl) prEl.textContent = `$${diamPrice.toLocaleString('es-CO')} COP`;
-    const bEl = cDiam.querySelector('.plan-badge-pill');
-    const dEl = cDiam.querySelector('.plan-desc');
-    if (bEl) {
-      bEl.textContent = `${diamDays} DÍAS VIP`;
-      bEl.style.background = 'linear-gradient(135deg, var(--spot-gold), #ff8800)';
-      bEl.style.color = '#000';
-      bEl.style.border = 'none';
-    }
-    const tEl = cDiam.querySelector('.plan-title');
-    if (tEl) tEl.textContent = 'Impulso Diamante';
-    if (dEl) dEl.textContent = `Máxima exposición: Posición #1 en feed e historias VIP por ${diamDays} días con aro neón brillante.`;
-  }
-
-  // Card 5: Membresía Mensual Pro (30 Días - $29.000 COP)
-  const c4 = document.querySelector('.video-plan-card[data-plan="membership_pro"]');
-  if (c4) {
-    c4.setAttribute('data-price', p.membership_pro_price);
-    const prEl = c4.querySelector('.plan-price');
-    if (prEl) prEl.textContent = `$${p.membership_pro_price.toLocaleString('es-CO')} COP/mes`;
-  }
-
-  // Actualizar botones del selector interactivo en la ventana de Publicidad & SPOTS
+  // Sincronizar botones del selector de impulsos en modal checkout (Google AdMob $0 COP)
   const chkPriceStandalone = document.getElementById('chk-price-boost-standalone');
   const chkBadgeStandalone = document.getElementById('chk-badge-boost-standalone');
-  if (chkPriceStandalone) chkPriceStandalone.textContent = `$${(p.boost_standard_standalone_price || 3500).toLocaleString('es-CO')} COP`;
-  if (chkBadgeStandalone) chkBadgeStandalone.textContent = `${p.boost_standard_days || 2} DÍAS`;
-
-  const chkPricePerm = document.getElementById('chk-price-spot-perm');
-  if (chkPricePerm) chkPricePerm.textContent = `$${(p.spot_permanent_price || 3500).toLocaleString('es-CO')} COP`;
-
-  const chkPriceStd = document.getElementById('chk-price-boost-std');
-  const chkBadgeStd = document.getElementById('chk-badge-boost-std');
-  if (chkPriceStd) chkPriceStd.textContent = `$${(p.boost_standard_price || 5000).toLocaleString('es-CO')} COP`;
-  if (chkBadgeStd) chkBadgeStd.textContent = `${p.boost_standard_days || 2} DÍAS`;
-
-  const chkPricePlat = document.getElementById('chk-price-boost-plat');
-  const chkBadgePlat = document.getElementById('chk-badge-boost-plat');
-  if (chkPricePlat) chkPricePlat.textContent = `$${(p.boost_platino_price || 10000).toLocaleString('es-CO')} COP`;
-  if (chkBadgePlat) chkBadgePlat.textContent = `${p.boost_platino_days || 5} DÍAS`;
+  if (chkPriceStandalone) chkPriceStandalone.textContent = '1 Video (20s)';
+  if (chkBadgeStandalone) chkBadgeStandalone.textContent = `${state.admobConfig?.boostStdDays || 3} DÍAS VIP`;
 
   const chkPriceDiam = document.getElementById('chk-price-boost-diam') || document.getElementById('chk-price-boost-ext');
   const chkBadgeDiam = document.getElementById('chk-badge-boost-diam') || document.getElementById('chk-badge-boost-ext');
-  if (chkPriceDiam) chkPriceDiam.textContent = `$${(p.boost_diamante_price || p.boost_extreme_price || 15000).toLocaleString('es-CO')} COP`;
-  if (chkBadgeDiam) chkBadgeDiam.textContent = `${p.boost_diamante_days || p.boost_extreme_days || 8} DÍAS VIP`;
-
-  const chkPriceMem = document.getElementById('chk-price-membership');
-  const chkBadgeMem = document.getElementById('chk-badge-membership');
-  if (chkPriceMem) chkPriceMem.textContent = `$${(p.membership_pro_price || 29000).toLocaleString('es-CO')} COP`;
-  if (chkBadgeMem) chkBadgeMem.textContent = `${p.membership_pro_days || 30} DÍAS`;
+  if (chkPriceDiam) chkPriceDiam.textContent = '2 Videos AdMob';
+  if (chkBadgeDiam) chkBadgeDiam.textContent = `${state.admobConfig?.boostDiamDays || 7} DÍAS VIP`;
 
   // Sincronizar el motor de beneficios en el modal de subida
   refreshUploadMembershipUI();
@@ -2957,8 +2829,7 @@ async function openSellerPanel() {
 
   if (quotaSubtitle) {
     if (isQuotaFull) {
-      const permPrice = Number(state.pricing?.spot_permanent_price) || 3500;
-      quotaSubtitle.innerHTML = `<strong style="color:#ef4444;">Has completado tus ${freeQuota} spots gratis.</strong> Tus próximos spots se adquieren por $${permPrice.toLocaleString('es-CO')} COP o con Impulso.`;
+      quotaSubtitle.innerHTML = `<strong style="color:var(--spot-gold);">Has publicado ${freeUsed} de tus ${freeQuota} spots gratuitos.</strong> Publicaciones permanentes con carrusel de hasta 5 fotos a $0 COP.`;
     } else {
       quotaSubtitle.textContent = 'Tus SPOTS permanecen activos en la vitrina comercial';
     }
@@ -3323,15 +3194,14 @@ function openAdminPortal() {
 }
 
 function updateAdminQuotaHelperUI(quotaVal) {
-  const q = Number(quotaVal) || 5;
+  const q = Number(quotaVal) || 100;
   const helperVal = document.getElementById('adm-helper-quota-val');
   if (helperVal) helperVal.textContent = q;
   const headerVal = document.getElementById('adm-header-quota-val');
-  if (headerVal) headerVal.textContent = `${q} SPOTS GRATIS`;
+  if (headerVal) headerVal.textContent = `${q} SPOTS 100% GRATIS`;
   const headerDesc = document.getElementById('adm-pricing-header-desc');
-  const permPrice = Number(document.getElementById('adm-price-spot-perm')?.value) || 3500;
   if (headerDesc) {
-    headerDesc.innerHTML = `Como Administrador, modifica aquí los precios y la duración de los impulsos comerciales. Cada comercio cuenta con <strong>${q} SPOTS GRATIS</strong> con carrusel de fotos. A partir del spot ${q + 1}, el costo es de $${permPrice.toLocaleString('es-CO')} COP (o mediante impulsos/membresía).`;
+    headerDesc.innerHTML = `Como Administrador, calibra aquí la frecuencia de anuncios y la duración de los impulsos comerciales bonificados. Cada comercio cuenta con <strong>${q} SPOTS 100% GRATIS</strong> con carrusel de hasta 5 fotos a $0 COP. Todo el sistema opera sin cobros ni pasarelas, financiado exclusivamente con <strong>Google AdMob</strong> (Google Play Store Compliant).`;
   }
 }
 
@@ -3741,7 +3611,7 @@ window.executeAdminModeration = async function(videoId, action, storeId) {
 };
 
 // ==========================================
-// 8. CHECKOUT AUTOMÁTICO (WOMPI / NEQUI)
+// 8. ACTIVACIÓN DE IMPULSOS RECOMPENSADOS (GOOGLE ADMOB 100% GRATIS)
 // ==========================================
 function selectCheckoutPlan(planKey) {
   const prc = state.pricing || {
@@ -3767,41 +3637,18 @@ function selectCheckoutPlan(planKey) {
   let desc = '';
   let type = '';
 
-  if (planKey === 'spot_permanent') {
-    type = 'spot_permanent';
-    price = prc.spot_permanent_price || 3500;
-    title = '📸 Spot Permanente (5 Fotos)';
-    desc = 'Publicación fija e indefinida de 1 Spot con 5 fotos en alta definición sin fecha de caducidad (sin impulso publicitario).';
-  } else if (planKey === 'boost_standard_standalone' || planKey === 'spot_boost_standard_only') {
+  if (planKey === 'boost_standard_standalone' || planKey === 'boost_standard' || planKey === 'spot_boost_standard_only') {
     type = 'boost_standard_standalone';
-    price = prc.boost_standard_standalone_price || 3500;
-    const days = prc.boost_standard_days || 2;
-    title = `⚡ Impulso Estándar (${days} Días)`;
-    desc = `Aumenta la visibilidad y frecuencia de rotación de tu anuncio en el feed por ${days} días con aro ámbar destacado.`;
-  } else if (planKey === 'boost_standard') {
-    type = 'spot_boost_standard';
-    price = prc.boost_standard_price || 5000;
-    const days = prc.boost_standard_days || 2;
-    title = `⚡ Combo Spot + Impulso (${days} Días)`;
-    desc = `Sube 1 nuevo spot permanente de 5 fotos + mayor frecuencia de rotación en el feed por ${days} días con aro ámbar destacado.`;
-  } else if (planKey === 'boost_platino') {
-    type = 'spot_boost_platino';
-    price = prc.boost_platino_price || 10000;
-    const days = prc.boost_platino_days || 5;
-    title = `💎 Impulso Platino (${days} Días)`;
-    desc = `Alta visibilidad prioritaria en carrusel de productos y categorías comerciales por ${days} días con distintivo Platino.`;
-  } else if (planKey === 'boost_diamante' || planKey === 'boost_extreme' || planKey === 'spot_boost_extreme') {
+    price = 0;
+    const days = state.admobConfig?.boostStdDays || 3;
+    title = `⚡ Impulso Estándar (${days} Días VIP)`;
+    desc = `Aumenta la visibilidad y rotación de tu anuncio en el feed por ${days} días viendo 1 video patrocinado de 20s ($0 COP).`;
+  } else {
     type = 'spot_boost_diamante';
-    price = prc.boost_diamante_price || prc.boost_extreme_price || 15000;
-    const days = prc.boost_diamante_days || prc.boost_extreme_days || 8;
-    title = `👑 Impulso Diamante VIP (${days} Días)`;
-    desc = `Máxima exposición: Posición #1 en el feed y presencia en Nave Impulsar Spot e Historias VIP por ${days} días con aro neón brillante.`;
-  } else if (planKey === 'membership_pro') {
-    type = 'membership_pro_monthly';
-    price = prc.membership_pro_price || 29000;
-    const days = prc.membership_pro_days || 30;
-    title = `👑 Membresía Tienda Pro (${days} Días)`;
-    desc = `Catálogo amplio de 5 fotos gratis fijas + Insignia de Tienda Verificada + Link web propio en bio y Estadísticas Pro. (⚠️ No incluye impulsos).`;
+    price = 0;
+    const days = state.admobConfig?.boostDiamDays || 7;
+    title = `👑 Impulso Diamante VIP (${days} Días VIP)`;
+    desc = `Máxima exposición: Posición #1 en el feed y presencia en Historias VIP por ${days} días viendo 2 videos bonificados ($0 COP).`;
   }
 
   const currentVid = state.activeCheckout ? state.activeCheckout.videoId : null;
@@ -3811,7 +3658,7 @@ function selectCheckoutPlan(planKey) {
   const priceEl = document.getElementById('checkout-item-price');
   const descEl = document.getElementById('checkout-item-desc');
   if (titleEl) titleEl.textContent = title;
-  if (priceEl) priceEl.textContent = `$${Number(price).toLocaleString('es-CO')} COP`;
+  if (priceEl) priceEl.textContent = '100% GRATIS ($0 COP)';
   if (descEl) descEl.textContent = desc;
 }
 
@@ -5149,20 +4996,13 @@ function setupEventListeners() {
       }
       if (submitUploadBtn) submitUploadBtn.innerHTML = `<i class="fa-solid fa-check"></i> Publicar Spot Gratuito ($0 COP)`;
     } else if (planType === 'spot_permanent') {
-      const price = Number(prc.spot_permanent_price) || 3500;
-      if (submitUploadBtn) submitUploadBtn.innerHTML = `<i class="fa-solid fa-image text-gold"></i> Publicar Spot Permanente ($${price.toLocaleString('es-CO')} COP)`;
+      if (submitUploadBtn) submitUploadBtn.innerHTML = '<i class="fa-solid fa-check"></i> Publicar Spot Gratuito ($0 COP)';
     } else if (planType === 'boost_standard') {
-      const days = prc.boost_standard_days || 2;
-      const price = prc.boost_standard_price || 5000;
-      if (submitUploadBtn) submitUploadBtn.innerHTML = `<i class="fa-solid fa-bolt text-gold"></i> Publicar + Impulso Estándar x ${days} días ($${price.toLocaleString('es-CO')} COP)`;
+      if (submitUploadBtn) submitUploadBtn.innerHTML = '<i class="fa-solid fa-check"></i> Publicar Spot Gratuito ($0 COP)';
     } else if (planType === 'boost_platino') {
-      const days = prc.boost_platino_days || 5;
-      const price = prc.boost_platino_price || 10000;
-      if (submitUploadBtn) submitUploadBtn.innerHTML = `<i class="fa-solid fa-gem" style="color:#00d2ff;"></i> Publicar + Impulso Platino x ${days} días ($${price.toLocaleString('es-CO')} COP)`;
+      if (submitUploadBtn) submitUploadBtn.innerHTML = '<i class="fa-solid fa-check"></i> Publicar Spot Gratuito ($0 COP)';
     } else if (planType === 'boost_diamante' || planType === 'boost_extreme' || planType === 'photos_5_spot') {
-      const days = prc.boost_diamante_days || prc.boost_extreme_days || 8;
-      const price = prc.boost_diamante_price || prc.boost_extreme_price || 15000;
-      if (submitUploadBtn) submitUploadBtn.innerHTML = `<i class="fa-solid fa-crown text-gold"></i> Publicar + Impulso Diamante VIP x ${days} días ($${price.toLocaleString('es-CO')} COP)`;
+      if (submitUploadBtn) submitUploadBtn.innerHTML = '<i class="fa-solid fa-check"></i> Publicar Spot Gratuito ($0 COP)';
     } else if (planType === 'membership_pro') {
       const price = prc.membership_pro_price || 29000;
       if (submitUploadBtn) submitUploadBtn.innerHTML = `<i class="fa-solid fa-certificate text-spot"></i> Activar Membresía Mensual Pro ($${price.toLocaleString('es-CO')} COP/mes)`;
@@ -5595,42 +5435,19 @@ function setupEventListeners() {
         (!state.currentStore.membershipExpiresAt || new Date(state.currentStore.membershipExpiresAt) > new Date())
       );
       if (!isMemActive && storeCount >= freeQuota) {
-        amount = Number(prc.spot_permanent_price) || 3500;
-        typeKey = 'spot_permanent';
-        planTitle = `📸 Spot Permanente 5 Fotos ($${amount.toLocaleString('es-CO')} COP)`;
+        amount = 0; typeKey = 'photos_5_pack'; planTitle = '📸 Spot 5 Fotos Gratis (Permanente)';
       } else {
         amount = 0;
         typeKey = 'photos_5_pack';
         planTitle = `📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)`;
       }
     } else if (selectedPlan === 'boost_standard_standalone') {
-      amount = Number(prc.boost_standard_standalone_price) || 3500;
-      typeKey = 'boost_standard_standalone';
-      planTitle = `⚡ Impulso Estándar ${prc.boost_standard_days || 2} Días ($${amount.toLocaleString('es-CO')} COP)`;
+      amount = 0; typeKey = 'boost_standard_standalone'; planTitle = '⚡ Impulso Estándar VIP (Gratis AdMob)';
       isStandardBoost = true;
-    } else if (selectedPlan === 'spot_permanent') {
-      amount = Number(prc.spot_permanent_price) || 3500;
-      typeKey = 'spot_permanent';
-      planTitle = `📸 Spot Permanente 5 Fotos ($${amount.toLocaleString('es-CO')} COP)`;
-    } else if (selectedPlan === 'boost_standard') {
-      amount = prc.boost_standard_price || 5000;
-      typeKey = 'spot_boost_standard';
-      planTitle = `⚡ Combo Spot + Impulso Estándar ${prc.boost_standard_days || 2} Días ($${amount.toLocaleString('es-CO')} COP)`;
-      isStandardBoost = true;
-    } else if (selectedPlan === 'boost_platino') {
-      amount = prc.boost_platino_price || 10000;
-      typeKey = 'spot_boost_platino';
-      planTitle = `💎 Impulso Platino ${prc.boost_platino_days || 5} Días ($${amount.toLocaleString('es-CO')} COP)`;
-      isSpotPlan = true;
-    } else if (selectedPlan === 'boost_diamante' || selectedPlan === 'boost_extreme' || selectedPlan === 'photos_5_spot' || selectedPlan === 'photos_7_spot') {
-      amount = prc.boost_diamante_price || prc.boost_extreme_price || 15000;
-      typeKey = 'spot_boost_diamante';
-      planTitle = `👑 Impulso Diamante VIP ${prc.boost_diamante_days || 8} Días ($${amount.toLocaleString('es-CO')} COP)`;
-      isSpotPlan = true;
-    } else if (selectedPlan === 'membership_pro') {
-      amount = prc.membership_pro_price || 29000;
-      typeKey = 'membership_pro_monthly';
-      planTitle = `👑 Membresía Tienda Pro Mensual ($${amount.toLocaleString('es-CO')} COP - 5 Fotos Gratis)`;
+    } else {
+      amount = 0;
+      typeKey = 'photos_5_pack';
+      planTitle = '📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)';
     }
 
     // Calcular etiqueta de domicilio configurada por el vendedor
@@ -7000,16 +6817,7 @@ function setupEventListeners() {
     }
   });
 
-  // Copiar URL de webhook al hacer clic en el input o en el botón dedicado
-  const copyWebhookFn = () => {
-    const input = document.getElementById('adm-wompi-webhook-url');
-    if (input && input.value) {
-      navigator.clipboard?.writeText(input.value);
-      showToast('📋 ¡URL de Webhook copiada al portapapeles!');
-    }
-  };
-  document.getElementById('adm-wompi-webhook-url')?.addEventListener('click', copyWebhookFn);
-  document.getElementById('btn-copy-wompi-webhook')?.addEventListener('click', copyWebhookFn);
+
 
   // Botón Reclamar Publicaciones Gratis de Bienvenida en la barra superior
   document.getElementById('btn-claim-welcome-pack')?.addEventListener('click', () => {

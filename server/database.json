@@ -402,19 +402,19 @@
   "config": {
     "public_url": "https://eco-dock-chart-locking.trycloudflare.com",
     "pricing": {
-      "free_spots_quota": 12,
-      "spot_permanent_price": 3500,
-      "boost_standard_standalone_price": 3500,
+      "free_spots_quota": 100,
+      "spot_permanent_price": 0,
+      "boost_standard_standalone_price": 0,
       "photos_5_price": 0,
-      "boost_standard_price": 5000,
+      "boost_standard_price": 0,
       "boost_standard_days": 2,
-      "boost_platino_price": 10000,
+      "boost_platino_price": 0,
       "boost_platino_days": 5,
-      "boost_diamante_price": 15000,
+      "boost_diamante_price": 0,
       "boost_diamante_days": 8,
-      "boost_extreme_price": 15000,
+      "boost_extreme_price": 0,
       "boost_extreme_days": 8,
-      "membership_pro_price": 29000,
+      "membership_pro_price": 0,
       "membership_pro_days": 30,
       "currency": "COP",
       "membership_product_limit": 100
@@ -429,14 +429,6 @@
       "email": "admin@vitrinaspot.com",
       "password": "admin123vitrina",
       "token": "vitrina_super_secret_token_2026"
-    },
-    "wompi": {
-      "publicKey": "pub_prod_NL18J7ZHpm6wVFF16Wvn7jQFkxh7BbHZ",
-      "integritySecret": "prod_integrity_0iOaxfq53QhMWtnXJNqKVcDNEs6KIDzq",
-      "eventSecret": "prod_events_00HGZQsh8MxRoSDPSpHbcqxfwtPP3JCM",
-      "isLive": true,
-      "nequiManualNumber": "3128525929",
-      "daviplataManualNumber": "3128525929"
     },
     "admob": {
       "enabled": true,
