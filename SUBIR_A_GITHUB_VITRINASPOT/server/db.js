@@ -256,6 +256,7 @@ const DEFAULT_TRANSACTIONS = [
     date: new Date(Date.now() - 86400000 * 5).toISOString()
   }
 ];
+
 class Database {
   constructor() {
     this.pgPool = null;
@@ -352,6 +353,7 @@ class Database {
       }
     }
   }
+
   init() {
     if (!fs.existsSync(DB_FILE)) {
       this.data = {
@@ -520,6 +522,7 @@ class Database {
 
     return hasChanged;
   }
+
   // Recalcular estado de impulso de una tienda específica inmediatamente tras una compra o subida
   recalculateStoreBoost(storeId) {
     const store = this.data.stores.find(s => s.id === storeId);
@@ -623,6 +626,12 @@ class Database {
     }
 
     // 🎲 ALGORITMO DE DESCUBRIMIENTO ALEATORIO PONDERADO (FISHER-YATES SHUFFLE)
+    // Cada usuario y cada sesión recibe un orden dinámico, fresco e impredecible:
+    // 1. Si hay spots VIP Diamante / Extreme, se barajan al azar entre ellos (el puesto #1 rota entre los VIP).
+    // 2. Luego se barajan al azar los spots Platino.
+    // 3. Luego se barajan al azar los spots Estándar.
+    // 4. Todos los productos orgánicos/gratuitos se barajan al 100% al azar entre sí.
+    // 5. Si no hay spots pagados en ese filtro, el feed completo es 100% aleatorio puro para todos los comercios.
     const shuffleArray = (arr) => {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -684,6 +693,7 @@ class Database {
       ...shuffleArray(regulars)
     ];
   }
+
   getVideosByStoreId(storeId) {
     this.cleanExpiredSpotsAndMemberships();
     return this.data.videos.filter(v => v.storeId === storeId && v.status !== "deleted");
@@ -882,6 +892,7 @@ class Database {
     }
     return null;
   }
+
   // Activar SPOT publicitario a una tienda con nivel de impulso
   activateSpot(storeId, days = 7, boostLevel = 'standard') {
     const store = this.getStoreById(storeId);
@@ -929,10 +940,10 @@ class Database {
       wompiTransactionId: tx.wompiTransactionId || null,
       storeId: tx.storeId,
       storeName: tx.storeName,
-      type: tx.type,
+      type: tx.type, // 'spot_7d', 'spot_15d', 'video_30s', 'video_60s'
       typeLabel: tx.typeLabel,
       amount: tx.amount,
-      method: tx.method,
+      method: tx.method, // 'wompi_nequi', 'wompi_pse', 'manual_nequi'
       status: tx.status || "approved",
       date: new Date().toISOString()
     };
@@ -1046,6 +1057,7 @@ class Database {
     this.save();
     return notif;
   }
+
   reportVideo(report) {
     if (!Array.isArray(this.data.config.reports)) this.data.config.reports = [];
     const newRep = {
@@ -1142,6 +1154,7 @@ class Database {
     const pendingReports = (this.data.config.reports || []).filter(r => r.status === 'pending');
     const items = [];
     
+    // Videos con reportes pendientes o en estado under_review / rejected_needs_fix
     this.data.videos.forEach(v => {
       if (v.status === 'deleted') return;
       const vReports = pendingReports.filter(r => r.videoId === v.id);

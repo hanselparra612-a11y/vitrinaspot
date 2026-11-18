@@ -852,7 +852,7 @@ body.vitrina-header-collapsed .categories-nav {
   border-radius: 0;
   border: none;
   box-shadow: none;
-  touch-action: pan-y !important;
+  touch-action: pan-x pan-y pinch-zoom !important;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform: translateZ(0);
@@ -870,10 +870,52 @@ body.vitrina-header-collapsed .categories-nav {
   height: 100%;
   background-color: #000;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1;
+}
+
+.reel-photos-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex !important;
+  flex-direction: row !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  touch-action: pan-x pan-y pinch-zoom !important;
+  z-index: 2;
+}
+
+.reel-photos-slider::-webkit-scrollbar {
+  display: none !important;
+}
+
+.reel-photo-slide {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  scroll-snap-align: start !important;
+  scroll-snap-stop: normal !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.reel-photo-slide img.reel-hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .reel-hero-photo,
@@ -1003,7 +1045,41 @@ body.vitrina-header-collapsed .categories-nav {
 }
 
 .photo-nav-arrow {
-  display: none !important;
+  display: flex !important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(12, 15, 20, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 0.9rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 22;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.photo-nav-arrow:hover,
+.photo-nav-arrow:active {
+  background: rgba(255, 184, 0, 0.35);
+  border-color: var(--spot-gold);
+  color: var(--spot-gold);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.photo-nav-prev {
+  left: 10px;
+}
+
+.photo-nav-next {
+  right: 10px;
 }
 
 .photo-dots-row {
@@ -1014,20 +1090,22 @@ body.vitrina-header-collapsed .categories-nav {
   gap: 6px;
   z-index: 25;
   will-change: opacity;
+  pointer-events: auto;
 }
 
 .photo-dot {
   width: 20px;
-  height: 3px;
-  border-radius: 2px;
+  height: 4px;
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.35);
-  transition: background 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .photo-dot.active {
   background: var(--spot-gold);
-  width: 20px;
-  box-shadow: 0 0 6px rgba(255, 184, 0, 0.5);
+  width: 28px;
+  box-shadow: 0 0 8px rgba(255, 184, 0, 0.6);
 }
 
 /* OVERLAYS FLOTANTES SOBRE EL VIDEO */
@@ -4439,7 +4517,7 @@ body.admin-active-view .main-viewport {
     border: none;
     scroll-snap-align: start !important;
     scroll-snap-stop: normal !important;
-    touch-action: pan-y !important;
+    touch-action: pan-x pan-y pinch-zoom !important;
     overflow: hidden;
     transform: translateZ(0) !important;
     -webkit-transform: translateZ(0) !important;
@@ -4607,9 +4685,36 @@ body.admin-active-view .main-viewport {
     font-size: 0.75rem;
   }
 
-  /* OCULTAR EN MÓVIL EL TOGGLE DE CUADRÍCULA 2X2 PARA LIBERAR ESPACIO */
+  /* BOTÓN ALTERNADOR DE VISTA (CUADRÍCULA 2x2 / VITRINA INMERSIVA) EN MÓVIL */
   #btn-feed-view-toggle {
-    display: none !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff !important;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  #btn-feed-view-toggle:active {
+    transform: scale(0.92);
+    background: rgba(255, 184, 0, 0.2);
+    border-color: var(--spot-gold);
+    color: var(--spot-gold) !important;
+  }
+
+  #btn-feed-view-toggle.active-grid {
+    background: rgba(255, 184, 0, 0.25) !important;
+    border-color: var(--spot-gold) !important;
+  }
+
+  #btn-feed-view-toggle.active-grid i,
+  #btn-feed-view-toggle.active-grid #feed-toggle-icon {
+    color: var(--spot-gold) !important;
   }
 
   /* OCULTAR EN MÓVIL EL BOTÓN PUBLICAR DE LA BARRA (SE TRASLADA AL FAB FLOTANTE) */
@@ -6930,7 +7035,6 @@ body.admin-active-view .main-viewport {
 .btn-hide-keyboard:active {
   transform: translateY(-50%) scale(0.95) !important;
 }
-
 
 /* Botón directo: Ya tengo tienda / Entrar a Mi Negocio */
 .btn-welcome-login-direct {

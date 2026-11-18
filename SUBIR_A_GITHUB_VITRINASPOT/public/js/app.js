@@ -887,28 +887,52 @@ function updateCardPhotoDisplay(video, direction = 'next') {
   }
 }
 
-function nextCardPhoto(videoId, e) {
-  if (e) e.stopPropagation();
+function scrollCardPhoto(videoId, direction = 'next', e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  const slider = document.getElementById(`slider-${videoId}`);
+  if (slider) {
+    const slideW = slider.clientWidth || 360;
+    const currentScroll = slider.scrollLeft;
+    const target = direction === 'next' ? currentScroll + slideW : currentScroll - slideW;
+    slider.scrollTo({ left: target, behavior: 'smooth' });
+    return;
+  }
   const video = state.videos.find(v => v.id === videoId);
   if (!video || !video._allPhotos || video._allPhotos.length <= 1) return;
-  video._currentPhotoIdx = ((video._currentPhotoIdx || 0) + 1) % video._allPhotos.length;
-  updateCardPhotoDisplay(video, 'next');
+  if (direction === 'next') {
+    video._currentPhotoIdx = ((video._currentPhotoIdx || 0) + 1) % video._allPhotos.length;
+  } else {
+    video._currentPhotoIdx = ((video._currentPhotoIdx || 0) - 1 + video._allPhotos.length) % video._allPhotos.length;
+  }
+  updateCardPhotoDisplay(video, direction);
   preloadAdjacentPhotos(video);
+}
+window.scrollCardPhoto = scrollCardPhoto;
+
+function nextCardPhoto(videoId, e) {
+  scrollCardPhoto(videoId, 'next', e);
 }
 window.nextCardPhoto = nextCardPhoto;
 
 function prevCardPhoto(videoId, e) {
-  if (e) e.stopPropagation();
-  const video = state.videos.find(v => v.id === videoId);
-  if (!video || !video._allPhotos || video._allPhotos.length <= 1) return;
-  video._currentPhotoIdx = ((video._currentPhotoIdx || 0) - 1 + video._allPhotos.length) % video._allPhotos.length;
-  updateCardPhotoDisplay(video, 'prev');
-  preloadAdjacentPhotos(video);
+  scrollCardPhoto(videoId, 'prev', e);
 }
 window.prevCardPhoto = prevCardPhoto;
 
 function selectCardPhoto(videoId, pIdx, e) {
-  if (e) e.stopPropagation();
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  const slider = document.getElementById(`slider-${videoId}`);
+  if (slider) {
+    const slideW = slider.clientWidth || 360;
+    slider.scrollTo({ left: pIdx * slideW, behavior: 'smooth' });
+    return;
+  }
   const video = state.videos.find(v => v.id === videoId);
   if (!video || !video._allPhotos || pIdx >= video._allPhotos.length) return;
   const oldIdx = video._currentPhotoIdx || 0;
@@ -1155,25 +1179,29 @@ function renderContinuousFeed() {
 
     return `
       <article class="reel-player-card" id="card-${video.id}" data-id="${video.id}" data-index="${idx}">
-        <!-- FOTO PRINCIPAL ULTRA-LIVIANA -->
+        <!-- CARRUSEL DE FOTOS NATIVO (HASTA 7 FOTOS DESLIZABLES HORIZONTALMENTE) -->
         <div class="reel-photo-viewport" id="viewport-${video.id}">
-          <img id="photo-${video.id}" class="reel-hero-photo" src="${photos[0]}" alt="${escapeHtml(video.title)}" loading="eager" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';">
+          <div class="reel-photos-slider" id="slider-${video.id}" data-id="${video.id}">
+            ${photos.map((pUrl, pIdx) => `
+            <div class="reel-photo-slide" data-idx="${pIdx}">
+              <img id="photo-${video.id}-${pIdx}" class="reel-hero-photo" src="${pUrl}" alt="${escapeHtml(video.title)} - Foto ${pIdx + 1}" loading="${pIdx === 0 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';">
+            </div>
+            `).join('')}
+          </div>
         </div>
 
         <!-- INDICADOR ÚNICO MULTIFOTO (SI TIENE MÁS DE 1 FOTO) -->
         ${photos.length > 1 ? `
-        <button type="button" class="photo-counter-badge" id="badge-photos-${video.id}" onclick="openCardPhotoGallery('${video.id}', event)" title="Ver galería">
+        <button type="button" class="photo-counter-badge" id="badge-photos-${video.id}" onclick="openCardPhotoGallery('${video.id}', event)" title="Ver todas las fotos">
           <i class="fa-solid fa-images"></i>
           <span class="counter-text">1/${photos.length}</span>
         </button>
-        ` : ''}
 
         <!-- FLECHAS LATERALES Y PUNTOS INDICADORES DE FOTOS -->
-        ${photos.length > 1 ? `
-        <button type="button" class="photo-nav-arrow photo-nav-prev" onclick="prevCardPhoto('${video.id}', event)" title="Foto Anterior" aria-label="Foto Anterior">
+        <button type="button" class="photo-nav-arrow photo-nav-prev" onclick="scrollCardPhoto('${video.id}', 'prev', event)" title="Foto Anterior" aria-label="Foto Anterior">
           <i class="fa-solid fa-chevron-left"></i>
         </button>
-        <button type="button" class="photo-nav-arrow photo-nav-next" onclick="nextCardPhoto('${video.id}', event)" title="Siguiente Foto" aria-label="Siguiente Foto">
+        <button type="button" class="photo-nav-arrow photo-nav-next" onclick="scrollCardPhoto('${video.id}', 'next', event)" title="Siguiente Foto" aria-label="Siguiente Foto">
           <i class="fa-solid fa-chevron-right"></i>
         </button>
         <div class="photo-dots-row" id="dots-${video.id}">
@@ -1946,19 +1974,44 @@ function setupHorizontalPhotoGestures() {
   container.querySelectorAll('.reel-player-card:not(.welcome-hook-card)').forEach(card => {
     const videoId = card.dataset.id;
     const viewport = card.querySelector('.reel-photo-viewport');
+    const slider = card.querySelector('.reel-photos-slider');
+    const badgeText = card.querySelector(`#badge-photos-${videoId} .counter-text`);
+    const dots = card.querySelectorAll(`#dots-${videoId} .photo-dot`);
+    const slides = card.querySelectorAll('.reel-photo-slide');
+    const totalPhotos = slides.length;
+
     if (!viewport) return;
 
-    let startX = 0;
-    let startY = 0;
-    let lastTap = 0;
+    // 1. Sincronización del slider horizontal nativo con el badge e indicadores
+    if (slider && totalPhotos > 1) {
+      let scrollRaf = null;
+      slider.addEventListener('scroll', () => {
+        if (scrollRaf) cancelAnimationFrame(scrollRaf);
+        scrollRaf = requestAnimationFrame(() => {
+          const w = slider.clientWidth || 1;
+          const idx = Math.min(Math.max(Math.round(slider.scrollLeft / w), 0), totalPhotos - 1);
 
+          if (badgeText) badgeText.textContent = `${idx + 1}/${totalPhotos}`;
+          dots.forEach((dot, dIdx) => {
+            if (dIdx === idx) dot.classList.add('active');
+            else dot.classList.remove('active');
+          });
+
+          const vidObj = state.videos.find(v => v.id === videoId);
+          if (vidObj) vidObj._currentPhotoIdx = idx;
+        });
+      }, { passive: true });
+    }
+
+    // 2. Doble toque / clic en foto para dar Me Gusta instantáneo con animación
+    let lastTap = 0;
     let tapTimeout = null;
 
-    viewport.addEventListener('click', (e) => {
+    const interactiveArea = slider || viewport;
+    interactiveArea.addEventListener('click', (e) => {
       if (e.target.closest('button, a, .side-action-btn, .photo-nav-arrow, .btn-spotplay-feed-sound')) return;
       const now = Date.now();
       if (now - lastTap < 320 && now - lastTap > 40) {
-        // Doble toque / Doble clic: dar Me Gusta instantáneo
         if (tapTimeout) {
           clearTimeout(tapTimeout);
           tapTimeout = null;
@@ -1986,74 +2039,22 @@ function setupHorizontalPhotoGestures() {
       }
     });
 
-    let isHorizontalSwipe = false;
-    let heroPhoto = null;
-
-    viewport.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      isHorizontalSwipe = false;
-      heroPhoto = viewport.querySelector('.reel-hero-photo');
-    }, { passive: true });
-
-    viewport.addEventListener('touchmove', (e) => {
-      if (state.currentAppMode === 'spotplay' || !heroPhoto) return;
-      const curX = e.touches[0].clientX;
-      const curY = e.touches[0].clientY;
-      const diffX = curX - startX;
-      const diffY = curY - startY;
-
-      // Detectar si el usuario intenta arrastrar horizontalmente la foto
-      if (!isHorizontalSwipe && Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
-        isHorizontalSwipe = true;
-      }
-
-      if (isHorizontalSwipe && Math.abs(diffX) < 130) {
-        heroPhoto.style.transform = `translateX(${diffX * 0.42}px) scale(0.99)`;
-        heroPhoto.style.transition = 'none';
-      }
-    }, { passive: true });
-
-    viewport.addEventListener('touchend', (e) => {
-      if (state.currentAppMode === 'spotplay') return;
-      if (heroPhoto) {
-        heroPhoto.style.transition = 'transform 0.22s cubic-bezier(0.25, 1, 0.5, 1)';
-        heroPhoto.style.transform = 'translateX(0) scale(1)';
-      }
-
-      const endX = e.changedTouches[0].clientX;
-      const endY = e.changedTouches[0].clientY;
-      const diffX = startX - endX;
-      const diffY = startY - endY;
-
-      // Deslizamiento horizontal claro
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) >= 32) {
-        if (diffX > 0) nextCardPhoto(videoId);
-        else prevCardPhoto(videoId);
-      }
-      isHorizontalSwipe = false;
-    }, { passive: true });
-
-    // Arrastre horizontal con ratón para PC
+    // 3. Fallback de arrastre con ratón en PC
     let mouseStartX = 0;
-    let mouseStartY = 0;
     let isMouseDown = false;
-
-    viewport.addEventListener('mousedown', (e) => {
+    interactiveArea.addEventListener('mousedown', (e) => {
       if (e.target.closest('button, a, .side-action-btn, .photo-dots-row, .photo-counter-badge')) return;
       isMouseDown = true;
       mouseStartX = e.clientX;
-      mouseStartY = e.clientY;
     });
 
-    viewport.addEventListener('mouseup', (e) => {
+    interactiveArea.addEventListener('mouseup', (e) => {
       if (!isMouseDown) return;
       isMouseDown = false;
       const diffX = mouseStartX - e.clientX;
-      const diffY = mouseStartY - e.clientY;
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) >= 30) {
-        if (diffX > 0) nextCardPhoto(videoId);
-        else prevCardPhoto(videoId);
+      if (Math.abs(diffX) >= 40) {
+        if (diffX > 0) scrollCardPhoto(videoId, 'next');
+        else scrollCardPhoto(videoId, 'prev');
       }
     });
   });
