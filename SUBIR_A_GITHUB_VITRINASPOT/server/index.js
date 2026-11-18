@@ -471,25 +471,10 @@ app.post('/api/videos', upload.fields([
     const hasMembershipQuota = isMembershipActive && storeVideos.length < memLimit;
     const hasFreeQuota = storeVideos.length < freeQuota;
 
-    const isStandardFree = (!wantsBoost && !isSpotPermanent && (hasFreeQuota || hasMembershipQuota));
-    
-    // Si ya completó los 5 spots gratuitos y no tiene membresía, cualquier publicación exige pago previo
-    if (!hasFreeQuota && !hasMembershipQuota) {
-      const hasValidTx = Boolean(
-        req.body.transactionId && 
-        req.body.transactionId.trim() !== '' && 
-        !req.body.transactionId.startsWith('tx_free')
-      );
-      if (!hasValidTx) {
-        return res.status(403).json({
-          error: `Has completado tu cupo de ${freeQuota} spots gratuitos. Para publicar tu ${storeVideos.length + 1}° spot permanente de 7 imágenes, adquiérelo por solo $3.500 COP o activa un Impulso comercial.`
-        });
-      }
-    }
-
-    const hasValidTx = isStandardFree || Boolean(
-      req.body.transactionId && req.body.transactionId.trim() !== '' && !req.body.transactionId.startsWith('tx_free')
-    );
+    // 🚀 MODELO 100% GRATUITO PARA COMERCIOS (MONETIZACIÓN CON GOOGLE ADMOB)
+    // Cualquier negocio puede publicar spots permanentes de 7 imágenes sin límite ni cobros
+    const isStandardFree = true;
+    const hasValidTx = true;
 
     const isBoosted = Boolean(wantsBoost && hasValidTx);
     let boostExpiry = null;

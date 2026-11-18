@@ -1324,6 +1324,30 @@ function renderContinuousFeed() {
         </div>
       </article>
     `;
+
+    // Inserción de Espacio Publicitario Google AdMob cada 4 productos
+    let adMobCardHTML = '';
+    if ((idx + 1) % 4 === 0 && idx < state.videos.length - 1) {
+      adMobCardHTML = `
+        <article class="reel-player-card reel-admob-card">
+          <div class="admob-card-badge"><i class="fa-solid fa-bullhorn text-gold"></i> Publicidad Patrocinada</div>
+          <div class="admob-card-viewport">
+            <div class="admob-card-inner">
+              <div class="admob-icon-circle"><i class="fa-solid fa-store text-gold"></i></div>
+              <h3>Espacio Publicitario Google AdMob</h3>
+              <p>Promociones y anuncios personalizados para Colombia vía Google AdMob.</p>
+              <div class="admob-pill-tag"><i class="fa-brands fa-google"></i> Google AdMob Ready</div>
+            </div>
+          </div>
+          <div class="reel-bottom-sheet">
+            <div class="safety-legal-text">
+              <i class="fa-brands fa-google text-gold"></i> Anuncios gestionados automáticamente por la red de Google AdMob.
+            </div>
+          </div>
+        </article>
+      `;
+    }
+    return cardHTML + adMobCardHTML;
   }).join('');
 
   feedContainer.innerHTML = welcomeHookCardHTML + productCardsHTML;
@@ -5668,69 +5692,25 @@ function setupEventListeners() {
       formattedDelivery = 'Envíos a Todo el País';
     }
 
-    // MODELO DE NEGOCIO VITRINASPOT:
-    // 1. Publicar hasta 5 spots de 7 imágenes es 100% GRATIS ($0 COP) por tienda.
-    // 2. A partir del 6° spot, se adquiere como Spot Permanente ($3.500 COP) o con Impulsos Comerciales.
-    if ((selectedPlan === 'photos_5' || selectedPlan === 'photos_7') && amount === 0) {
-      const submitBtn = document.getElementById('btn-submit-upload');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Optimizando fotos...';
-      }
-      const sendData = await prepareCompressedFormData(uploadForm);
-      if (state.currentStore) sendData.append('storeId', state.currentStore.id);
-      sendData.set('delivery', formattedDelivery);
-      sendData.append('paidPlan', 'photos_5');
-      sendData.append('hasSpot', 'false');
-      sendData.append('isStandardBoost', 'false');
-      sendData.append('spotBoost', 'false');
-      sendData.append('isPermanent', 'true');
-      sendData.append('transactionId', 'tx_free_standard_upload');
-      executeVideoUpload(sendData, 'photos_5');
-      return;
+    // MODELO DE NEGOCIO VITRINASPOT 100% GRATIS (MONETIZACIÓN CON GOOGLE ADMOB):
+    // Publicar spots de hasta 7 imágenes es 100% GRATIS ($0 COP) para todos los comercios.
+    const submitBtn = document.getElementById('btn-submit-upload');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Optimizando fotos...';
     }
-
-    state.pendingVideoUpload = async (txId) => {
-      const submitBtn = document.getElementById('btn-submit-upload');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Optimizando fotos...';
-      }
-      const sendData = await prepareCompressedFormData(uploadForm);
-      if (state.currentStore) sendData.append('storeId', state.currentStore.id);
-      sendData.set('delivery', formattedDelivery);
-
-      const effectiveType = state.activeCheckout?.type || selectedPlan;
-      let finalPlan = selectedPlan;
-      let isBoost = false;
-      let isStd = false;
-
-      if (effectiveType.includes('diamante') || effectiveType.includes('extreme')) {
-        finalPlan = 'boost_diamante';
-        isBoost = true;
-      } else if (effectiveType.includes('platino')) {
-        finalPlan = 'boost_platino';
-        isBoost = true;
-      } else if (effectiveType === 'boost_standard' || effectiveType === 'spot_boost_standard') {
-        finalPlan = 'boost_standard';
-        isBoost = true;
-        isStd = true;
-      } else if (effectiveType === 'spot_permanent' || effectiveType.includes('permanent')) {
-        finalPlan = 'spot_permanent';
-        isBoost = false;
-      }
-
-      sendData.append('paidPlan', finalPlan);
-      const isApproved = txId && txId !== 'tx_free';
-      sendData.append('hasSpot', (isBoost && isApproved) ? 'true' : 'false');
-      sendData.append('isStandardBoost', (isStd && isApproved) ? 'true' : 'false');
-      sendData.append('spotBoost', (isBoost && isApproved) ? 'true' : 'false');
-      sendData.append('isPermanent', 'true');
-      sendData.append('transactionId', txId || 'tx_approved');
-      executeVideoUpload(sendData, finalPlan);
-    };
-
-    openCheckoutModal(typeKey, planTitle, amount);
+    const sendData = await prepareCompressedFormData(uploadForm);
+    if (state.currentStore) sendData.append('storeId', state.currentStore.id);
+    sendData.set('delivery', formattedDelivery);
+    sendData.append('paidPlan', selectedPlan || 'photos_5');
+    const isBoostPlan = selectedPlan && (selectedPlan.includes('boost') || selectedPlan.includes('diamante') || selectedPlan.includes('platino'));
+    sendData.append('hasSpot', isBoostPlan ? 'true' : 'false');
+    sendData.append('isStandardBoost', selectedPlan === 'boost_standard' ? 'true' : 'false');
+    sendData.append('spotBoost', isBoostPlan ? 'true' : 'false');
+    sendData.append('isPermanent', 'true');
+    sendData.append('transactionId', 'tx_free_admob_model');
+    executeVideoUpload(sendData, selectedPlan || 'photos_5');
+    return;
   }
 
   function executeVideoUpload(formData, selectedPlan) {

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=22.9">
+  <link rel="stylesheet" href="css/style.css?v=23.0">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -42,8 +42,8 @@
     }
   </script>
 
-  <!-- Pasarela Oficial Wompi Bancolombia (Widget Seguro) -->
-  <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
+  <!-- Google AdMob / AdSense Integration Ready -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 </head>
 <body class="dark-theme">
 
@@ -936,67 +936,22 @@
           </div>
 
           <div class="video-plans-grid" id="video-plans-grid">
-            <!-- 1. PUBLICACIÓN GRATUITA (HASTA 5 SPOTS GRATIS) -->
+            <!-- 1. PUBLICACIÓN ESTÁNDAR 100% GRATIS -->
             <div class="video-plan-card active" data-plan="photos_5" data-price="0">
-              <span class="plan-badge-pill" id="plan-card-badge-free" style="background: linear-gradient(135deg, var(--wa-green), #00c853); color: #000; font-weight: 800;">5 SPOTS GRATIS</span>
+              <span class="plan-badge-pill" id="plan-card-badge-free" style="background: linear-gradient(135deg, var(--wa-green), #00c853); color: #000; font-weight: 800;">100% GRATIS</span>
               <div class="plan-icon"><i class="fa-solid fa-gift text-gold"></i></div>
-              <strong class="plan-title">Spot Gratuito</strong>
-              <span class="plan-price" id="plan-card-price-photos">$0 COP</span>
-              <p class="plan-desc" id="plan-card-desc-photos">Tus primeros 5 spots con 7 imágenes son 100% gratis. 1 Portada + 6 Detalle permanentes.</p>
+              <strong class="plan-title">Publicación Gratuita</strong>
+              <span class="plan-price" id="plan-card-price-photos">$0 COP (Permanente)</span>
+              <p class="plan-desc" id="plan-card-desc-photos">Publica tu producto con hasta 7 fotos en alta definición y contacto directo a WhatsApp sin costo.</p>
             </div>
 
-            <!-- 2. SPOT PERMANENTE (7 IMÁGENES SIN IMPULSO - $3.500 COP) -->
-            <div class="video-plan-card" data-plan="spot_permanent" data-price="3500">
-              <span class="plan-badge-pill" id="plan-card-badge-perm" style="background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid rgba(0,255,136,0.5); font-weight: 800;">SOLO PUBLICACIÓN</span>
-              <div class="plan-icon"><i class="fa-solid fa-image text-gold"></i></div>
-              <strong class="plan-title">Spot Permanente</strong>
-              <span class="plan-price" id="plan-card-price-perm">$3.500 COP</span>
-              <p class="plan-desc">1 Spot permanente de 7 imágenes sin caducidad (sin impulso publicitario).</p>
-            </div>
-
-            <!-- 2.1 IMPULSO ESTÁNDAR (2 DÍAS - $3.500 COP) -->
-            <div class="video-plan-card" data-plan="boost_standard_standalone" data-price="3500">
-              <span class="plan-badge-pill" id="plan-card-badge-boost-std" style="background: linear-gradient(135deg, #ffb800, #ff8800); color: #000; font-weight: 800;">IMPULSO 2 DÍAS</span>
-              <div class="plan-icon"><i class="fa-solid fa-bolt text-gold"></i></div>
-              <strong class="plan-title">Impulso Estándar</strong>
-              <span class="plan-price" id="plan-card-price-boost-std">$3.500 COP</span>
-              <p class="plan-desc">Aumenta la visibilidad y rotación de tu anuncio en el feed por 2 días con aro ámbar.</p>
-            </div>
-
-            <!-- 3. COMBO SPOT + IMPULSO ESTÁNDAR (2 DÍAS - $5.000 COP) -->
-            <div class="video-plan-card" data-plan="boost_standard" data-price="5000">
-              <span class="plan-badge-pill" id="plan-card-badge-std" style="background: linear-gradient(135deg, #00d2ff, #0072ff); color: #fff; font-weight: 800;">COMBO + 2 DÍAS IMPULSO</span>
-              <div class="plan-icon"><i class="fa-solid fa-boxes-stacked text-gold"></i></div>
-              <strong class="plan-title">Spot + Impulso Estándar</strong>
-              <span class="plan-price" id="plan-card-price-std">$5.000 COP</span>
-              <p class="plan-desc">Publicación fija permanente + 2 días de rotación destacada en feed con aro ámbar.</p>
-            </div>
-
-            <!-- 4. IMPULSO PLATINO (5 DÍAS - $10.000 COP) -->
-            <div class="video-plan-card" data-plan="boost_platino" data-price="10000">
-              <span class="plan-badge-pill" id="plan-card-badge-plat" style="background: linear-gradient(135deg, #e0e7ff, #6366f1); color: #1e1b4b; font-weight: 800;">5 DÍAS PLATINO</span>
-              <div class="plan-icon"><i class="fa-solid fa-gem" style="color: #6366f1;"></i></div>
-              <strong class="plan-title">Impulso Platino</strong>
-              <span class="plan-price" id="plan-card-price-plat">$10.000 COP</span>
-              <p class="plan-desc">Alta visibilidad prioritaria en carrusel de productos y búsquedas por 5 días.</p>
-            </div>
-
-            <!-- 5. IMPULSO DIAMANTE (8 DÍAS VIP - $15.000 COP) -->
-            <div class="video-plan-card" data-plan="boost_diamante" data-price="15000">
-              <span class="plan-badge-pill" id="plan-card-badge-diam" style="background: linear-gradient(135deg, var(--spot-gold), #ff8800); color: #000; font-weight: 800;">8 DÍAS VIP</span>
+            <!-- 2. IMPULSO DESTACADO VIP PATROCINADO (GRATIS) -->
+            <div class="video-plan-card" data-plan="boost_diamante" data-price="0">
+              <span class="plan-badge-pill" id="plan-card-badge-diam" style="background: linear-gradient(135deg, var(--spot-gold), #ff8800); color: #000; font-weight: 800;">IMPULSO VIP GRATIS</span>
               <div class="plan-icon"><i class="fa-solid fa-crown text-gold"></i></div>
-              <strong class="plan-title">Impulso Diamante</strong>
-              <span class="plan-price" id="plan-card-price-diam">$15.000 COP</span>
-              <p class="plan-desc">Máxima exposición: Posición #1 en feed e historias VIP por 8 días con aro neón brillante.</p>
-            </div>
-
-            <!-- 5. PAQUETE DE MEMBRESÍA PRO (30 DÍAS - $29.000 COP) -->
-            <div class="video-plan-card" data-plan="membership_pro" data-price="29000">
-              <span class="plan-badge-pill" id="plan-card-badge-mem" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; font-weight: 800;">MEMBRESÍA 30 DÍAS</span>
-              <div class="plan-icon"><i class="fa-solid fa-certificate text-spot"></i></div>
-              <strong class="plan-title">Membresía Mensual</strong>
-              <span class="plan-price" id="plan-card-price-mem">$29.000 COP/mes</span>
-              <p class="plan-desc">Catálogo ilimitado de 7 imágenes gratis + Tienda Verificada + Métricas (⚠️ Sin impulsos).</p>
+              <strong class="plan-title">Impulso Destacado VIP</strong>
+              <span class="plan-price" id="plan-card-price-diam">$0 COP (Patrocinado)</span>
+              <p class="plan-desc">Máxima exposición: Posición prioritaria en el feed e historias VIP con aro neón brillante.</p>
             </div>
           </div>
           <input type="hidden" name="selectedPlan" id="upload-selected-plan" value="photos_5">
@@ -2369,6 +2324,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=22.9"></script>
+  <script src="js/app.js?v=23.0"></script>
 </body>
 </html>
