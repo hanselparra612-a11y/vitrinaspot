@@ -1,5 +1,5 @@
 // Service Worker Oficial VitrinaSpot PWA
-const CACHE_NAME = 'vitrinaspot-v21.9';
+const CACHE_NAME = 'vitrinaspot-v24.1';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -9,7 +9,12 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log('Purgando caché antigua:', key);
+            return caches.delete(key);
+          }
+        })
       );
     }).then(() => self.clients.claim())
   );
