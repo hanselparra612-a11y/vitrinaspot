@@ -1480,12 +1480,9 @@ app.get('/api/admin/metrics', (req, res) => {
       enabled: true,
       publisherId: "ca-pub-3940256099942544",
       feedAdFrequency: 4,
-      boostStdDays: 3,
-      boostDiamDays: 7,
       interstitialOnUpload: true,
       testMode: true,
       bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
-      rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
       interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
     },
     admob: config.admob || {
@@ -1623,12 +1620,9 @@ app.post('/api/admin/admob-config', (req, res) => {
     enabled: req.body.enabled,
     publisherId: req.body.publisherId,
     feedAdFrequency: req.body.feedAdFrequency,
-    boostStdDays: req.body.boostStdDays,
-    boostDiamDays: req.body.boostDiamDays,
     interstitialOnUpload: req.body.interstitialOnUpload,
     testMode: req.body.testMode,
     bannerUnitId: req.body.bannerUnitId,
-    rewardedUnitId: req.body.rewardedUnitId,
     interstitialUnitId: req.body.interstitialUnitId
   });
 
