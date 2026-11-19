@@ -1205,6 +1205,10 @@
           <input type="tel" id="reg-store-whatsapp" placeholder="Ej: 312 456 7890" required>
         </div>
         <div class="form-group">
+          <label>Correo Electrónico <small class="text-muted">(Opcional - Para recuperar tu cuenta si olvidas tu clave)</small></label>
+          <input type="email" id="reg-store-email" placeholder="ejemplo@correo.com" autocomplete="email">
+        </div>
+        <div class="form-group">
           <label>Ciudad Principal</label>
           <select id="reg-store-city">
             <option value="Bogotá">Bogotá D.C.</option>
@@ -1457,6 +1461,11 @@
             <option value="Amazonas & Leticia">Amazonas & Leticia</option>
             </select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Correo Electrónico de Respaldo <small class="text-muted">(Opcional - Para recuperar tu cuenta)</small></label>
+          <input type="email" id="edit-store-email" name="email" placeholder="ejemplo@correo.com" autocomplete="email">
         </div>
 
         <div class="form-group">
@@ -2077,6 +2086,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=24.5"></script>
+  <script src="js/app.js?v=24.6"></script>
 </body>
 </html>

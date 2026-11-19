@@ -852,7 +852,7 @@ app.get('/api/stores/:id', (req, res) => {
 
 // Registrar nueva tienda de negocio
 app.post('/api/stores', (req, res) => {
-  const { name, whatsapp, city, password, acceptedRules } = req.body;
+  const { name, whatsapp, email, city, password, acceptedRules } = req.body;
   if (!name || !whatsapp) {
     return res.status(400).json({ error: 'Nombre de tienda y WhatsApp son obligatorios.' });
   }
@@ -869,6 +869,7 @@ app.post('/api/stores', (req, res) => {
   }
 
   const trimmedName = name.trim();
+  const cleanEmail = email && typeof email === 'string' ? email.trim().toLowerCase() : '';
   const targetCity = city ? city.trim() : 'Bogotá';
 
   // Verificar si ya existe una tienda con este WhatsApp
@@ -897,6 +898,7 @@ app.post('/api/stores', (req, res) => {
     // Si ya existe, actualizamos el nombre si cambió y devolvemos la sesión
     existing.name = trimmedName;
     existing.city = targetCity;
+    if (cleanEmail) existing.email = cleanEmail;
     db.save();
     return res.json({ success: true, store: existing, message: 'Ya existía una tienda con este WhatsApp. Has iniciado sesión.' });
   }
@@ -904,6 +906,7 @@ app.post('/api/stores', (req, res) => {
   const newStore = db.createStore({
     name: trimmedName,
     whatsapp: cleanWhatsApp,
+    email: cleanEmail,
     city: targetCity,
     password: password || '123',
     acceptedRules: true
@@ -970,38 +973,43 @@ const recoveryCodes = new Map();
 
 // Solicitar código de recuperación por WhatsApp
 app.post('/api/stores/forgot-password', (req, res) => {
-  const { whatsapp } = req.body;
-  if (!whatsapp) {
-    return res.status(400).json({ error: 'Por favor ingresa tu número de WhatsApp registrado.' });
-  }
-
-  const cleanReq = whatsapp.replace(/[^0-9]/g, '');
-  if (cleanReq.length < 7) {
-    return res.status(400).json({ error: 'Número de WhatsApp inválido.' });
+  const { whatsapp, email } = req.body;
+  const input = (whatsapp || email || '').trim();
+  if (!input) {
+    return res.status(400).json({ error: 'Por favor ingresa tu número de WhatsApp o correo registrado.' });
   }
 
   const stores = db.getStores();
-  const store = stores.find(s => {
-    const sClean = (s.whatsapp || '').replace(/[^0-9]/g, '');
-    return sClean.endsWith(cleanReq.slice(-10)) || sClean === cleanReq;
-  });
+  let store = null;
+
+  if (input.includes('@')) {
+    const cleanEmail = input.toLowerCase();
+    store = stores.find(s => (s.email || '').toLowerCase() === cleanEmail);
+  } else {
+    const cleanReq = input.replace(/[^0-9]/g, '');
+    if (cleanReq.length >= 7) {
+      store = stores.find(s => {
+        const sClean = (s.whatsapp || '').replace(/[^0-9]/g, '');
+        return sClean.endsWith(cleanReq.slice(-10)) || sClean === cleanReq;
+      });
+    }
+  }
 
   if (!store) {
-    return res.status(404).json({ error: 'No encontramos ninguna tienda registrada con ese número de WhatsApp. Verifica tu número o crea una tienda gratis.' });
+    return res.status(404).json({ error: 'No encontramos ninguna tienda registrada con esos datos. Verifica o crea una tienda gratis.' });
   }
 
   // Generar código de seguridad de 4 dígitos (1000 - 9999)
   const code = Math.floor(1000 + Math.random() * 9000).toString();
   const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutos de vigencia
-  const keyWa = cleanReq.slice(-10);
+  const fullCleanWa = (store.whatsapp || '').replace(/[^0-9]/g, '');
+  const keyWa = fullCleanWa.slice(-10);
 
   recoveryCodes.set(keyWa, {
     code,
     expiresAt,
     storeId: store.id
   });
-
-  const fullCleanWa = (store.whatsapp || '').replace(/[^0-9]/g, '');
 
   res.json({
     success: true,
@@ -1010,9 +1018,7 @@ app.post('/api/stores/forgot-password', (req, res) => {
     whatsapp: fullCleanWa,
     storeName: store.name
   });
-}
-
-);
+});
 
 // Verificar código y restablecer contraseña
 app.post('/api/stores/reset-password', (req, res) => {

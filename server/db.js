@@ -829,6 +829,7 @@ class Database {
       id: `store-${Date.now()}`,
       name: storeData.name,
       whatsapp: storeData.whatsapp,
+      email: storeData.email ? String(storeData.email).trim().toLowerCase() : "",
       city: storeData.city || "Bogotá",
       avatar: storeData.avatar || "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=200&auto=format&fit=crop&q=80",
       rating: 5.0,
@@ -853,6 +854,9 @@ class Database {
   updateStore(id, updates) {
     const store = this.getStoreById(id);
     if (store) {
+      if (updates.email !== undefined) {
+        updates.email = updates.email ? String(updates.email).trim().toLowerCase() : "";
+      }
       Object.assign(store, updates);
       // Actualizar también en los videos que tenga esa tienda
       this.data.videos.forEach(v => {

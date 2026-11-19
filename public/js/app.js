@@ -5799,6 +5799,7 @@ function setupEventListeners() {
     clearRegNameError();
     const name = document.getElementById('reg-store-name').value.trim();
     const whatsapp = document.getElementById('reg-store-whatsapp').value.trim();
+    const email = document.getElementById('reg-store-email')?.value.trim().toLowerCase() || '';
     const city = document.getElementById('reg-store-city').value;
     const password = document.getElementById('reg-store-pass').value;
     const acceptRules = document.getElementById('reg-store-accept-rules')?.checked;
@@ -5839,7 +5840,7 @@ function setupEventListeners() {
       const res = await fetch('/api/stores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, whatsapp, city, password, acceptedRules: true })
+        body: JSON.stringify({ name, whatsapp, email, city, password, acceptedRules: true })
       });
       const data = await res.json();
       if (res.ok) {
@@ -6111,6 +6112,7 @@ function setupEventListeners() {
     const previewImg = document.getElementById('edit-preview-avatar');
     const nameInput = document.getElementById('edit-store-name');
     const waInput = document.getElementById('edit-store-whatsapp');
+    const emailInput = document.getElementById('edit-store-email');
     const citySelect = document.getElementById('edit-store-city');
     const descInput = document.getElementById('edit-store-desc');
     const hoursInput = document.getElementById('edit-store-hours');
@@ -6121,6 +6123,7 @@ function setupEventListeners() {
     if (previewImg) previewImg.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80';
     if (nameInput) nameInput.value = state.currentStore.name || '';
     if (waInput) waInput.value = (state.currentStore.whatsapp || '').replace('+57', '').replace(/[^0-9]/g, '');
+    if (emailInput) emailInput.value = state.currentStore.email || '';
     if (citySelect) citySelect.value = state.currentStore.city || 'Bogotá';
     if (descInput) descInput.value = state.currentStore.description || '';
     if (hoursInput) hoursInput.value = state.currentStore.hours || 'Lun - Sáb: 8:00 AM - 7:00 PM';
