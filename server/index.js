@@ -1426,6 +1426,14 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 // Métricas ejecutivas completas para el Administrador
+// Registrar impresión de anuncio Google AdMob (In-Feed o Intersticial)
+app.post('/api/admob/impression', (req, res) => {
+  const type = req.body && req.body.type === 'interstitial' ? 'interstitial' : 'feed';
+  const admobTel = db.recordAdMobImpression(type);
+  res.json({ success: true, admob: admobTel });
+});
+
+// Obtener métricas y telemetría completa para la Bóveda Ejecutiva del Administrador
 app.get('/api/admin/metrics', (req, res) => {
   const token = req.headers['x-admin-token'];
   const config = db.getConfig();
@@ -1433,19 +1441,6 @@ app.get('/api/admin/metrics', (req, res) => {
   if (token !== config.admin.token) {
     return res.status(403).json({ error: 'Acceso Denegado 403: Zona de Administración Privada.' });
   }
-
-  const transactions = db.getTransactions();
-  const totalRevenue = transactions
-    .filter(t => t.status === 'approved')
-    .reduce((sum, t) => sum + (t.amount || 0), 0);
-
-  const spotsRevenue = transactions
-    .filter(t => t.type?.startsWith('spot_') && t.status === 'approved')
-    .reduce((sum, t) => sum + (t.amount || 0), 0);
-
-  const videosRevenue = transactions
-    .filter(t => t.type?.startsWith('video_') && t.status === 'approved')
-    .reduce((sum, t) => sum + (t.amount || 0), 0);
 
   const stores = db.getStores();
   const videos = db.getVideos({});
@@ -1460,24 +1455,40 @@ app.get('/api/admin/metrics', (req, res) => {
     .sort((a, b) => b.clicks - a.clicks)
     .slice(0, 10);
 
-  const totalBoosts = transactions.length;
+  // Telemetría y Estimación de Ganancias Google AdMob (eCPM promedio Colombia/LATAM)
+  const admobTel = config.telemetry?.admob || {
+    feedImpressions: 0,
+    interstitialImpressions: 0,
+    totalImpressions: 0,
+    recentEvents: []
+  };
+
+  const feedImp = admobTel.feedImpressions || 0;
+  const interImp = admobTel.interstitialImpressions || 0;
+  const totalImp = admobTel.totalImpressions || (feedImp + interImp);
+
+  // In-Feed: ~$1.20 USD / 1000 imp | Intersticial: ~$3.50 USD / 1000 imp
+  const estUsd = ((feedImp * 1.20) + (interImp * 3.50)) / 1000;
+  const estCop = Math.round(estUsd * 4100);
 
   res.json({
-    revenue: {
-      total: totalBoosts,
-      spots: totalBoosts,
-      extendedVideos: 0,
-      formattedTotal: `${totalBoosts} Impulsos VIP AdMob`
+    admobStats: {
+      feedImpressions: feedImp,
+      interstitialImpressions: interImp,
+      totalImpressions: totalImp,
+      estimatedUsd: Number(estUsd.toFixed(2)),
+      estimatedCop: estCop,
+      recentEvents: admobTel.recentEvents || []
     },
     telemetry: {
-      totalWhatsAppClicks: config.telemetry.totalWhatsAppClicks,
-      totalViews: config.telemetry.totalViews
+      totalWhatsAppClicks: config.telemetry?.totalWhatsAppClicks || 0,
+      totalViews: config.telemetry?.totalViews || 0
     },
     counts: {
       stores: stores.length,
       videos: videos.length,
-      spotsActive: stores.filter(s => s.hasSpot).length,
-      reports: config.reports.length
+      spotsActive: videos.length,
+      reports: (config.reports || []).length
     },
     topStores,
     pricing: config.pricing,
@@ -1491,25 +1502,10 @@ app.get('/api/admin/metrics', (req, res) => {
       bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
       interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
     },
-    admob: config.admob || {
-      enabled: true,
-      publisherId: "ca-pub-3940256099942544",
-      feedAdFrequency: 4,
-      boostStdDays: 3,
-      boostDiamDays: 7,
-      interstitialOnUpload: true,
-      testMode: true,
-      bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
-      rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
-      interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
-    },
     wompi: config.wompi,
-    reports: config.reports,
-    recentTransactions: transactions.slice(0, 15)
+    reports: config.reports
   });
-}
-
-);
+});
 
 // Obtener tarifas y cupos oficiales de la plataforma (público para la app)
 app.get('/api/pricing', (req, res) => {

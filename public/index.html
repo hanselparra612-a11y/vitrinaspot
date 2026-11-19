@@ -447,9 +447,6 @@
             <button class="btn btn-spot" id="btn-seller-new-video" title="Publicar Nuevo Producto">
               <i class="fa-solid fa-cloud-arrow-up"></i> <span>Subir Anuncio</span>
             </button>
-            <button class="btn btn-gold" id="btn-seller-activate-spot" title="Activar Impulso SPOT Gratis con Google AdMob">
-              <i class="fa-solid fa-bolt"></i> <span>Impulsar con AdMob</span>
-            </button>
             <button class="btn btn-gold-ring" id="btn-back-from-seller" title="Volver al Feed">
               <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
             </button>
@@ -651,10 +648,10 @@
               <h2 class="stat-number text-green" id="adm-wa-clicks">0</h2>
               <span class="stat-sub">Compradores conectados con negocios</span>
             </div>
-            <div class="admin-stat-card">
-              <span class="stat-title">SPOTS Activos Hoy</span>
-              <h2 class="stat-number" id="adm-spots-active">0</h2>
-              <span class="stat-sub">Negocios con doble visibilidad</span>
+            <div class="admin-stat-card border-gold" style="background: rgba(255, 184, 0, 0.05);">
+              <span class="stat-title"><i class="fa-brands fa-google text-gold"></i> Ganancias Estimadas AdMob</span>
+              <h2 class="stat-number text-gold" id="adm-admob-est-cop">$0 COP</h2>
+              <span class="stat-sub" id="adm-admob-est-usd">$0.00 USD • 0 Impresiones</span>
             </div>
             <div class="admin-stat-card">
               <span class="stat-title">Total Negocios / Anuncios</span>
@@ -767,7 +764,7 @@
             </form>
           </div>
 
-          <!-- TOP 10 TIENDAS CON MÁS CONTACTOS Y TRANSACCIONES -->
+          <!-- TOP 10 TIENDAS CON MÁS CONTACTOS Y TELEMETRÍA DE MONETIZACIÓN ADMOB -->
           <div class="admin-split-grid">
             <div class="admin-box">
               <h4>🏆 Top Negocios con Más Clientes a WhatsApp</h4>
@@ -776,9 +773,39 @@
               </div>
             </div>
             <div class="admin-box">
-              <h4>🎬 Historial de Impulsos Activados por Video AdMob</h4>
-              <div class="transactions-list-scroll" id="adm-tx-list">
-                <!-- Lista de cobros -->
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h4 style="margin: 0;"><i class="fa-brands fa-google text-gold"></i> Monetización & Telemetría AdMob</h4>
+                <span class="badge" style="background: rgba(0, 255, 136, 0.15); color: #00ff88; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700;">EN VIVO</span>
+              </div>
+              
+              <!-- Tarjeta resumen de rendimiento publicitario -->
+              <div style="background: rgba(255, 184, 0, 0.08); border: 1px solid rgba(255, 184, 0, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-size: 0.82rem; color: #fff; font-weight: 700;">Ganancias Estimadas en Vivo:</span>
+                  <span id="adm-admob-pill-earnings" style="font-size: 1.05rem; font-weight: 800; color: var(--spot-gold);">$0 COP <small style="font-size: 0.75rem; color: #00ff88;">($0.00 USD)</small></span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;">
+                  <div>
+                    <span style="display: block; font-size: 0.7rem; color: var(--text-muted);">Total Impresiones</span>
+                    <strong id="adm-admob-total-stat" style="font-size: 1rem; color: #fff;">0</strong>
+                  </div>
+                  <div>
+                    <span style="display: block; font-size: 0.7rem; color: var(--text-muted);">In-Feed</span>
+                    <strong id="adm-admob-feed-stat" style="font-size: 1rem; color: #00d2ff;">0</strong>
+                  </div>
+                  <div>
+                    <span style="display: block; font-size: 0.7rem; color: var(--text-muted);">Intersticial</span>
+                    <strong id="adm-admob-inter-stat" style="font-size: 1rem; color: #ff9800;">0</strong>
+                  </div>
+                </div>
+                <small style="display: block; margin-top: 6px; font-size: 0.72rem; color: var(--text-dim); text-align: center;">
+                  eCPM promedio estimado de Google AdMob para Colombia (~$1.80 USD por cada 1.000 vistas).
+                </small>
+              </div>
+
+              <h5 style="margin: 0 0 8px 0; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Últimas Impresiones Servidas</h5>
+              <div class="transactions-list-scroll" id="adm-admob-events-list">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px;">Registrando primeras impresiones de anuncios...</div>
               </div>
             </div>
           </div>
@@ -879,7 +906,7 @@
                 <span style="background: #ef4444; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 99px;">LÍMITE ALCANZADO</span>
               </div>
               <p style="margin: 3px 0 0; font-size: 0.8rem; color: #e2e8f0; line-height: 1.3;">
-                Has utilizado todos tus 5 spots gratuitos. Para subir este nuevo spot de 5 fotos puedes activar un <strong>Impulso Comercial VIP</strong>.
+                Has completado el cupo asignado a tu cuenta de spots gratuitos. Para ampliar tu cupo comercial o publicar más productos, contacta a soporte de VitrinaSpot.
               </p>
             </div>
           </div>
@@ -890,7 +917,7 @@
               <span class="plan-badge-pill" id="plan-card-badge-free" style="background: linear-gradient(135deg, var(--wa-green), #00c853); color: #000; font-weight: 800;">100% GRATIS</span>
               <div class="plan-icon"><i class="fa-solid fa-gift text-gold"></i></div>
               <strong class="plan-title">Publicación Gratuita</strong>
-              <span class="plan-price" id="plan-card-price-photos">$0 COP (Permanente)</span>
+              <span class="plan-price" id="plan-card-price-photos">Totalmente Gratis (Permanente)</span>
               <p class="plan-desc" id="plan-card-desc-photos">Publica tu producto con hasta 5 fotos en alta definición y contacto directo a WhatsApp sin costo.</p>
             </div>
           </div>
@@ -1865,7 +1892,7 @@
             <span style="color: #00ff88; font-weight: 800;">3.</span> Política de Respaldo al Pago (Segunda Oportunidad)
           </h4>
           <p style="margin: 0; font-size: 0.82rem; color: #d1fae5;">
-            Si activaste un SPOT o un plan de Impulso y tus imágenes fueron rechazadas por no cumplir con la nitidez o normas visuales, Tu anuncio entrará en estado de <em>Corrección Requerida</em> y podrás subir nuevas fotografías gratis para reactivarlo de inmediato conservando la totalidad de tus días de impulso adquiridos.
+            Si tus imágenes fueron rechazadas por no cumplir con la nitidez o normas comunitarias, tu anuncio entrará en estado de <em>Corrección Requerida</em> y podrás subir nuevas fotografías gratis para reactivarlo de inmediato conservando tu cupo de publicación intacto.
           </p>
         </div>
 
@@ -2086,6 +2113,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=24.6"></script>
+  <script src="js/app.js?v=24.7"></script>
 </body>
 </html>

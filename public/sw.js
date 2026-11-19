@@ -1,5 +1,5 @@
 // Service Worker Oficial VitrinaSpot PWA
-const CACHE_NAME = 'vitrinaspot-v24.6';
+const CACHE_NAME = 'vitrinaspot-v24.7';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

@@ -303,16 +303,16 @@ function renderDynamicPlansUI() {
     lockedBanner.style.display = isLocked ? 'flex' : 'none';
     if (isLocked) {
       const lockStrong = lockedBanner.querySelector('strong');
-      if (lockStrong) lockStrong.textContent = `🔒 Cupo Gratuito Bloqueado (${storeCount} de ${freeQuota} Spots Usados)`;
+      if (lockStrong) lockStrong.textContent = `🔒 Cupo Gratuito Alcanzado (${storeCount} de ${freeQuota} Spots Usados)`;
       const lockP = lockedBanner.querySelector('p');
-      if (lockP) lockP.innerHTML = `Has utilizado tus ${freeQuota} spots gratuitos con carrusel de hasta 5 fotos a $0 COP. Para destacar tu vitrina puedes activar un <strong>Impulso Comercial VIP</strong> bonificado con Google AdMob.`;
+      if (lockP) lockP.innerHTML = `Has utilizado todos tus ${freeQuota} spots gratuitos con carrusel de fotos. Si deseas ampliar el cupo de tu vitrina, contacta a soporte.`;
     }
   }
 
   // Actualizar dinámicamente el botón de registro de invitados
   const guestRegBtn = document.getElementById('btn-guest-register-trigger');
   if (guestRegBtn) {
-    guestRegBtn.innerHTML = `<i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (${freeQuota} SPOTS $0 COP)`;
+    guestRegBtn.innerHTML = `<i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (${freeQuota} SPOTS GRATIS)`;
   }
 
   if (c1) {
@@ -325,20 +325,20 @@ function renderDynamicPlansUI() {
     if (isLocked) {
       c1.classList.add('plan-free-locked');
       if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-lock" style="color: #ef4444;"></i>';
-      if (prEl) prEl.innerHTML = '<span style="color:#ef4444; font-weight:800; text-decoration:line-through;">$0 COP</span> <small style="font-size:0.75rem; color:#ef4444; font-weight:800;">(BLOQUEADO)</small>';
+      if (prEl) prEl.innerHTML = '<span style="color:#ef4444; font-weight:800; text-decoration:line-through;">100% GRATIS</span> <small style="font-size:0.75rem; color:#ef4444; font-weight:800;">(CUPO LLENO)</small>';
       if (bEl) {
         bEl.className = 'plan-badge-pill plan-lock-badge-pill';
-        bEl.innerHTML = `<i class="fa-solid fa-lock"></i> BLOQUEADO (${storeCount}/${freeQuota})`;
+        bEl.innerHTML = `<i class="fa-solid fa-lock"></i> LÍMITE (${storeCount}/${freeQuota})`;
         bEl.style.background = '';
         bEl.style.color = '';
       }
       if (dEl) {
-        dEl.innerHTML = `<strong style="color:#ef4444;">🔒 Límite gratuito alcanzado (${storeCount}/${freeQuota}).</strong> Ya no puedes subir más spots gratis. Activa un Impulso VIP para continuar publicando.`;
+        dEl.innerHTML = `<strong style="color:#ef4444;">🔒 Límite de spots alcanzado (${storeCount}/${freeQuota}).</strong> Has completado tu cupo de spots gratuitos.`;
       }
     } else {
       c1.classList.remove('plan-free-locked');
       if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-gift text-gold"></i>';
-      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">$0 COP</span> <small style="font-size:0.75rem; color:#00ff88;">(CARRUSEL DE FOTOS)</small>';
+      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">100% GRATIS</span> <small style="font-size:0.75rem; color:#00ff88;">(CARRUSEL DE FOTOS)</small>';
       if (bEl) {
         bEl.className = 'plan-badge-pill';
         bEl.textContent = `${freeRem > 0 ? freeRem + ' DE ' + freeQuota + ' GRATIS' : freeQuota + ' SPOTS GRATIS'}`;
@@ -346,21 +346,10 @@ function renderDynamicPlansUI() {
         bEl.style.color = '#000';
       }
       if (dEl) {
-        dEl.textContent = `Tus primeros ${freeQuota} spots con carrusel de hasta 5 fotos son 100% gratis ($0 COP). Disponibles: ${freeRem} spots.`;
+        dEl.textContent = `Tus primeros ${freeQuota} spots con carrusel de hasta 5 fotos son totalmente gratis. Disponibles: ${freeRem} spots.`;
       }
     }
   }
-
-  // Sincronizar botones del selector de impulsos en modal checkout (Google AdMob $0 COP)
-  const chkPriceStandalone = document.getElementById('chk-price-boost-standalone');
-  const chkBadgeStandalone = document.getElementById('chk-badge-boost-standalone');
-  if (chkPriceStandalone) chkPriceStandalone.textContent = '1 Video (20s)';
-  if (chkBadgeStandalone) chkBadgeStandalone.textContent = `${state.admobConfig?.boostStdDays || 3} DÍAS VIP`;
-
-  const chkPriceDiam = document.getElementById('chk-price-boost-diam') || document.getElementById('chk-price-boost-ext');
-  const chkBadgeDiam = document.getElementById('chk-badge-boost-diam') || document.getElementById('chk-badge-boost-ext');
-  if (chkPriceDiam) chkPriceDiam.textContent = '2 Videos AdMob';
-  if (chkBadgeDiam) chkBadgeDiam.textContent = `${state.admobConfig?.boostDiamDays || 7} DÍAS VIP`;
 
   // Sincronizar el motor de beneficios en el modal de subida
   refreshUploadMembershipUI();
@@ -418,12 +407,12 @@ function refreshUploadMembershipUI() {
         bgPill.style.color = '';
       }
       if (dEl) {
-        dEl.innerHTML = `<strong style="color:#ef4444;">🔒 Límite gratuito alcanzado (${storeCount}/${freeQuota}).</strong> Ya no puedes subir más spots gratis. Adquiere <strong>1 Spot Permanente ($3.500 COP)</strong> o activa un Impulso para publicar.`;
+        dEl.innerHTML = `<strong style="color:#ef4444;">🔒 Límite de spots alcanzado (${storeCount}/${freeQuota}).</strong> Has completado tu cupo de publicaciones gratuitas.`;
       }
     } else {
       c1.classList.remove('plan-free-locked');
       if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-gift text-gold"></i>';
-      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">$0 COP</span> <small style="font-size:0.75rem; color:#00ff88;">(5 FOTOS)</small>';
+      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">100% GRATIS</span> <small style="font-size:0.75rem; color:#00ff88;">(5 FOTOS)</small>';
       if (bgPill) {
         bgPill.className = 'plan-badge-pill';
         bgPill.textContent = `${freeRem > 0 ? freeRem + ' DE ' + freeQuota + ' GRATIS' : freeQuota + ' SPOTS GRATIS'}`;
@@ -431,7 +420,7 @@ function refreshUploadMembershipUI() {
         bgPill.style.color = '#000';
       }
       if (dEl) {
-        dEl.textContent = `Tus primeros ${freeQuota} spots con 5 fotos son 100% gratis ($0 COP). Disponibles: ${freeRem} spots.`;
+        dEl.textContent = `Tus primeros ${freeQuota} spots con 5 fotos son totalmente gratis. Disponibles: ${freeRem} spots.`;
       }
     }
   }
@@ -1122,13 +1111,6 @@ function renderContinuousFeed() {
         </div>
         ` : ''}
 
-        <!-- INSIGNIA SUPERIOR SPOT PATROCINADO (SI ES SPOT) -->
-        ${video.hasSpot ? `
-        <div class="spot-banner-badge" title="${video.boostLevel === 'diamante' ? 'Impulso Diamante VIP' : (video.boostLevel === 'platino' ? 'Impulso Platino' : 'Impulso Estándar')}">
-          <i class="fa-solid ${video.boostLevel === 'diamante' ? 'fa-crown text-gold' : (video.boostLevel === 'platino' ? 'fa-gem' : 'fa-bolt')}"></i>
-          <span>${video.boostLevel === 'diamante' ? 'DIAMANTE VIP' : (video.boostLevel === 'platino' ? 'PLATINO' : 'IMPULSO')}</span>
-        </div>` : ''}
-
         <!-- COLUMNA DERECHA DE ACCIONES FLOTANTES (ICONOS TIKTOK / INSTAGRAM REELS) -->
         <div class="reel-side-actions">
           <!-- LOGO TIENDA CON ANILLO DE ESTADO -->
@@ -1456,6 +1438,16 @@ function toggleFeedViewMode() {
 window.toggleFeedViewMode = toggleFeedViewMode;
 
 // Configurar detección de tarjeta activa mediante IntersectionObserver
+// Telemetría de Impresiones Google AdMob
+function trackAdMobImpression(type = 'feed') {
+  fetch('/api/admob/impression', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type })
+  }).catch(() => {});
+}
+window.trackAdMobImpression = trackAdMobImpression;
+
 function setupFeedIntersectionObserver() {
   const container = document.getElementById('feed-scroll-container');
   if (!container) return;
@@ -1475,6 +1467,12 @@ function setupFeedIntersectionObserver() {
       const indicator = entry.target.querySelector('.spotplay-play-center-indicator');
 
       if (entry.isIntersecting) {
+        // Telemetría automática de impresiones Google AdMob In-Feed
+        if (entry.target.classList.contains('reel-admob-card') && !entry.target.dataset.adTracked) {
+          entry.target.dataset.adTracked = 'true';
+          trackAdMobImpression('feed');
+        }
+
         const idx = parseInt(entry.target.dataset.index, 10);
         if (!isNaN(idx) && idx !== state.currentIndex) {
           state.currentIndex = idx;
@@ -2906,7 +2904,7 @@ async function openSellerPanel() {
               <i class="fa-solid fa-triangle-exclamation"></i> Fotos Rechazadas para Corrección
             </div>
             <div style="color: var(--text-dim); margin-bottom: 8px; font-size: 0.75rem; line-height: 1.35;">
-              ${v.adminReason ? escapeHtml(v.adminReason) : 'Tus fotos no cumplen con las políticas comunitarias o nitidez comercial. <strong>¡Tu pago e impulso están a salvo!</strong> Cambia las fotos para reactivar tu anuncio gratis.'}
+              ${v.adminReason ? escapeHtml(v.adminReason) : 'Tus fotos no cumplen con las políticas comunitarias o nitidez comercial. <strong>¡Tu cupo está a salvo!</strong> Cambia las fotos para reactivar tu anuncio gratis.'}
             </div>
             <button type="button" class="btn btn-spot btn-sm btn-fix-rejected-spot" data-id="${v.id}" data-title="${escapeHtml(v.title)}" style="font-size: 0.75rem; padding: 6px 12px; width: 100%;">
               <i class="fa-solid fa-camera-rotate"></i> Cambiar Fotos y Reactivar SPOT ($0 COP)
@@ -2926,9 +2924,7 @@ async function openSellerPanel() {
           <div style="position: relative;">
             <img class="seller-vid-thumb" src="${v.thumbnailUrl}" alt="${escapeHtml(v.title)}">
             ${spotNumberBadge}
-            ${v.hasSpot 
-              ? `<span class="cat-thumb-spot" style="top:8px; right:8px; ${v.boostLevel === 'platino' ? 'background:linear-gradient(135deg,#6366f1,#a855f7);' : (v.boostLevel === 'standard' ? 'background:linear-gradient(135deg,#f59e0b,#d97706);' : '')}">${v.boostLevel === 'diamante' ? '👑 VIP' : (v.boostLevel === 'platino' ? '💎 PLATINO' : '⚡ IMPULSO')}</span>` 
-              : ''}
+
           </div>
           <h4 style="margin: 4px 0 2px 0;">${escapeHtml(v.title)}</h4>
           <div style="font-size:0.88rem; color:var(--spot-gold); font-weight:800;">${v.priceFormatted}</div>
@@ -3217,7 +3213,7 @@ async function loadAdminMetrics() {
       document.getElementById('adm-spots-active').textContent = data.counts.spotsActive;
       document.getElementById('adm-stores-count').textContent = `${data.counts.stores} / ${data.counts.videos}`;
 
-      // Parámetros Dinámicos Google AdMob e Impulsos Recompensados
+      // Parámetros Dinámicos Google AdMob & Monetización
       const prc = data.pricing || {};
       const admob = data.admob || {};
       state.admobConfig = Object.assign(state.admobConfig || {}, admob);
@@ -3264,24 +3260,71 @@ async function loadAdminMetrics() {
 
       // Top tiendas
       const topList = document.getElementById('adm-top-stores-list');
-      topList.innerHTML = data.topStores.map((s, idx) => `
-        <div class="top-store-row">
-          <span><strong>#${idx + 1}</strong> ${escapeHtml(s.name)}</span>
-          <span class="text-green" style="font-weight:700;"><i class="fa-brands fa-whatsapp"></i> ${s.clicks} clientes</span>
-        </div>
-      `).join('');
-
-      // Transacciones
-      const txList = document.getElementById('adm-tx-list');
-      txList.innerHTML = data.recentTransactions.map(t => `
-        <div class="tx-row">
-          <div>
-            <strong>${escapeHtml(t.storeName)}</strong>
-            <small style="display:block; color:var(--text-muted); font-size:0.75rem;">${t.typeLabel} • ${t.method}</small>
+      if (topList && Array.isArray(data.topStores)) {
+        topList.innerHTML = data.topStores.map((s, idx) => `
+          <div class="top-store-row">
+            <span><strong>#${idx + 1}</strong> ${escapeHtml(s.name)}</span>
+            <span class="text-green" style="font-weight:700;"><i class="fa-brands fa-whatsapp"></i> ${s.clicks} clientes</span>
           </div>
-          <span style="font-weight:800; color:var(--spot-gold);">$${t.amount.toLocaleString('es-CO')}</span>
-        </div>
-      `).join('');
+        `).join('');
+      }
+
+      // Telemetría & Estimación de Ganancias Google AdMob en Vivo
+      const admobStats = data.admobStats || {
+        feedImpressions: 0,
+        interstitialImpressions: 0,
+        totalImpressions: 0,
+        estimatedUsd: 0,
+        estimatedCop: 0,
+        recentEvents: []
+      };
+
+      const estCopFormatted = `$${(admobStats.estimatedCop || 0).toLocaleString('es-CO')} COP`;
+      const estUsdFormatted = `$${Number(admobStats.estimatedUsd || 0).toFixed(2)} USD`;
+      const totalImpFormatted = (admobStats.totalImpressions || 0).toLocaleString('es-CO');
+
+      const elEstCop = document.getElementById('adm-admob-est-cop');
+      if (elEstCop) elEstCop.textContent = estCopFormatted;
+
+      const elEstUsd = document.getElementById('adm-admob-est-usd');
+      if (elEstUsd) elEstUsd.textContent = `${estUsdFormatted} • ${totalImpFormatted} Impresiones`;
+
+      const elPillEarnings = document.getElementById('adm-admob-pill-earnings');
+      if (elPillEarnings) {
+        elPillEarnings.innerHTML = `${estCopFormatted} <small style="font-size: 0.75rem; color: #00ff88;">(${estUsdFormatted})</small>`;
+      }
+
+      const elTotalStat = document.getElementById('adm-admob-total-stat');
+      if (elTotalStat) elTotalStat.textContent = totalImpFormatted;
+
+      const elFeedStat = document.getElementById('adm-admob-feed-stat');
+      if (elFeedStat) elFeedStat.textContent = (admobStats.feedImpressions || 0).toLocaleString('es-CO');
+
+      const elInterStat = document.getElementById('adm-admob-inter-stat');
+      if (elInterStat) elInterStat.textContent = (admobStats.interstitialImpressions || 0).toLocaleString('es-CO');
+
+      const elEventsList = document.getElementById('adm-admob-events-list');
+      if (elEventsList) {
+        if (admobStats.recentEvents && admobStats.recentEvents.length > 0) {
+          elEventsList.innerHTML = admobStats.recentEvents.map(ev => {
+            const dateStr = new Date(ev.timestamp).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const isInter = ev.typeKey === 'interstitial';
+            return `
+              <div class="tx-row" style="padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <strong style="font-size: 0.85rem; color: ${isInter ? '#ff9800' : '#00d2ff'};">
+                    <i class="fa-solid ${isInter ? 'fa-mobile-screen' : 'fa-rectangle-ad'}"></i> ${escapeHtml(ev.type)}
+                  </strong>
+                  <small style="display: block; color: var(--text-muted); font-size: 0.72rem;">Servido a usuario • ${dateStr}</small>
+                </div>
+                <span class="badge" style="background: rgba(0, 255, 136, 0.12); color: #00ff88; font-size: 0.72rem; font-weight: 700;">+ Moneda AdMob</span>
+              </div>
+            `;
+          }).join('');
+        } else {
+          elEventsList.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 15px;">Registrando primeras impresiones de anuncios...</div>';
+        }
+      }
 
       // Cargar reportes de moderación comunitaria (Nivel 2)
       loadAdminModeration();
@@ -3562,7 +3605,7 @@ window.executeAdminModeration = async function(videoId, action, storeId) {
 
   let adminReason = '';
   if (action === 'reject_needs_fix') {
-    adminReason = prompt('Motivo para rechazar las fotos (el vendedor podrá subir nuevas fotos gratis sin perder su dinero ni días de impulso):', 'Tus fotos no cumplen con las políticas comunitarias o nitidez comercial. Sube nuevas fotos de tu producto.');
+    adminReason = prompt('Motivo para rechazar las fotos (el vendedor podrá subir nuevas fotos gratis conservando su cupo de spot):', 'Tus fotos no cumplen con las políticas comunitarias o nitidez comercial. Sube nuevas fotos de tu producto.');
     if (adminReason === null) return;
   } else if (action === 'delete') {
     if (!confirm('¿Seguro que deseas eliminar definitivamente este SPOT?')) return;
@@ -4863,7 +4906,7 @@ function setupEventListeners() {
         (!state.currentStore.membershipExpiresAt || new Date(state.currentStore.membershipExpiresAt) > new Date())
       );
       if (!isMemActive && storeCount >= freeQuota) {
-        showToast(`🔒 Plan Gratuito Bloqueado: Has alcanzado el límite de ${freeQuota} spots gratis. Para subir un nuevo spot adquiere 1 Spot Permanente ($3.500 COP) o activa un Impulso.`, 'error');
+        showToast(`🔒 Plan Gratuito Bloqueado: Has alcanzado el límite de ${freeQuota} spots gratis. Has completado tu cupo de publicaciones para este comercio.`, 'error');
         updatePlanSelection('spot_permanent');
         const permCard = document.querySelector('.video-plan-card[data-plan="spot_permanent"]');
         if (permCard) {
@@ -4901,7 +4944,7 @@ function setupEventListeners() {
           (!state.currentStore.membershipExpiresAt || new Date(state.currentStore.membershipExpiresAt) > new Date())
         );
         if (!isMemActive && storeCount >= freeQuota) {
-          showToast(`🔒 Plan Gratuito Bloqueado: Ya completaste tus ${freeQuota} spots gratis. Para subir un nuevo spot debes adquirir Spot Permanente ($3.500 COP) o activar un Impulso.`, 'error');
+          showToast(`🔒 Plan Gratuito Bloqueado: Ya completaste tus ${freeQuota} spots gratis. Has completado tu cupo de publicaciones para este comercio.`, 'error');
           updatePlanSelection('spot_permanent');
           const permCard = document.querySelector('.video-plan-card[data-plan="spot_permanent"]');
           if (permCard) {
@@ -5319,9 +5362,7 @@ function setupEventListeners() {
         typeKey = 'photos_5_pack';
         planTitle = `📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)`;
       }
-    } else if (selectedPlan === 'boost_standard_standalone') {
-      amount = 0; typeKey = 'boost_standard_standalone'; planTitle = '⚡ Impulso Estándar VIP (Gratis AdMob)';
-      isStandardBoost = true;
+
     } else {
       amount = 0;
       typeKey = 'photos_5_pack';
@@ -5457,6 +5498,11 @@ function setupEventListeners() {
 
   // Modal de Celebración y Bucle Viral Post-Publicación (Opción 3)
   function openUploadSuccessModal(videoId) {
+    // Telemetría AdMob: Registrar impresión de anuncio Intersticial post-publicación
+    if (state.admobConfig && state.admobConfig.interstitialOnUpload !== false) {
+      trackAdMobImpression('interstitial');
+    }
+
     const modal = document.getElementById('modal-upload-success');
     if (!modal) {
       showToast('🚀 ¡Tu SPOT ha sido publicado con éxito!');
@@ -5931,25 +5977,7 @@ function setupEventListeners() {
   });
 
 
-  document.getElementById('btn-seller-activate-spot')?.addEventListener('click', () => {
-    const prc = state.pricing || {};
-    const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
-    triggerCheckout(
-      'boost_standard_standalone', 
-      `⚡ Impulso Estándar Gratis (${days} Días)`, 
-      0,
-      `Aumenta la exposición de tu anuncio en el feed comercial por ${days} días con distintivo VIP patrocinado por Google AdMob.`
-    );
-  });
-  document.getElementById('btn-confirm-checkout')?.addEventListener('click', confirmCheckout);
-
-  // Selección interactiva de paquetes en la ventana de Publicidad & SPOTS AdMob
-  document.querySelectorAll('.checkout-plan-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const p = btn.getAttribute('data-plan');
-      selectCheckoutPlan(p);
-    });
-  });
+// Listeners de planes de pago e impulsos removidos (Sistema 100% Orgánico)
 
   // ==========================================
   // CALIFICACIÓN INTERACTIVA DE TIENDA (1 A 5 ESTRELLAS)

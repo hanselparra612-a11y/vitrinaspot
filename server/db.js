@@ -1001,6 +1001,41 @@ class Database {
     return this.data.config.wompi;
   }
 
+  // --- REGISTRO DE TELEMETRÍA Y RENDIMIENTO GOOGLE ADMOB ---
+  recordAdMobImpression(type = 'feed') {
+    if (!this.data.config.telemetry) {
+      this.data.config.telemetry = { totalWhatsAppClicks: 0, totalViews: 0 };
+    }
+    if (!this.data.config.telemetry.admob) {
+      this.data.config.telemetry.admob = {
+        feedImpressions: 0,
+        interstitialImpressions: 0,
+        totalImpressions: 0,
+        recentEvents: []
+      };
+    }
+    const admobTel = this.data.config.telemetry.admob;
+    if (type === 'interstitial') {
+      admobTel.interstitialImpressions = (admobTel.interstitialImpressions || 0) + 1;
+    } else {
+      admobTel.feedImpressions = (admobTel.feedImpressions || 0) + 1;
+    }
+    admobTel.totalImpressions = (admobTel.totalImpressions || 0) + 1;
+
+    if (!Array.isArray(admobTel.recentEvents)) admobTel.recentEvents = [];
+    admobTel.recentEvents.unshift({
+      id: `ad-${Date.now()}`,
+      type: type === 'interstitial' ? 'Intersticial (Pantalla Completa)' : 'In-Feed Nativo (Reel)',
+      typeKey: type,
+      timestamp: new Date().toISOString()
+    });
+    if (admobTel.recentEvents.length > 20) {
+      admobTel.recentEvents = admobTel.recentEvents.slice(0, 20);
+    }
+    this.save();
+    return admobTel;
+  }
+
   // --- MODELO OFICIAL GOOGLE ADMOB (100% GRATIS PARA COMERCIOS / PLAY STORE COMPLIANT) ---
   updateAdMobConfig(admobData) {
     if (!this.data.config.admob) {
@@ -1139,7 +1174,7 @@ class Database {
       // Notificar al vendedor garantizando que su pago y spot están seguros
       this.addNotification(video.storeId, {
         title: '⚠️ Spot Pausado para Corrección de Fotos',
-        message: `Tu anuncio "${video.title}" requiere ajuste fotográfico: ${video.moderationReason}. Tranquilo, tu pago y días de impulso siguen 100% activos. Cambia las fotos para reactivarlo sin costo adicional.`,
+        message: `Tu anuncio "${video.title}" requiere ajuste fotográfico: ${video.moderationReason}. Tranquilo, tu cupo de publicación sigue 100% activo. Cambia las fotos para reactivarlo sin costo adicional.`,
         type: 'moderation',
         videoId: video.id
       });
