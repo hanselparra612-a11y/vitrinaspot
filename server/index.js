@@ -1505,29 +1505,14 @@ app.get('/api/admin/metrics', (req, res) => {
 
 );
 
-// Obtener tarifas y tiempos oficiales de la plataforma (público para la app)
+// Obtener tarifas y cupos oficiales de la plataforma (público para la app)
 app.get('/api/pricing', (req, res) => {
   const config = db.getConfig();
   const pricing = config.pricing || {};
   res.json({
     success: true,
     pricing: {
-      free_spots_quota: Number(pricing.free_spots_quota) || 100,
-      spot_permanent_price: 0,
-      boost_standard_standalone_price: 0,
-      photos_5_price: 0,
-      boost_standard_price: 0,
-      boost_standard_days: Number(pricing.boost_standard_days) || 3,
-      boost_platino_price: 0,
-      boost_platino_days: Number(pricing.boost_platino_days) || 5,
-      boost_diamante_price: 0,
-      boost_diamante_days: Number(pricing.boost_diamante_days) || 7,
-      boost_extreme_price: 0,
-      boost_extreme_days: Number(pricing.boost_diamante_days || pricing.boost_extreme_days) || 7,
-      membership_pro_price: 0,
-      membership_pro_days: Number(pricing.membership_pro_days) || 30,
-      membership_product_limit: Number(pricing.membership_product_limit) || 100,
-      currency: pricing.currency || "COP"
+      free_spots_quota: Number(pricing.free_spots_quota) || 100
     },
     public_url: config.public_url || "https://eco-dock-chart-locking.trycloudflare.com",
     launch_campaign: db.getLaunchCampaign(),
@@ -1535,12 +1520,9 @@ app.get('/api/pricing', (req, res) => {
       enabled: true,
       publisherId: "ca-pub-3940256099942544",
       feedAdFrequency: 4,
-      boostStdDays: 3,
-      boostDiamDays: 7,
       interstitialOnUpload: true,
       testMode: true,
       bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
-      rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
       interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
     }
   });
@@ -1557,7 +1539,7 @@ app.post('/api/admin/public-url', (req, res) => {
   res.json({ success: true, public_url: updatedUrl });
 });
 
-// Actualizar tarifas dinámicas y tiempos de impulso desde el panel de Administrador
+// Actualizar cupos gratuitos de comercios desde el panel de Administrador
 app.post('/api/admin/pricing', (req, res) => {
   const token = req.headers['x-admin-token'];
   if (token !== db.getConfig().admin.token) {
@@ -1565,22 +1547,7 @@ app.post('/api/admin/pricing', (req, res) => {
   }
 
   const newPrices = {
-    free_spots_quota: Number(req.body.free_spots_quota) || 5,
-    spot_permanent_price: Number(req.body.spot_permanent_price) || 3500,
-    boost_standard_standalone_price: Number(req.body.boost_standard_standalone_price) || 3500,
-    photos_5_price: 0,
-    boost_standard_price: Number(req.body.boost_standard_price) || 5000,
-    boost_standard_days: Number(req.body.boost_standard_days) || 2,
-    boost_platino_price: Number(req.body.boost_platino_price) || 10000,
-    boost_platino_days: Number(req.body.boost_platino_days) || 5,
-    boost_diamante_price: Number(req.body.boost_diamante_price) || 15000,
-    boost_diamante_days: Number(req.body.boost_diamante_days) || 8,
-    boost_extreme_price: Number(req.body.boost_diamante_price || req.body.boost_extreme_price) || 15000,
-    boost_extreme_days: Number(req.body.boost_diamante_days || req.body.boost_extreme_days) || 8,
-    membership_pro_price: Number(req.body.membership_pro_price) || 29000,
-    membership_pro_days: Number(req.body.membership_pro_days) || 30,
-    membership_product_limit: Number(req.body.membership_product_limit) || 100,
-    currency: req.body.currency || "COP"
+    free_spots_quota: Number(req.body.free_spots_quota) || 100
   };
 
   const updatedPricing = db.updatePricing(newPrices);

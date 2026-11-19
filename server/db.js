@@ -312,11 +312,38 @@ class Database {
         console.log(`   - Tiendas registradas: ${this.data.stores?.length || 0}`);
         console.log(`   - Anuncios/Videos activos: ${this.data.videos?.length || 0}`);
         console.log(`   - Transacciones: ${this.data.transactions?.length || 0}`);
+
+        // Sanitización definitiva: purga de impulsos y configuración obsoleta en Cloud
+        if (this.data.config?.admob) {
+          delete this.data.config.admob.boostStdDays;
+          delete this.data.config.admob.boostDiamDays;
+          delete this.data.config.admob.rewardedUnitId;
+        }
+        if (this.data.config?.pricing) {
+          delete this.data.config.pricing.boost_standard_price;
+          delete this.data.config.pricing.boost_standard_days;
+          delete this.data.config.pricing.boost_platino_price;
+          delete this.data.config.pricing.boost_platino_days;
+          delete this.data.config.pricing.boost_diamante_price;
+          delete this.data.config.pricing.boost_diamante_days;
+          delete this.data.config.pricing.boost_extreme_price;
+          delete this.data.config.pricing.boost_extreme_days;
+          delete this.data.config.pricing.spot_permanent_price;
+          delete this.data.config.pricing.boost_standard_standalone_price;
+        }
+        if (Array.isArray(this.data.videos)) {
+          this.data.videos.forEach(v => {
+            v.hasSpot = false;
+            v.boostLevel = null;
+            v.boostExpiresAt = null;
+          });
+        }
         
-        // Mantener copia local en sincronía
+        // Mantener copia local y PostgreSQL en sincronía
         try {
           fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
         } catch (e) {}
+        await this.syncToPostgresAsync();
       } else {
         console.log('🌱 [DB Engine] No hay datos previos en PostgreSQL. Inicializando registro maestro...');
         await this.syncToPostgresAsync();
@@ -977,24 +1004,23 @@ class Database {
         enabled: true,
         publisherId: "ca-pub-3940256099942544",
         feedAdFrequency: 4,
-        boostStdDays: 3,
-        boostDiamDays: 7,
         interstitialOnUpload: true,
         testMode: true,
         bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
-        rewardedUnitId: "ca-app-pub-3940256099942544/5224354917",
         interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
       };
     }
+    // Asegurar purga de campos obsoletos
+    delete this.data.config.admob.boostStdDays;
+    delete this.data.config.admob.boostDiamDays;
+    delete this.data.config.admob.rewardedUnitId;
+
     if (admobData.enabled !== undefined) this.data.config.admob.enabled = Boolean(admobData.enabled);
     if (admobData.publisherId !== undefined) this.data.config.admob.publisherId = String(admobData.publisherId).trim();
     if (admobData.feedAdFrequency !== undefined) this.data.config.admob.feedAdFrequency = Math.max(2, Number(admobData.feedAdFrequency) || 4);
-    if (admobData.boostStdDays !== undefined) this.data.config.admob.boostStdDays = Math.max(1, Number(admobData.boostStdDays) || 3);
-    if (admobData.boostDiamDays !== undefined) this.data.config.admob.boostDiamDays = Math.max(1, Number(admobData.boostDiamDays) || 7);
     if (admobData.interstitialOnUpload !== undefined) this.data.config.admob.interstitialOnUpload = Boolean(admobData.interstitialOnUpload);
     if (admobData.testMode !== undefined) this.data.config.admob.testMode = Boolean(admobData.testMode);
     if (admobData.bannerUnitId !== undefined) this.data.config.admob.bannerUnitId = String(admobData.bannerUnitId).trim();
-    if (admobData.rewardedUnitId !== undefined) this.data.config.admob.rewardedUnitId = String(admobData.rewardedUnitId).trim();
     if (admobData.interstitialUnitId !== undefined) this.data.config.admob.interstitialUnitId = String(admobData.interstitialUnitId).trim();
     this.save();
     return this.data.config.admob;

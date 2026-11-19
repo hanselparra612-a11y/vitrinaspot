@@ -388,22 +388,7 @@
   "config": {
     "public_url": "https://eco-dock-chart-locking.trycloudflare.com",
     "pricing": {
-      "free_spots_quota": 100,
-      "spot_permanent_price": 0,
-      "boost_standard_standalone_price": 0,
-      "photos_5_price": 0,
-      "boost_standard_price": 0,
-      "boost_standard_days": 2,
-      "boost_platino_price": 0,
-      "boost_platino_days": 5,
-      "boost_diamante_price": 0,
-      "boost_diamante_days": 8,
-      "boost_extreme_price": 0,
-      "boost_extreme_days": 8,
-      "membership_pro_price": 0,
-      "membership_pro_days": 30,
-      "currency": "COP",
-      "membership_product_limit": 100
+      "free_spots_quota": 100
     },
     "launch_campaign": {
       "welcome_pack_enabled": true,

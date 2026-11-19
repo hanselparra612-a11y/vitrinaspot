@@ -3190,10 +3190,10 @@ function updateAdminQuotaHelperUI(quotaVal) {
   const helperVal = document.getElementById('adm-helper-quota-val');
   if (helperVal) helperVal.textContent = q;
   const headerVal = document.getElementById('adm-header-quota-val');
-  if (headerVal) headerVal.textContent = `${q} SPOTS 100% GRATIS`;
+  if (headerVal) headerVal.textContent = `${q} SPOTS GRATIS`;
   const headerDesc = document.getElementById('adm-pricing-header-desc');
   if (headerDesc) {
-    headerDesc.innerHTML = `Como Administrador, calibra aquí el cupo gratuito por tienda y la frecuencia publicitaria en el feed. Cada comercio cuenta con <strong>${q} SPOTS 100% GRATIS</strong> con carrusel permanente de hasta 5 fotos a $0 COP. El feed opera en modalidad <strong>100% ORGÁNICA Y DEMOCRÁTICA</strong> financiado pasivamente con <strong>Google AdMob</strong>.`;
+    headerDesc.innerHTML = `Como Administrador, calibra aquí el cupo gratuito por tienda y la frecuencia publicitaria en el feed. Cada comercio cuenta con <strong>${q} SPOTS 100% GRATIS</strong> con carrusel permanente de fotos. El feed opera en modalidad <strong>100% ORGÁNICA Y DEMOCRÁTICA</strong> financiado pasivamente con <strong>Google AdMob</strong>.`;
   }
 }
 
@@ -3229,12 +3229,6 @@ async function loadAdminMetrics() {
       if (document.getElementById('adm-admob-feed-freq')) {
         document.getElementById('adm-admob-feed-freq').value = admob.feedAdFrequency || 4;
       }
-      if (document.getElementById('adm-admob-boost-std-days')) {
-        document.getElementById('adm-admob-boost-std-days').value = admob.boostStdDays || 3;
-      }
-      if (document.getElementById('adm-admob-boost-diam-days')) {
-        document.getElementById('adm-admob-boost-diam-days').value = admob.boostDiamDays || 7;
-      }
       if (document.getElementById('adm-admob-interstitial-upload')) {
         document.getElementById('adm-admob-interstitial-upload').value = admob.interstitialOnUpload !== false ? 'true' : 'false';
       }
@@ -3248,9 +3242,6 @@ async function loadAdminMetrics() {
       }
       if (document.getElementById('adm-admob-banner-unit-id')) {
         document.getElementById('adm-admob-banner-unit-id').value = admob.bannerUnitId || 'ca-app-pub-3940256099942544/6300978111';
-      }
-      if (document.getElementById('adm-admob-rewarded-unit-id')) {
-        document.getElementById('adm-admob-rewarded-unit-id').value = admob.rewardedUnitId || 'ca-app-pub-3940256099942544/5224354917';
       }
       if (document.getElementById('adm-admob-interstitial-unit-id')) {
         document.getElementById('adm-admob-interstitial-unit-id').value = admob.interstitialUnitId || 'ca-app-pub-3940256099942544/1033173712';
@@ -6572,17 +6563,15 @@ function setupEventListeners() {
     openAdminPortal();
   });
 
-  // Actualizar parámetros de frecuencia e impulsos AdMob en el panel de Administrador
+  // Actualizar parámetros de cupos y publicidad AdMob en el panel de Administrador
   document.getElementById('admin-pricing-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const freeQuota = Number(document.getElementById('adm-quota-free-spots')?.value) || 100;
     const feedFreq = Math.max(2, Number(document.getElementById('adm-admob-feed-freq')?.value) || 4);
-    const boostStdDays = Math.max(1, Number(document.getElementById('adm-admob-boost-std-days')?.value) || 3);
-    const boostDiamDays = Math.max(1, Number(document.getElementById('adm-admob-boost-diam-days')?.value) || 7);
     const interstitialOnUpload = document.getElementById('adm-admob-interstitial-upload')?.value === 'true';
 
     try {
-      // 1. Guardar cupo en pricing
+      // 1. Guardar cupo gratuito por comercio
       const pRes = await fetch('/api/admin/pricing', {
         method: 'POST',
         headers: {
@@ -6590,16 +6579,11 @@ function setupEventListeners() {
           'x-admin-token': state.adminToken
         },
         body: JSON.stringify({
-          free_spots_quota: freeQuota,
-          spot_permanent_price: 0,
-          boost_standard_price: 0,
-          boost_standard_days: boostStdDays,
-          boost_diamante_days: boostDiamDays,
-          photos_5_price: 0
+          free_spots_quota: freeQuota
         })
       });
 
-      // 2. Guardar parámetros de AdMob
+      // 2. Guardar parámetros de AdMob (Frecuencia e Intersticial)
       const adRes = await fetch('/api/admin/admob-config', {
         method: 'POST',
         headers: {
@@ -6608,8 +6592,6 @@ function setupEventListeners() {
         },
         body: JSON.stringify({
           feedAdFrequency: feedFreq,
-          boostStdDays: boostStdDays,
-          boostDiamDays: boostDiamDays,
           interstitialOnUpload: interstitialOnUpload
         })
       });
@@ -6620,7 +6602,7 @@ function setupEventListeners() {
           state.admobConfig = Object.assign(state.admobConfig || {}, adData.admob);
         }
         updateAdminQuotaHelperUI(freeQuota);
-        showToast('⚙️ ¡Parámetros de AdMob y tiempos de impulso guardados!');
+        showToast('⚙️ ¡Cupos y parámetros publicitarios guardados exitosamente!');
       } else {
         alert('Error al guardar parámetros en el servidor.');
       }
@@ -6638,7 +6620,6 @@ function setupEventListeners() {
     const testMode = document.getElementById('adm-admob-test-mode')?.value === 'true';
     const publisherId = document.getElementById('adm-admob-pub-id')?.value.trim();
     const bannerUnitId = document.getElementById('adm-admob-banner-unit-id')?.value.trim();
-    const rewardedUnitId = document.getElementById('adm-admob-rewarded-unit-id')?.value.trim();
     const interstitialUnitId = document.getElementById('adm-admob-interstitial-unit-id')?.value.trim();
 
     try {

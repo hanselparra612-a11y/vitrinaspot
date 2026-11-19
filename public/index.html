@@ -644,7 +644,7 @@
             <div class="admin-stat-card border-gold">
               <span class="stat-title">SPOTS Comerciales Activos</span>
               <h2 class="stat-number text-gold" id="adm-revenue-total">0</h2>
-              <span class="stat-sub">Catálogo 100% Orgánico en Vivo ($0 COP)</span>
+              <span class="stat-sub">Catálogo 100% Orgánico y Gratuito</span>
             </div>
             <div class="admin-stat-card border-green">
               <span class="stat-title">Telemetría de Clics a WhatsApp</span>
@@ -674,11 +674,11 @@
             </button>
           </div>
 
-          <!-- FIJADOR DINÁMICO DE FRECUENCIA ADMOB Y TIEMPOS DE IMPULSO RECOMPENSADO -->
+          <!-- FIJADOR DINÁMICO DE CUPOS Y MONETIZACIÓN ADMOB -->
           <div class="admin-pricing-card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
               <div>
-                <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador de Cupos de Comercios y Frecuencia de Anuncios AdMob</h3>
+                <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador de Cupos de Comercios y Anuncios AdMob</h3>
                 <p class="text-muted" id="adm-pricing-header-desc" style="margin: 0;">Plataforma <strong>100% GRATIS Y ORGÁNICA</strong> para Comercios • Monetización pasiva exclusiva con <strong>Google AdMob</strong> (Google Play Store Compliant).</p>
               </div>
               <span class="badge" style="background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.4); padding: 6px 12px; font-size: 0.82rem; font-weight: 700;">
@@ -691,7 +691,7 @@
               <div class="form-group">
                 <label><i class="fa-solid fa-gift text-gold"></i> 1. Cupo de Spots Gratuitos por Comercio</label>
                 <input type="number" id="adm-quota-free-spots" value="100" min="1" max="1000" required>
-                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">🎁 Cada tienda publica gratis hasta <strong id="adm-helper-quota-val" style="color:var(--spot-gold); font-weight:800;">100</strong> productos (carrusel permanente de fotos a $0 COP).</small>
+                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">🎁 Cada tienda publica gratis hasta <strong id="adm-helper-quota-val" style="color:var(--spot-gold); font-weight:800;">100</strong> productos (carrusel permanente de fotos totalmente gratis).</small>
               </div>
 
               <!-- 2. Frecuencia de Anuncios In-Feed AdMob -->
@@ -751,12 +751,6 @@
                 <label><i class="fa-solid fa-rectangle-ad text-gold"></i> ID Bloque In-Feed / Banner</label>
                 <input type="text" id="adm-admob-banner-unit-id" value="ca-app-pub-3940256099942544/6300978111" placeholder="ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY" required style="font-family: monospace;">
                 <small class="text-muted" style="display:block; margin-top:3px;">Para las tarjetas publicitarias en el feed vertical de productos</small>
-              </div>
-
-              <div class="form-group">
-                <label><i class="fa-solid fa-gift text-gold"></i> ID Bloque Video Bonificado (Rewarded Ads)</label>
-                <input type="text" id="adm-admob-rewarded-unit-id" value="ca-app-pub-3940256099942544/5224354917" placeholder="ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY" required style="font-family: monospace;">
-                <small class="text-muted" style="display:block; margin-top:3px;">Para los Impulsos VIP que los comercios activan viendo videos</small>
               </div>
 
               <div class="form-group">
@@ -2083,6 +2077,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=24.3"></script>
+  <script src="js/app.js?v=24.5"></script>
 </body>
 </html>
