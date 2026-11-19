@@ -6347,10 +6347,42 @@ body.admin-active-view .main-viewport {
   flex-shrink: 0;
 }
 
-.benefit-free .benefit-icon-wrapper { background: rgba(0, 255, 136, 0.12); }
-.benefit-wa .benefit-icon-wrapper { background: rgba(37, 211, 102, 0.14); }
-.benefit-photos .benefit-icon-wrapper { background: rgba(255, 184, 0, 0.12); }
-.benefit-fees .benefit-icon-wrapper { background: rgba(255, 184, 0, 0.14); }
+/* Acentos individuales de color y resplandor para cada beneficio */
+.benefit-free {
+  border-color: rgba(0, 255, 136, 0.28) !important;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+}
+.benefit-free .benefit-icon-wrapper {
+  background: rgba(0, 255, 136, 0.18) !important;
+  color: #00ff88 !important;
+}
+
+.benefit-wa {
+  border-color: rgba(37, 211, 102, 0.32) !important;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+}
+.benefit-wa .benefit-icon-wrapper {
+  background: rgba(37, 211, 102, 0.18) !important;
+  color: #25d366 !important;
+}
+
+.benefit-photos {
+  border-color: rgba(0, 210, 255, 0.28) !important;
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+}
+.benefit-photos .benefit-icon-wrapper {
+  background: rgba(0, 210, 255, 0.18) !important;
+  color: #00d2ff !important;
+}
+
+.benefit-fees {
+  border-color: rgba(255, 184, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 184, 0, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+}
+.benefit-fees .benefit-icon-wrapper {
+  background: rgba(255, 184, 0, 0.18) !important;
+  color: var(--spot-gold) !important;
+}
 
 .welcome-benefit-item i {
   font-size: 1.05rem;

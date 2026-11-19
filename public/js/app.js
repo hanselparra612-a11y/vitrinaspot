@@ -937,10 +937,10 @@ function renderContinuousFeed() {
       <div class="welcome-hook-content">
         <div class="welcome-hook-badge-row">
           <span class="welcome-hook-badge">
-            <i class="fa-solid fa-gem text-gold"></i> VITRINA SPOT COLOMBIA 🇨🇴
+            <i class="fa-solid fa-store text-gold"></i> VITRINA COMERCIAL 🇨🇴
           </span>
           <span class="welcome-hook-trust-pill">
-            <i class="fa-solid fa-shield-halved"></i> 100% Seguro
+            <i class="fa-solid fa-shield-halved"></i> Trato Directo & Seguro
           </span>
         </div>
 
@@ -949,24 +949,24 @@ function renderContinuousFeed() {
         </div>
 
         <h2 class="welcome-hook-title">
-          Tu Vitrina Digital, <br>
+          Tu Catálogo Digital, <br>
           <span class="text-neon">Directo a WhatsApp</span>
         </h2>
 
         <p class="welcome-hook-sub">
-          Descubre cientos de tiendas y productos reales en Colombia. <br>
-          <span class="welcome-sub-highlight">¿Tienes negocio o vendes productos?</span> Publica <strong>100% GRATIS</strong> sin comisiones.
+          Explora cientos de tiendas, marcas y ofertas locales en Colombia. <br>
+          <span class="welcome-sub-highlight">¿Vendes productos o tienes negocio?</span> Publica tu vitrina <strong>100% GRATIS</strong> sin comisiones ni intermediarios.
         </p>
 
-        <!-- PÍLDORAS VIP DE NEÓN 3D (BENEFICIOS) -->
+        <!-- PÍLDORAS VIP DE NEÓN 3D (BENEFICIOS DEL NUEVO MODELO) -->
         <div class="welcome-hook-benefits-grid">
           <div class="welcome-benefit-item benefit-free">
             <div class="benefit-icon-wrapper">
               <i class="fa-solid fa-gift text-green"></i>
             </div>
             <div>
-              <strong>100% Gratis</strong>
-              <span>$0 COP permanentes</span>
+              <strong>100% Gratuito</strong>
+              <span>${Number(state.pricing?.free_spots_quota) || 5} SPOTS a $0 COP</span>
             </div>
           </div>
           <div class="welcome-benefit-item benefit-wa">
@@ -975,25 +975,25 @@ function renderContinuousFeed() {
             </div>
             <div>
               <strong>WhatsApp Directo</strong>
-              <span>Cero intermediarios</span>
+              <span>Pedidos al chat del vendedor</span>
             </div>
           </div>
           <div class="welcome-benefit-item benefit-photos">
             <div class="benefit-icon-wrapper">
-              <i class="fa-solid fa-images text-gold"></i>
+              <i class="fa-solid fa-images text-cyan"></i>
             </div>
             <div>
-              <strong>Carrusel de Fotos</strong>
-              <span>Hasta 5 por producto</span>
+              <strong>Carrusel HD</strong>
+              <span>Hasta 5 fotos por producto</span>
             </div>
           </div>
           <div class="welcome-benefit-item benefit-fees">
             <div class="benefit-icon-wrapper">
-              <i class="fa-solid fa-bolt text-gold"></i>
+              <i class="fa-solid fa-hand-holding-dollar text-gold"></i>
             </div>
             <div>
               <strong>0% Comisiones</strong>
-              <span>Venta 100% tuya</span>
+              <span>Venta y ganancia 100% tuya</span>
             </div>
           </div>
         </div>
@@ -1013,7 +1013,7 @@ function renderContinuousFeed() {
           ` : `
           <button type="button" class="btn-welcome-cta" onclick="handleWelcomeHookCTA()">
             <i class="fa-solid fa-store"></i>
-            <span>Crear Mi Tienda Gratis</span>
+            <span>Crear Mi Tienda Gratis (${Number(state.pricing?.free_spots_quota) || 5} SPOTS $0 COP)</span>
             <i class="fa-solid fa-arrow-right cta-arrow"></i>
           </button>
           <button type="button" class="btn-welcome-login-direct" onclick="openStoreLoginDirectly()">
