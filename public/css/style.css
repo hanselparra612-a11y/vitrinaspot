@@ -227,7 +227,7 @@ body.dark-theme {
   display: none;
   flex-direction: column;
   gap: 4px;
-  z-index: 200;
+  z-index: 999999 !important;
 }
 
 .city-dropdown.show {
@@ -4597,7 +4597,8 @@ body.admin-active-view .main-viewport {
     display: flex !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    z-index: 10000 !important;
   }
 
   /* LOGO A LA IZQUIERDA CON RESPIRO DE AIRE GARANTIZADO */
@@ -4660,13 +4661,21 @@ body.admin-active-view .main-viewport {
   }
 
   .city-dropdown {
-    position: absolute;
-    top: 38px;
-    left: auto;
-    right: -80px;
-    width: 220px;
-    max-width: calc(100vw - 24px);
-    z-index: 1000;
+    position: fixed !important;
+    top: 58px !important;
+    left: 14px !important;
+    right: auto !important;
+    width: 260px !important;
+    max-width: calc(100vw - 28px) !important;
+    max-height: calc(100dvh - 80px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: #111622 !important;
+    border: 1px solid rgba(255, 184, 0, 0.45) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(255, 184, 0, 0.2) !important;
+    z-index: 999999 !important;
+    backdrop-filter: blur(16px) !important;
   }
 
   .category-nav-btn {
@@ -4743,27 +4752,34 @@ body.admin-active-view .main-viewport {
     display: none !important;
   }
 
-  /* BOTÓN FLOTANTE VIP DE PUBLICACIÓN EN MÓVILES (FAB DORADO) */
+  /* BOTÓN FLOTANTE VIP DE PUBLICACIÓN EN MÓVILES (+ BLANCO Y POSICIÓN ELEVADA SEGURA) */
   .floating-fab-upload {
     display: flex !important;
-    position: fixed;
-    right: 16px;
-    bottom: max(22px, calc(env(safe-area-inset-bottom, 0px) + 20px));
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--spot-gold, #ffb800), #ff8800);
-    color: #000;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.35rem;
-    font-weight: 900;
-    border: 2px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 4px 22px rgba(255, 184, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.8);
-    z-index: 950;
-    cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
+    position: fixed !important;
+    right: 14px !important;
+    bottom: max(88px, calc(env(safe-area-inset-bottom, 0px) + 82px)) !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #ffb800, #ff7700) !important;
+    color: #ffffff !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 2px solid rgba(255, 255, 255, 0.75) !important;
+    box-shadow: 0 6px 20px rgba(255, 136, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+    z-index: 950 !important;
+    cursor: pointer !important;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease, box-shadow 0.2s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .floating-fab-upload i,
+  .floating-fab-upload .fa-plus {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 1.45rem !important;
+    font-weight: 900 !important;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)) !important;
   }
 
   .floating-fab-upload:active {

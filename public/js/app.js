@@ -1467,6 +1467,17 @@ function setupFeedIntersectionObserver() {
       const indicator = entry.target.querySelector('.spotplay-play-center-indicator');
 
       if (entry.isIntersecting) {
+        // Gestión visual inteligente del botón flotante (+): ocultar en Reel Cero (Hook de bienvenida) y mostrar en catálogo
+        const floatingFab = document.getElementById('btn-floating-fab-upload');
+        if (floatingFab) {
+          if (entry.target.id === 'card-welcome-hook') {
+            floatingFab.style.opacity = '0';
+            floatingFab.style.pointerEvents = 'none';
+          } else {
+            floatingFab.style.opacity = '1';
+            floatingFab.style.pointerEvents = 'auto';
+          }
+        }
         // Telemetría automática de impresiones Google AdMob In-Feed
         if (entry.target.classList.contains('reel-admob-card') && !entry.target.dataset.adTracked) {
           entry.target.dataset.adTracked = 'true';
