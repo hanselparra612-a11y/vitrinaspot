@@ -667,31 +667,14 @@ class Database {
         return searchable.includes(rawTerm) || (queryWords.length > 0 && queryWords.every(w => searchable.includes(w)));
       });
 
-      const diamantes = list.filter(v => v.hasSpot && (v.boostLevel === 'diamante' || v.boostLevel === 'extreme'));
-      const platinos = list.filter(v => v.hasSpot && v.boostLevel === 'platino');
-      const standards = list.filter(v => v.hasSpot && v.boostLevel !== 'diamante' && v.boostLevel !== 'extreme' && v.boostLevel !== 'platino');
-      const regulars = list.filter(v => !v.hasSpot);
-
-      return [
-        ...shuffleArray(diamantes),
-        ...shuffleArray(platinos),
-        ...shuffleArray(standards),
-        ...shuffleArray(regulars)
-      ];
+      list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      return list;
     }
 
-    // FEED PÚBLICO GENERAL (TODOS LOS USUARIOS RECIBEN ORDEN ALEATORIO IMPREDECIBLE)
-    const diamantes = list.filter(v => v.hasSpot && (v.boostLevel === 'diamante' || v.boostLevel === 'extreme'));
-    const platinos = list.filter(v => v.hasSpot && v.boostLevel === 'platino');
-    const standards = list.filter(v => v.hasSpot && v.boostLevel !== 'diamante' && v.boostLevel !== 'extreme' && v.boostLevel !== 'platino');
-    const regulars = list.filter(v => !v.hasSpot);
-
-    return [
-      ...shuffleArray(diamantes),
-      ...shuffleArray(platinos),
-      ...shuffleArray(standards),
-      ...shuffleArray(regulars)
-    ];
+    // FEED PÚBLICO 100% ORGÁNICO Y DEMOCRÁTICO (TODOS COMPITEN EN IGUALDAD DE CONDICIONES)
+    // Orden cronológico inverso: el producto más reciente sube de primero de forma natural
+    list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    return list;
   }
 
   getVideosByStoreId(storeId) {

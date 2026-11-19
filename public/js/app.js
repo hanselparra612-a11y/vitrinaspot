@@ -1220,14 +1220,6 @@ function renderContinuousFeed() {
                 <span class="btn-wa-text">Pedir por WhatsApp</span>
               </div>
             </a>
-
-            ${isMyVideo && !video.hasSpot ? `
-            <button type="button" class="btn-owner-boost-spot" onclick="openBoostVideoById('${video.id}')" title="Impulsar SPOT">
-              <div class="btn-boost-inner">
-                <i class="fa-solid fa-rocket boost-logo-pulse"></i>
-                <span class="btn-boost-text">Impulsar SPOT</span>
-              </div>
-            </button>` : ''}
           </div>
 
           <!-- LEYENDA LEGAL DE SEGURIDAD -->
@@ -2121,12 +2113,6 @@ function trackWaClick(videoId) {
 }
 window.trackWaClick = trackWaClick;
 
-function openBoostVideoById(videoId) {
-  const video = state.videos.find(v => v.id === videoId);
-  if (!video) return;
-  openBoostVideoModal(video);
-}
-window.openBoostVideoById = openBoostVideoById;
 
 function updateDesktopDetailsPanel(video) {
   const store = state.stores.find(s => s.id === video.storeId);
@@ -2961,10 +2947,6 @@ async function openSellerPanel() {
             <button class="btn btn-ghost btn-sm btn-del-video" data-id="${v.id}" title="Eliminar SPOT">
               <i class="fa-solid fa-trash"></i> Eliminar
             </button>
-            ${v.hasSpot
-              ? `<span class="badge-seller-boosted" title="${v.boostLevel === 'diamante' ? 'Impulso Diamante VIP Activo' : (v.boostLevel === 'platino' ? 'Impulso Platino Activo' : 'Impulso Estándar Activo')}"><i class="fa-solid ${v.boostLevel === 'diamante' ? 'fa-crown text-gold' : (v.boostLevel === 'platino' ? 'fa-gem' : 'fa-bolt text-gold')}"></i> ${v.boostLevel === 'diamante' ? 'DIAMANTE VIP' : (v.boostLevel === 'platino' ? 'PLATINO' : 'IMPULSO')} Activo</span>`
-              : `<button type="button" class="btn-seller-boost btn-boost-spot" data-id="${v.id}" title="Impulsar a las primeras posiciones 100% GRATIS con Google AdMob"><i class="fa-solid fa-bolt text-gold"></i> Impulsar Gratis (AdMob)</button>`
-            }
           </div>
         </div>
       `;
@@ -3076,18 +3058,7 @@ async function openSellerPanel() {
       });
     });
 
-    // Listener para activar impulso gratis con AdMob para el producto seleccionado
-    vList.querySelectorAll('.btn-boost-spot').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const vidId = btn.getAttribute('data-id');
-        const targetVid = myVideos.find(x => x.id === vidId) || state.videos.find(x => x.id === vidId);
-        if (targetVid) {
-          openBoostVideoModal(targetVid);
-        } else {
-          triggerCheckout('boost_standard_standalone', 'Impulso Estándar Gratis (Video AdMob)', 0);
-        }
-      });
-    });
+
 
     // Listener para corregir fotos de un SPOT rechazado (Segunda Oportunidad $0 COP)
     vList.querySelectorAll('.btn-fix-rejected-spot').forEach(btn => {
@@ -3222,7 +3193,7 @@ function updateAdminQuotaHelperUI(quotaVal) {
   if (headerVal) headerVal.textContent = `${q} SPOTS 100% GRATIS`;
   const headerDesc = document.getElementById('adm-pricing-header-desc');
   if (headerDesc) {
-    headerDesc.innerHTML = `Como Administrador, calibra aquí la frecuencia de anuncios y la duración de los impulsos comerciales bonificados. Cada comercio cuenta con <strong>${q} SPOTS 100% GRATIS</strong> con carrusel de hasta 5 fotos a $0 COP. Todo el sistema opera sin cobros ni pasarelas, financiado exclusivamente con <strong>Google AdMob</strong> (Google Play Store Compliant).`;
+    headerDesc.innerHTML = `Como Administrador, calibra aquí el cupo gratuito por tienda y la frecuencia publicitaria en el feed. Cada comercio cuenta con <strong>${q} SPOTS 100% GRATIS</strong> con carrusel permanente de hasta 5 fotos a $0 COP. El feed opera en modalidad <strong>100% ORGÁNICA Y DEMOCRÁTICA</strong> financiado pasivamente con <strong>Google AdMob</strong>.`;
   }
 }
 
@@ -3241,7 +3212,7 @@ async function loadAdminMetrics() {
 
     if (res.ok) {
       const data = await res.json();
-      document.getElementById('adm-revenue-total').textContent = data.revenue.formattedTotal;
+      document.getElementById('adm-revenue-total').textContent = data.counts.spotsActive || 0;
       document.getElementById('adm-wa-clicks').textContent = data.telemetry.totalWhatsAppClicks;
       document.getElementById('adm-spots-active').textContent = data.counts.spotsActive;
       document.getElementById('adm-stores-count').textContent = `${data.counts.stores} / ${data.counts.videos}`;
@@ -3632,193 +3603,9 @@ window.executeAdminModeration = async function(videoId, action, storeId) {
 };
 
 // ==========================================
-// 8. ACTIVACIÓN DE IMPULSOS RECOMPENSADOS (GOOGLE ADMOB 100% GRATIS)
+// 8. MODELO 100% ORGÁNICO (SIN IMPULSOS ARTIFICIALES)
 // ==========================================
-function selectCheckoutPlan(planKey) {
-  const prc = state.pricing || {
-    boost_standard_price: 5000,
-    boost_standard_days: 2,
-    boost_platino_price: 10000,
-    boost_platino_days: 5,
-    boost_diamante_price: 15000,
-    boost_diamante_days: 8,
-    boost_extreme_price: 15000,
-    boost_extreme_days: 8,
-    membership_pro_price: 29000,
-    membership_pro_days: 30
-  };
 
-  document.querySelectorAll('.checkout-plan-btn').forEach(b => {
-    if (b.getAttribute('data-plan') === planKey) b.classList.add('active');
-    else b.classList.remove('active');
-  });
-
-  let title = '';
-  let price = 0;
-  let desc = '';
-  let type = '';
-
-  if (planKey === 'boost_standard_standalone' || planKey === 'boost_standard' || planKey === 'spot_boost_standard_only') {
-    type = 'boost_standard_standalone';
-    price = 0;
-    const days = state.admobConfig?.boostStdDays || 3;
-    title = `⚡ Impulso Estándar (${days} Días VIP)`;
-    desc = `Aumenta la visibilidad y rotación de tu anuncio en el feed por ${days} días viendo 1 video patrocinado de 20s ($0 COP).`;
-  } else {
-    type = 'spot_boost_diamante';
-    price = 0;
-    const days = state.admobConfig?.boostDiamDays || 7;
-    title = `👑 Impulso Diamante VIP (${days} Días VIP)`;
-    desc = `Máxima exposición: Posición #1 en el feed y presencia en Historias VIP por ${days} días viendo 2 videos bonificados ($0 COP).`;
-  }
-
-  const currentVid = state.activeCheckout ? state.activeCheckout.videoId : null;
-  state.activeCheckout = { type, title, price, videoId: currentVid };
-
-  const titleEl = document.getElementById('checkout-item-title');
-  const priceEl = document.getElementById('checkout-item-price');
-  const descEl = document.getElementById('checkout-item-desc');
-  if (titleEl) titleEl.textContent = title;
-  if (priceEl) priceEl.textContent = '100% GRATIS ($0 COP)';
-  if (descEl) descEl.textContent = desc;
-}
-
-function triggerCheckout(type, title, price, customDesc) {
-  if (!state.currentStore) {
-    document.getElementById('modal-store-auth').style.display = 'flex';
-    return;
-  }
-
-  const selectorContainer = document.getElementById('checkout-plan-selector-container');
-  // Si la compra es la publicación básica sin impulso (fijo) al publicar, ocultamos el selector de impulsos
-  if (type === 'photos_5_pack' || type === 'photos_7_pack') {
-    if (selectorContainer) selectorContainer.style.display = 'none';
-    state.activeCheckout = { type, title, price };
-    const titleEl = document.getElementById('checkout-item-title');
-    const priceEl = document.getElementById('checkout-item-price');
-    const descEl = document.getElementById('checkout-item-desc');
-    if (titleEl) titleEl.textContent = title;
-    if (priceEl) priceEl.textContent = `$${Number(price).toLocaleString('es-CO')} COP`;
-    if (descEl) descEl.textContent = customDesc || 'Publicación fija e indefinida de tu anuncio con carrusel de 5 fotos gratis en alta definición.';
-  } else {
-    if (selectorContainer) selectorContainer.style.display = 'block';
-    let pKey = 'boost_diamante';
-    if (type.includes('permanent')) pKey = 'spot_permanent';
-    else if (type === 'boost_standard_standalone' || type.includes('standalone') || type.includes('standard_only')) pKey = 'boost_standard_standalone';
-    else if (type.includes('standard')) pKey = 'boost_standard';
-    else if (type.includes('platino')) pKey = 'boost_platino';
-    else if (type.includes('membership')) pKey = 'membership_pro';
-    selectCheckoutPlan(pKey);
-  }
-
-  const refEl = document.getElementById('checkout-ref-code');
-  if (refEl) {
-    refEl.textContent = 'VT-' + Math.floor(100000 + Math.random() * 900000);
-  }
-
-  document.getElementById('modal-checkout').style.display = 'flex';
-}
-
-function openBoostVideoModal(video) {
-  if (!state.currentStore) {
-    document.getElementById('modal-store-auth').style.display = 'flex';
-    return;
-  }
-  state.activeCheckout = { videoId: video.id };
-  triggerCheckout('boost_standard_standalone', `Impulsar "${video.title}" (Gratis con AdMob)`, 0);
-}
-
-function openCheckoutModal(type, title, price) {
-  triggerCheckout(type, title, price);
-}
-
-async function confirmCheckout() {
-  if (!state.activeCheckout || !state.currentStore) return;
-
-  const btn = document.getElementById('btn-confirm-checkout');
-  const player = document.getElementById('admob-rewarded-player');
-  const countdownEl = document.getElementById('admob-countdown');
-  const progressBar = document.getElementById('admob-reward-progress-bar');
-
-  if (player) player.style.display = 'block';
-  if (btn) btn.style.display = 'none';
-
-  let timeLeft = 5;
-  if (countdownEl) countdownEl.textContent = `Recompensa en ${timeLeft}s...`;
-  if (progressBar) progressBar.style.width = '0%';
-
-  const interval = setInterval(async () => {
-    timeLeft--;
-    if (progressBar) {
-      progressBar.style.width = `${((5 - timeLeft) / 5) * 100}%`;
-    }
-    if (countdownEl) {
-      countdownEl.textContent = timeLeft > 0 ? `Recompensa en ${timeLeft}s...` : '¡Recompensa ganada!';
-    }
-
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      if (player) player.style.display = 'none';
-      if (btn) {
-        btn.style.display = 'block';
-        btn.innerHTML = '<i class="fa-solid fa-play"></i> Ver Video AdMob y Activar Impulso Gratis';
-      }
-
-      const method = 'admob_rewarded_video';
-      const reference = `REF_ADMOB_${state.currentStore.id}_${state.activeCheckout.type}_${Date.now()}`;
-      showToast('🎉 ¡Video completado! Impulso VIP otorgado con éxito.');
-      await finalizeCheckoutApproval(reference, method, 0);
-    }
-  }, 1000);
-}
-
-async function finalizeCheckoutApproval(txId, method, amount) {
-  const res = await fetch('/api/payments/checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      storeId: state.currentStore.id,
-      videoId: state.activeCheckout.videoId || null,
-      type: state.activeCheckout.type,
-      amount: amount || state.activeCheckout.price,
-      method: method || 'admob_rewarded_video',
-      transactionId: txId || null
-    })
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-    state.currentStore = data.store;
-    document.getElementById('modal-checkout').style.display = 'none';
-    showToast(data.message);
-
-    if (data.video) {
-      const vIdx = state.videos.findIndex(v => v.id === data.video.id);
-      if (vIdx !== -1) {
-        state.videos[vIdx].hasSpot = true;
-        state.videos[vIdx].spotExpiresAt = data.video.spotExpiresAt;
-        state.videos[vIdx].boostLevel = data.video.boostLevel;
-      }
-      renderCurrentReelVideo();
-    }
-    
-    // Si había una subida pendiente de video/fotos, ejecutarla inmediatamente con la transacción confirmada
-    if (typeof state.pendingVideoUpload === 'function') {
-      const uploadTask = state.pendingVideoUpload;
-      state.pendingVideoUpload = null;
-      uploadTask(data.transaction ? data.transaction.id : (txId || 'tx_paid'));
-    } else {
-      await loadStores();
-      await loadVideos();
-      if (document.getElementById('seller-panel-view').style.display === 'block') {
-        openSellerPanel();
-      }
-    }
-  } else {
-    const errData = await res.json().catch(() => ({}));
-    showToast(errData.error || 'Error al validar servicio.', 'error');
-  }
-}
 // ==========================================
 // 9. EVENT LISTENERS
 // ==========================================
@@ -4890,18 +4677,6 @@ function setupEventListeners() {
   bindMenuAction('btn-open-saved-spots', () => { openSavedView(); });
   bindMenuAction('btn-guest-saved-spots', () => { openSavedView(); });
   document.getElementById('btn-nav-saved')?.addEventListener('click', openSavedView);
-
-  // 5. Impulsar SPOT con AdMob (100% Gratis - Rewarded Video)
-  bindMenuAction('btn-trigger-spot-buy', () => {
-    const prc = state.pricing || {};
-    const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
-    triggerCheckout(
-      'boost_standard_standalone', 
-      `⚡ Impulso Estándar Gratis (${days} Días)`, 
-      0,
-      `Aumenta la exposición de tu anuncio en el feed comercial por ${days} días con distintivo VIP patrocinado por Google AdMob.`
-    );
-  });
 
   // 6. Políticas y Reglas de Oro
   bindMenuAction('btn-open-legal-terms-logged', () => { openLegalTermsModal(); });
@@ -6163,31 +5938,7 @@ function setupEventListeners() {
     showView('feed-view');
   });
 
-  // Modal Checkout
-  document.getElementById('btn-close-checkout')?.addEventListener('click', () => {
-    document.getElementById('modal-checkout').style.display = 'none';
-    if (typeof state.pendingVideoUpload === 'function') {
-      const wantFree = confirm('¿Deseas publicar tu video de 15 segundos en modalidad básica GRATIS (sin impulso SPOT ni aro dorado)?');
-      if (wantFree) {
-        const uploadTask = state.pendingVideoUpload;
-        state.pendingVideoUpload = null;
-        uploadTask('tx_free');
-      } else {
-        state.pendingVideoUpload = null;
-      }
-    }
-  });
-  document.getElementById('btn-trigger-spot-buy')?.addEventListener('click', () => {
-    document.getElementById('user-dropdown-menu')?.classList.remove('show');
-    const prc = state.pricing || {};
-    const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;
-    triggerCheckout(
-      'boost_standard_standalone', 
-      `⚡ Impulso Estándar Gratis (${days} Días)`, 
-      0,
-      `Aumenta la exposición de tu anuncio en el feed comercial por ${days} días con distintivo VIP patrocinado por Google AdMob.`
-    );
-  });
+
   document.getElementById('btn-seller-activate-spot')?.addEventListener('click', () => {
     const prc = state.pricing || {};
     const days = prc.admob_boost_std_days || prc.boost_standard_days || 3;

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=24.2">
+  <link rel="stylesheet" href="css/style.css?v=24.3">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=24.2').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=24.3').catch(function() {});
     }
   </script>
 
@@ -141,9 +141,6 @@
         <i class="fa-solid fa-bookmark"></i>
         <span style="flex: 1; text-align: left;">Mis SPOTS Guardados</span>
         <span class="dropdown-counter-pill" id="saved-badge-logged">0</span>
-      </button>
-      <button class="dropdown-link" id="btn-trigger-spot-buy">
-        <i class="fa-solid fa-bolt text-gold"></i> Impulsar SPOT con AdMob
       </button>
       <button class="dropdown-link" id="btn-open-legal-terms-logged">
         <i class="fa-solid fa-scale-balanced"></i> Políticas y Reglas de Oro
@@ -645,9 +642,9 @@
           <!-- MÉTRICAS FINANCIERAS Y TELEMETRÍA -->
           <div class="admin-metrics-grid">
             <div class="admin-stat-card border-gold">
-              <span class="stat-title">Impulsos Totales Activados</span>
+              <span class="stat-title">SPOTS Comerciales Activos</span>
               <h2 class="stat-number text-gold" id="adm-revenue-total">0</h2>
-              <span class="stat-sub">Patrocinados por Google AdMob ($0 COP)</span>
+              <span class="stat-sub">Catálogo 100% Orgánico en Vivo ($0 COP)</span>
             </div>
             <div class="admin-stat-card border-green">
               <span class="stat-title">Telemetría de Clics a WhatsApp</span>
@@ -681,8 +678,8 @@
           <div class="admin-pricing-card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
               <div>
-                <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador Dinámico de Frecuencia AdMob y Tiempos de Impulso</h3>
-                <p class="text-muted" id="adm-pricing-header-desc" style="margin: 0;">Plataforma <strong>100% GRATIS</strong> para Comercios • Modelo oficial de Monetización Exclusiva con <strong>Google AdMob</strong> (Google Play Store Compliant).</p>
+                <h3><i class="fa-solid fa-sliders text-gold"></i> Fijador de Cupos de Comercios y Frecuencia de Anuncios AdMob</h3>
+                <p class="text-muted" id="adm-pricing-header-desc" style="margin: 0;">Plataforma <strong>100% GRATIS Y ORGÁNICA</strong> para Comercios • Monetización pasiva exclusiva con <strong>Google AdMob</strong> (Google Play Store Compliant).</p>
               </div>
               <span class="badge" style="background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.4); padding: 6px 12px; font-size: 0.82rem; font-weight: 700;">
                 <i class="fa-brands fa-google-play"></i> 100% Play Store Compliant
@@ -704,23 +701,9 @@
                 <small class="text-muted" style="display:block; margin-top:3px;">📲 Cada cuántos productos en el feed vertical se inyecta una tarjeta de anuncio patrocinado AdMob.</small>
               </div>
 
-              <!-- 3. Duración Impulso Estándar (Rewarded Video) -->
-              <div class="form-group">
-                <label><i class="fa-solid fa-bolt text-gold"></i> 3. Duración Impulso Estándar (Días)</label>
-                <input type="number" id="adm-admob-boost-std-days" value="3" min="1" max="30" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">🎬 Días de impulso VIP otorgados por ver <strong>1 video publicitario recompensado</strong> de 20s ($0 COP).</small>
-              </div>
-
-              <!-- 4. Duración Impulso Diamante VIP -->
-              <div class="form-group">
-                <label><i class="fa-solid fa-crown text-gold"></i> 4. Duración Impulso Diamante VIP (Días)</label>
-                <input type="number" id="adm-admob-boost-diam-days" value="7" min="1" max="60" required>
-                <small class="text-muted" style="display:block; margin-top:3px;">⭐ Días de máxima exposición en historias y #1 del feed por ver <strong>2 videos bonificados</strong>.</small>
-              </div>
-
-              <!-- 5. Anuncio Intersticial Post-Publicación -->
+              <!-- 3. Anuncio Intersticial Post-Publicación -->
               <div class="form-group" style="grid-column: 1 / -1;">
-                <label><i class="fa-solid fa-mobile-screen text-gold"></i> 5. Anuncio Intersticial tras Publicar Spot</label>
+                <label><i class="fa-solid fa-mobile-screen text-gold"></i> 3. Anuncio Intersticial tras Publicar Spot</label>
                 <select id="adm-admob-interstitial-upload" style="background: #181d2a; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px; border-radius: 8px; width: 100%; font-weight: 700;">
                   <option value="true">Activado (Mostrar anuncio de 5 seg a pantalla completa tras subir un spot gratis)</option>
                   <option value="false">Desactivado (Publicación silenciosa sin intersticial)</option>
@@ -730,7 +713,7 @@
 
               <div class="pricing-btn-col" style="grid-column: 1 / -1; margin-top: 10px;">
                 <button type="submit" class="btn btn-spot w-100" style="padding: 12px; font-size: 1rem; font-weight: 700;">
-                  <i class="fa-solid fa-floppy-disk"></i> Guardar Nuevos Parámetros de Frecuencia e Impulsos
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Nuevos Parámetros Publicitarios
                 </button>
               </div>
             </form>
@@ -1353,92 +1336,6 @@
           </button>
         </div>
       </form>
-    </div>
-  </div>
-
-  <!-- MODAL 3: IMPULSO VIP GRATUITO RECOMPENSADO (GOOGLE ADMOB) -->
-  <div class="modal-overlay" id="modal-checkout" style="display: none;">
-    <div class="modal-dialog modal-checkout-card">
-      <div class="modal-header">
-        <div class="checkout-title-row">
-          <i class="fa-solid fa-crown text-gold"></i>
-          <h3>Activar Impulso VIP 100% GRATIS</h3>
-        </div>
-        <button class="close-modal-btn" id="btn-close-checkout">&times;</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="admob-boost-notice-banner" style="background: rgba(255,184,0,0.12); border: 1px solid rgba(255,184,0,0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
-          <i class="fa-solid fa-circle-check text-green" style="font-size: 1.5rem; flex-shrink: 0;"></i>
-          <div>
-            <strong style="color: #fff; font-size: 0.95rem; display: block;">¡Cero costo de tu bolsillo! ($0 COP)</strong>
-            <span style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.3; display: block;">Patrocinado por Google AdMob. Mira un breve video interactivo para activar exposición VIP en el feed.</span>
-          </div>
-        </div>
-
-        <!-- SELECTOR INTERACTIVO DE PLANES DE IMPULSO Y PUBLICIDAD -->
-        <div class="checkout-plan-selector" id="checkout-plan-selector-container">
-          <label class="checkout-selector-label">
-            <i class="fa-solid fa-layer-group text-gold"></i> Elige el Nivel de Impulso para tu SPOT:
-          </label>
-          <div class="checkout-plans-grid" id="checkout-plans-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
-            <!-- 1. IMPULSO ESTÁNDAR RECOMPENSADO -->
-            <div class="checkout-plan-btn" data-plan="boost_standard_standalone" style="cursor: pointer;">
-              <div class="chk-plan-icon"><i class="fa-solid fa-bolt text-gold"></i></div>
-              <div class="chk-plan-info">
-                <strong>Impulso Estándar</strong>
-                <span class="chk-plan-badge badge-perm" id="chk-badge-boost-standalone">3 DÍAS VIP</span>
-              </div>
-              <span class="chk-plan-price" style="color: #00ff88; font-weight: 800;">1 Video (20s)</span>
-            </div>
-
-            <!-- 2. IMPULSO DIAMANTE VIP RECOMPENSADO -->
-            <div class="checkout-plan-btn active" data-plan="boost_diamante" style="cursor: pointer;">
-              <div class="chk-plan-icon"><i class="fa-solid fa-crown text-gold"></i></div>
-              <div class="chk-plan-info">
-                <strong>Impulso Diamante</strong>
-                <span class="chk-plan-badge badge-diamante" id="chk-badge-boost-diam">7 DÍAS VIP</span>
-              </div>
-              <span class="chk-plan-price" style="color: #00ff88; font-weight: 800;">2 Videos AdMob</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="checkout-product-preview" style="margin: 16px 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; background: rgba(0,0,0,0.3);">
-          <span class="preview-tag">Beneficio Seleccionado</span>
-          <h2 id="checkout-item-title" style="margin: 4px 0; font-size: 1.15rem; color: var(--spot-gold);">⭐ Impulso Diamante VIP (7 Días)</h2>
-          <div class="checkout-price-tag" id="checkout-item-price" style="font-size: 1.25rem; color: #00ff88; font-weight: 900;">100% GRATIS</div>
-          <p id="checkout-item-desc" style="font-size: 0.85rem; color: var(--text-muted); margin: 6px 0 0 0;">Máxima exposición: Posición #1 en el feed y presencia en Historias VIP superiores.</p>
-        </div>
-
-        <!-- SIMULADOR INTERACTIVO / PLAYER DE VIDEO BONIFICADO ADMOB -->
-        <div id="admob-rewarded-player" style="display: none; background: #000; border-radius: 14px; padding: 20px; text-align: center; border: 1px solid var(--spot-gold); margin-bottom: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <span style="font-size: 0.75rem; background: var(--spot-gold); color: #000; font-weight: 800; padding: 3px 8px; border-radius: 4px;">ANUNCIO BONIFICADO ADMOB</span>
-            <span id="admob-countdown" style="font-size: 0.85rem; color: #fff; font-weight: 700;">Recompensa en 5s...</span>
-          </div>
-          <div style="padding: 24px 10px;">
-            <i class="fa-solid fa-play-circle text-gold" style="font-size: 3rem; animation: pulse 1.5s infinite;"></i>
-            <h4 style="margin: 10px 0 4px 0; color: #fff;">Reproduciendo Anuncio Patrocinado</h4>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Espera que termine el video para activar tu impulso VIP automático.</p>
-          </div>
-          <div class="admob-reward-progress-track" style="height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden;">
-            <div id="admob-reward-progress-bar" style="height: 100%; width: 0%; background: var(--spot-gold); transition: width 1s linear;"></div>
-          </div>
-        </div>
-
-        <!-- BOTÓN DE CONFIRMACIÓN AUTOMÁTICA -->
-        <button type="button" class="btn btn-gold btn-large w-100" id="btn-confirm-checkout" style="padding: 14px; font-weight: 800; font-size: 1rem; border-radius: 12px;">
-          <i class="fa-solid fa-play"></i> Ver Video AdMob y Activar Impulso Gratis
-        </button>
-
-        <div class="checkout-security-note" style="margin-top: 12px; text-align: center; font-size: 0.78rem; color: var(--text-muted);">
-          <i class="fa-brands fa-google"></i> Google AdMob Rewarded Video System • Acreditación Inmediata
-        </div>
-      </div>
-    </div>
-  </div>
-      </div>
     </div>
   </div>
 
@@ -2186,6 +2083,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=24.2"></script>
+  <script src="js/app.js?v=24.3"></script>
 </body>
 </html>
