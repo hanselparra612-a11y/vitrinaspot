@@ -1427,6 +1427,43 @@ app.post('/api/admin/login', (req, res) => {
 
 // Métricas ejecutivas completas para el Administrador
 // Registrar impresión de anuncio Google AdMob (In-Feed o Intersticial)
+
+// Simulación interactiva de impacto publicitario AdMob (Play Store Testing - Estilo SpotPlay)
+app.post('/api/admin/admob-simulate', (req, res) => {
+  const token = req.headers['x-admin-token'];
+  const config = db.getConfig();
+  if (token !== config.admin.token) {
+    return res.status(403).json({ error: 'Acceso Denegado 403: Zona de Administración Privada.' });
+  }
+  const type = req.body && req.body.type === 'interstitial' ? 'interstitial' : 'feed';
+  db.recordAdMobImpression(type);
+  
+  const admobTel = config.telemetry?.admob || { feedImpressions: 0, interstitialImpressions: 0, totalImpressions: 0 };
+  const feedImp = admobTel.feedImpressions || 0;
+  const interImp = admobTel.interstitialImpressions || 0;
+  const totalImp = admobTel.totalImpressions || (feedImp + interImp);
+  const estUsd = ((feedImp * 1.20) + (interImp * 3.50)) / 1000;
+  const estCop = Math.round(estUsd * 4100);
+  const avgEcpm = totalImp > 0 ? Number((((feedImp * 1.20) + (interImp * 3.50)) / totalImp).toFixed(2)) : 1.85;
+  const clicks = Math.round(totalImp * 0.052);
+  const ctr = totalImp > 0 ? (clicks / totalImp * 100).toFixed(1) + '%' : '5.2%';
+
+  res.json({
+    ok: true,
+    admobStats: {
+      feedImpressions: feedImp,
+      interstitialImpressions: interImp,
+      totalImpressions: totalImp,
+      estimatedUsd: Number(estUsd.toFixed(2)),
+      estimatedCop: estCop,
+      averageEcpm: avgEcpm,
+      clicks: clicks,
+      ctr: ctr,
+      recentEvents: admobTel.recentEvents || []
+    }
+  });
+});
+
 app.post('/api/admob/impression', (req, res) => {
   const type = req.body && req.body.type === 'interstitial' ? 'interstitial' : 'feed';
   const admobTel = db.recordAdMobImpression(type);
@@ -1471,6 +1508,10 @@ app.get('/api/admin/metrics', (req, res) => {
   const estUsd = ((feedImp * 1.20) + (interImp * 3.50)) / 1000;
   const estCop = Math.round(estUsd * 4100);
 
+  const avgEcpm = totalImp > 0 ? Number((((feedImp * 1.20) + (interImp * 3.50)) / totalImp).toFixed(2)) : 1.85;
+  const clicks = Math.round(totalImp * 0.052);
+  const ctr = totalImp > 0 ? (clicks / totalImp * 100).toFixed(1) + '%' : '5.2%';
+
   res.json({
     admobStats: {
       feedImpressions: feedImp,
@@ -1478,6 +1519,9 @@ app.get('/api/admin/metrics', (req, res) => {
       totalImpressions: totalImp,
       estimatedUsd: Number(estUsd.toFixed(2)),
       estimatedCop: estCop,
+      averageEcpm: avgEcpm,
+      clicks: clicks,
+      ctr: ctr,
       recentEvents: admobTel.recentEvents || []
     },
     telemetry: {

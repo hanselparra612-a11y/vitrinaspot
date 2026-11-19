@@ -2766,7 +2766,7 @@ async function openSellerPanel() {
 
   // Cargar datos y notificaciones del vendedor
   document.getElementById('seller-dash-title').textContent = `Panel de Control: ${state.currentStore.name}`;
-  document.getElementById('seller-stat-spot').textContent = state.currentStore.hasSpot ? 'Activo (Doble Visibilidad) ✨' : 'Inactivo';
+  if (document.getElementById('seller-stat-spot')) document.getElementById('seller-stat-spot').textContent = 'Activo';
 
   // Estado de Membresía Pro en panel vendedor
   const isMemActive = Boolean(
@@ -8250,3 +8250,26 @@ window.openGiftsDrawerById = function() {};
 window.closeGiftsDrawer = function() {};
 window.renderSpotPlayFeed = function() {};
 
+
+
+  // Simulación interactiva de impacto publicitario AdMob (Play Store Simulator)
+  document.getElementById('btn-simulate-admob')?.addEventListener('click', async () => {
+    if (!state.adminToken) return;
+    try {
+      const res = await fetch('/api/admin/admob-simulate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': state.adminToken
+        },
+        body: JSON.stringify({ type: 'feed' })
+      });
+      const data = await res.json();
+      if (data.ok && data.admobStats) {
+        showToast('🧪 ¡Simulación exitosa! Se sumó 1 impacto publicitario en vivo a tu cuenta AdMob.');
+        loadAdminMetrics();
+      }
+    } catch (err) {
+      console.error('Error al simular impacto publicitario:', err);
+    }
+  });

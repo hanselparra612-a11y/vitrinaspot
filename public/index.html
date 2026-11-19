@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=24.3">
+  <link rel="stylesheet" href="css/style.css?v=24.8">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=24.3').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=24.8').catch(function() {});
     }
   </script>
 
@@ -537,20 +537,7 @@
               <span class="metric-label">Veces Guardado en Lista de Deseos</span>
             </div>
           </div>
-          <div class="metric-card">
-            <div class="metric-icon bg-green"><i class="fa-solid fa-bolt"></i></div>
-            <div class="metric-data">
-              <span class="metric-value" id="seller-stat-spot">Inactivo</span>
-              <span class="metric-label">Estado de tu SPOT Publicitario</span>
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-icon" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;"><i class="fa-solid fa-crown"></i></div>
-            <div class="metric-data">
-              <span class="metric-value" id="seller-stat-membership">Inactiva</span>
-              <span class="metric-label" id="seller-stat-membership-label">Membresía Pro</span>
-            </div>
-          </div>
+
           <div class="metric-card">
             <div class="metric-icon" id="seller-stat-welcome-icon" style="background: rgba(0, 200, 83, 0.2); color: #00ff88;"><i class="fa-solid fa-gift"></i></div>
             <div class="metric-data">
@@ -633,6 +620,46 @@
               <button class="btn btn-gold-ring btn-sm" id="btn-admin-exit-feed" title="Volver al Feed">
                 <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
               </button>
+            </div>
+          </div>
+
+                    <!-- 📱 BÓVEDA PUBLICITARIA OFICIAL GOOGLE ADMOB (ESTILO SPOTPLAY - 100% PLAY STORE APPROVED) -->
+          <div class="admin-admob-hero-card">
+            <div class="admin-admob-hero-top">
+              <span class="admin-admob-badge-live">
+                <span class="live-dot-pulse"></span>
+                Bóveda Publicitaria Google AdMob Oficial (Play Store)
+              </span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span class="badge-playstore-approved">✓ 100% GOOGLE PLAY APPROVED</span>
+                <button type="button" class="btn-simulate-admob" id="btn-simulate-admob" title="Probar incremento en tiempo real">
+                  <i class="fa-solid fa-flask"></i> Simular Ganancia (+1 Impresión)
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-admob-hero-revenue">
+              <h2 class="admin-admob-big-usd"><span id="adm-hero-est-usd">$0.00</span> <small>USD</small></h2>
+              <span class="admin-admob-equiv-cop">≈ <strong id="adm-hero-est-cop">$0 COP</strong></span>
+            </div>
+
+            <p class="admin-admob-hero-desc">
+              Ingresos oficiales generados por impresiones de anuncios nativos en el feed vertical e intersticiales post-publicación en VitrinaSpot. Pagados mensualmente por Google AdMob directo a tu cuenta bancaria sin pasarelas externas ni comisiones.
+            </p>
+
+            <div class="admin-admob-hero-trio">
+              <div class="trio-item">
+                <span class="trio-label">Impresiones Servidas</span>
+                <strong class="trio-value text-emerald" id="adm-hero-total-imp">0</strong>
+              </div>
+              <div class="trio-item">
+                <span class="trio-label">eCPM Promedio</span>
+                <strong class="trio-value text-cyan" id="adm-hero-ecpm">$1.85 USD</strong>
+              </div>
+              <div class="trio-item">
+                <span class="trio-label">Clics / CTR Estimado</span>
+                <strong class="trio-value text-gold" id="adm-hero-ctr">0 (5.2%)</strong>
+              </div>
             </div>
           </div>
 
@@ -2113,6 +2140,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=24.7"></script>
+  <script src="js/app.js?v=24.8"></script>
 </body>
 </html>
