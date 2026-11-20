@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=25.1">
+  <link rel="stylesheet" href="css/style.css?v=25.2">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=25.1').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=25.2').catch(function() {});
     }
   </script>
 
@@ -353,8 +353,11 @@
           <!-- ACCIONES RÁPIDAS DE LA TIENDA (TARJETA DIGITAL VIP) -->
           <div class="catalog-hero-actions">
             <div class="catalog-actions-primary-row" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
-              <a href="#" target="_blank" class="btn btn-wa-giant" id="btn-cat-whatsapp" style="flex: 2; min-width: 200px;">
+              <a href="#" target="_blank" class="btn btn-wa-giant" id="btn-cat-whatsapp" style="flex: 2; min-width: 170px;">
                 <i class="fa-brands fa-whatsapp"></i> Chatear por WhatsApp
+              </a>
+              <a href="#" target="_blank" class="btn btn-tg-giant" id="btn-cat-telegram" style="flex: 2; min-width: 170px; display: none; text-decoration: none; padding: 14px 18px; border-radius: 12px; font-weight: 800; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-brands fa-telegram"></i> Chatear por Telegram
               </a>
               <button type="button" class="btn btn-spot" id="btn-cat-share" style="flex: 1; min-width: 160px; padding: 14px 18px; font-weight: 700; border-radius: 12px; gap: 8px; display: inline-flex; align-items: center; justify-content: center;">
                 <i class="fa-solid fa-share-nodes"></i> Compartir Catálogo
@@ -1259,6 +1262,10 @@
           <input type="tel" id="reg-store-whatsapp" placeholder="Ej: 312 456 7890" required>
         </div>
         <div class="form-group">
+          <label><i class="fa-brands fa-telegram" style="color: #26a5e4;"></i> Usuario de Telegram <small class="text-muted">(Opcional - Ej: @MiTienda o t.me/MiTienda)</small></label>
+          <input type="text" id="reg-store-telegram" placeholder="@MiTienda o t.me/MiTienda">
+        </div>
+        <div class="form-group">
           <label>Correo Electrónico <small class="text-muted">(Opcional - Para recuperar tu cuenta si olvidas tu clave)</small></label>
           <input type="email" id="reg-store-email" placeholder="ejemplo@correo.com" autocomplete="email">
         </div>
@@ -1517,6 +1524,20 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label><i class="fa-brands fa-telegram" style="color: #26a5e4;"></i> Usuario o Enlace de Telegram <small class="text-muted">(Opcional)</small></label>
+            <input type="text" id="edit-store-telegram" name="telegram" placeholder="Ej: @MiTienda o t.me/MiTienda">
+          </div>
+          <div class="form-group flex-1">
+            <label><i class="fa-solid fa-comments text-gold"></i> Canal de Chat para Pedidos</label>
+            <select id="edit-store-primary-chat" name="primaryChat">
+              <option value="both">Ambos (WhatsApp y Telegram)</option>
+              <option value="whatsapp" selected>WhatsApp Principal</option>
+              <option value="telegram">Telegram Principal</option>
+            </select>
+          </div>
+        </div>
         <div class="form-group">
           <label>Correo Electrónico de Respaldo <small class="text-muted">(Opcional - Para recuperar tu cuenta)</small></label>
           <input type="email" id="edit-store-email" name="email" placeholder="ejemplo@correo.com" autocomplete="email">
@@ -1616,9 +1637,14 @@
         <p id="sheet-product-desc" style="margin: 0; color: var(--text-dim); font-size: 0.84rem; line-height: 1.45; max-height: 95px; overflow-y: auto; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);"></p>
 
         <!-- BOTÓN PROTAGONISTA: WHATSAPP DIRECTO DE ESTE PRODUCTO -->
-        <a href="#" target="_blank" rel="noopener noreferrer" id="btn-sheet-whatsapp" class="btn btn-wa-giant w-100" style="padding: 12px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-top: 4px;">
-          <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Pedir por WhatsApp a la Tienda
-        </a>
+        <div id="sheet-chat-actions-container" style="display: flex; gap: 8px; width: 100%; margin-top: 4px; flex-wrap: wrap;">
+          <a href="#" target="_blank" rel="noopener noreferrer" id="btn-sheet-whatsapp" class="btn btn-wa-giant flex-1" style="padding: 12px; border-radius: 12px; font-size: 0.92rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 160px;">
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Pedir por WhatsApp
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" id="btn-sheet-telegram" class="btn btn-tg-giant flex-1" style="display: none; padding: 12px; border-radius: 12px; font-size: 0.92rem; font-weight: 800; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 160px;">
+            <i class="fa-brands fa-telegram" style="font-size: 1.25rem;"></i> Pedir por Telegram
+          </a>
+        </div>
 
         <!-- ACCIONES SECUNDARIAS (COMPARTIR SPOT & CERRAR) -->
         <div style="display: flex; gap: 8px; margin-top: 2px;">
@@ -2140,6 +2166,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=25.1"></script>
+  <script src="js/app.js?v=25.2"></script>
 </body>
 </html>

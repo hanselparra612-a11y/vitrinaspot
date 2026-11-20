@@ -852,7 +852,7 @@ app.get('/api/stores/:id', (req, res) => {
 
 // Registrar nueva tienda de negocio
 app.post('/api/stores', (req, res) => {
-  const { name, whatsapp, email, city, password, acceptedRules } = req.body;
+  const { name, whatsapp, email, city, password, acceptedRules, telegram, primaryChat } = req.body;
   if (!name || !whatsapp) {
     return res.status(400).json({ error: 'Nombre de tienda y WhatsApp son obligatorios.' });
   }
@@ -899,6 +899,8 @@ app.post('/api/stores', (req, res) => {
     existing.name = trimmedName;
     existing.city = targetCity;
     if (cleanEmail) existing.email = cleanEmail;
+    if (telegram !== undefined) existing.telegram = telegram.trim();
+    if (primaryChat !== undefined) existing.primaryChat = primaryChat;
     db.save();
     return res.json({ success: true, store: existing, message: 'Ya existía una tienda con este WhatsApp. Has iniciado sesión.' });
   }
@@ -909,6 +911,8 @@ app.post('/api/stores', (req, res) => {
     email: cleanEmail,
     city: targetCity,
     password: password || '123',
+    telegram: telegram ? telegram.trim() : '',
+    primaryChat: primaryChat || 'whatsapp',
     acceptedRules: true
   });
 

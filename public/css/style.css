@@ -9415,3 +9415,40 @@ body.spotplay-active #spotplay-top-bar {
   background: rgba(0, 255, 136, 0.3);
   transform: translateY(-1px);
 }
+
+/* CANAL TELEGRAM Y ACCIONES DUALES DE CHAT DIRECTO */
+.telegram-action-btn {
+  background: linear-gradient(135deg, #2aabee, #229ed9) !important;
+  box-shadow: 0 4px 15px rgba(34, 158, 217, 0.45) !important;
+}
+
+.telegram-action-btn:hover {
+  box-shadow: 0 6px 20px rgba(34, 158, 217, 0.65) !important;
+  color: #ffffff !important;
+  transform: scale(1.04);
+}
+
+.dual-chat-actions {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.dual-chat-actions .whatsapp-action-btn {
+  flex: 1 1 0 !important;
+  padding: 7px 8px !important;
+  font-size: 0.8rem !important;
+  min-width: 0 !important;
+}
+
+.btn-tg-giant {
+  background: linear-gradient(135deg, #2aabee, #229ed9) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(34, 158, 217, 0.4) !important;
+}
+
+.btn-tg-giant:hover {
+  background: linear-gradient(135deg, #229ed9, #1c85b8) !important;
+  color: #ffffff !important;
+}

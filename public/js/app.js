@@ -1,3 +1,12 @@
+
+function getTelegramLink(telegram, message) {
+  if (!telegram) return null;
+  const cleanUser = String(telegram).trim().replace(/^@/, '').replace(/^https?:\/\/t\.me\//, '').replace(/\/$/, '');
+  if (!cleanUser) return null;
+  const msgParam = message ? '?text=' + encodeURIComponent(message) : '';
+  return 'https://t.me/' + cleanUser + msgParam;
+}
+window.getTelegramLink = getTelegramLink;
 function triggerOpenUploadModal() {
   document.getElementById('user-dropdown-menu')?.classList.remove('show');
   const uploadModal = document.getElementById('modal-upload');
@@ -1078,6 +1087,8 @@ function renderContinuousFeed() {
     const rawWaMsg = `¡Hola! Me interesa este producto, ¿sigue disponible?\n\n${videoDirectUrl}`;
     const msg = encodeURIComponent(rawWaMsg);
     const waLink = `https://wa.me/${waClean}?text=${msg}`;
+    const tgLink = getTelegramLink(store.telegram || video.storeTelegram, rawWaMsg);
+    const primaryChat = store.primaryChat || 'whatsapp';
 
     return `
       <article class="reel-player-card" id="card-${video.id}" data-id="${video.id}" data-index="${idx}">
@@ -1194,7 +1205,32 @@ function renderContinuousFeed() {
           ${video.description && !video.description.startsWith('Contáctanos') ? `
           <p class="reel-product-desc" onclick="this.classList.toggle('expanded')" title="Toca para ver u ocultar descripción completa">${escapeHtml(video.description)}</p>` : ''}
 
-          <!-- BOTÓN PROTAGONISTA: WHATSAPP DIRECTO COMPACTO Y ELEGANTE -->
+          <!-- BOTONES PROTAGONISTAS: CHAT DIRECTO (WHATSAPP / TELEGRAM / AMBOS) -->
+          ${(tgLink && primaryChat === 'both' && waLink) ? `
+          <div class="reel-action-main-container dual-chat-actions">
+            <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
+              <div class="btn-wa-inner">
+                <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
+                <span class="btn-wa-text">WhatsApp</span>
+              </div>
+            </a>
+            <a href="${tgLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn telegram-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por Telegram">
+              <div class="btn-wa-inner">
+                <i class="fa-brands fa-telegram wa-logo-bounce"></i>
+                <span class="btn-wa-text">Telegram</span>
+              </div>
+            </a>
+          </div>
+          ` : (tgLink && primaryChat === 'telegram') ? `
+          <div class="reel-action-main-container">
+            <a href="${tgLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn telegram-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por Telegram">
+              <div class="btn-wa-inner">
+                <i class="fa-brands fa-telegram wa-logo-bounce"></i>
+                <span class="btn-wa-text">Pedir por Telegram</span>
+              </div>
+            </a>
+          </div>
+          ` : `
           <div class="reel-action-main-container">
             <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
               <div class="btn-wa-inner">
@@ -1203,6 +1239,7 @@ function renderContinuousFeed() {
               </div>
             </a>
           </div>
+          `}
 
           <!-- LEYENDA LEGAL DE SEGURIDAD -->
           <div class="safety-legal-text">
@@ -2310,6 +2347,16 @@ async function openStoreCatalog(storeId) {
       const msg = encodeURIComponent(`¡Hola! Vi el catálogo de ${store.name} en VitrinaSpot y me interesan sus productos.`);
       catWaBtn.href = `https://wa.me/${cleanWa}?text=${msg}`;
     }
+    const catTgBtn = document.getElementById('btn-cat-telegram');
+    if (catTgBtn) {
+      if (store.telegram) {
+        const tgLink = getTelegramLink(store.telegram, `¡Hola! Vi el catálogo de ${store.name} en VitrinaSpot y me interesan sus productos.`);
+        catTgBtn.href = tgLink;
+        catTgBtn.style.display = 'inline-flex';
+      } else {
+        catTgBtn.style.display = 'none';
+      }
+    }
 
     // Detección precisa de Tienda Física vs Tienda 100% Online
     const addressRaw = (store.address || '').trim();
@@ -2479,6 +2526,16 @@ function openCatalogProductSheet(video, store) {
   if (sheetWaBtn) {
     sheetWaBtn.href = `https://wa.me/${waClean}?text=${encodeURIComponent(rawMsg)}`;
     sheetWaBtn.onclick = () => trackWaClick(video.id);
+  }
+  const sheetTgBtn = document.getElementById('btn-sheet-telegram');
+  if (sheetTgBtn) {
+    if (store?.telegram || video.storeTelegram) {
+      sheetTgBtn.href = getTelegramLink(store?.telegram || video.storeTelegram, rawMsg);
+      sheetTgBtn.style.display = 'inline-flex';
+      sheetTgBtn.onclick = () => trackWaClick(video.id);
+    } else {
+      sheetTgBtn.style.display = 'none';
+    }
   }
 
   // 5. Botón Compartir Producto
