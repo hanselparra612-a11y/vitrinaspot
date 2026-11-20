@@ -479,7 +479,7 @@ function updateNavStoreUI() {
 
   if (state.currentStore) {
     if (navAvatar) {
-      navAvatar.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop&q=80';
+      navAvatar.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=100&auto=format&fit=crop&q=80';
       navAvatar.style.display = 'block';
     }
     if (navGuestIcon) navGuestIcon.style.display = 'none';
@@ -544,7 +544,7 @@ function renderStoriesBar() {
       pinnedSlot.innerHTML = `
         <div class="story-item story-my-business-entry" id="story-my-business-btn" title="Mi Negocio: ${escapeHtml(state.currentStore.name)} (Toca para administrar)">
           <div class="story-ring my-store-ring-vip has-spot">
-            <img class="story-avatar" src="${state.currentStore.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80'}" alt="Mi Negocio" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80';" loading="lazy">
+            <img class="story-avatar" src="${state.currentStore.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80'}" alt="Mi Negocio" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80';" loading="lazy">
             <span class="story-my-badge" title="Mi Negocio">⭐</span>
           </div>
           <span class="story-name my-story-name">⭐ Mi Negocio</span>
@@ -599,7 +599,7 @@ function renderStoriesBar() {
     return `
       <div class="story-item ${isSelected ? 'active-store-filter' : ''}" data-store-id="${store.id}" title="Ver publicaciones de ${escapeHtml(store.name)}">
         <div class="story-ring ${store.hasSpot ? 'has-spot' : ''} ${isSelected ? 'active-filter-ring' : ''}">
-          <img class="story-avatar" src="${store.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(store.name)}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80';" loading="lazy">
+          <img class="story-avatar" src="${store.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(store.name)}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80';" loading="lazy">
         </div>
         <span class="story-name">${escapeHtml(store.name)}</span>
       </div>
@@ -693,7 +693,7 @@ function renderActiveStoreBanner(store, count) {
   banner.id = 'active-store-filter-bar';
   banner.innerHTML = `
     <div class="store-filter-left" onclick="openStoreCatalog('${store.id}')" title="Ver ficha completa y ubicación">
-      <img src="${store.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120'}" class="store-filter-avatar" alt="${escapeHtml(store.name)}" onerror="this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120';">
+      <img src="${store.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120'}" class="store-filter-avatar" alt="${escapeHtml(store.name)}" onerror="this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120';">
       <div class="store-filter-texts">
         <span class="store-filter-label">Viendo tienda:</span>
         <strong class="store-filter-title">${escapeHtml(store.name)} (${count})</strong>
@@ -973,7 +973,7 @@ function renderContinuousFeed() {
               
               <!-- PANTALLA DEL CELULAR CON SPOT PUBLICITARIO EN VIVO -->
               <div class="phone-mockup-screen">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80" alt="Spot en Vivo" class="phone-mockup-img" loading="eager">
+                <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop&q=80" alt="Spot en Vivo" class="phone-mockup-img" loading="eager">
                 
                 <div class="phone-mockup-overlay">
                   <!-- Header del Spot dentro del teléfono -->
@@ -1016,7 +1016,7 @@ function renderContinuousFeed() {
                       <span class="phone-store-name">${escapeHtml(state.currentStore?.name || 'Variedades Leo')}</span>
                       <i class="fa-solid fa-circle-check text-green phone-verified"></i>
                     </div>
-                    <div class="phone-spot-title">Zapatillas Urbanas Red Edition</div>
+                    <div class="phone-spot-title">Zapatillas Streetwear Urban Pro</div>
                     <div class="phone-spot-action-row">
                       <span class="phone-spot-price">$189.900 COP</span>
                       <span class="phone-spot-shipping"><i class="fa-solid fa-motorcycle"></i> Gratis</span>
@@ -1145,7 +1145,7 @@ function renderContinuousFeed() {
           <!-- LOGO TIENDA CON ANILLO DE ESTADO -->
           <button type="button" class="side-action-btn store-badge-action" onclick="openStoreCatalog('${video.storeId}')" title="Ver Tienda y Catálogo">
             <div class="store-ring-wrapper ${video.hasSpot ? 'has-spot' : ''}">
-              <img src="${video.storeAvatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(video.storeName)}" class="reel-store-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&auto=format&fit=crop&q=80';" loading="lazy">
+              <img src="${video.storeAvatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(video.storeName)}" class="reel-store-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80';" loading="lazy">
               <div class="verified-mini-check">
                 <i class="fa-solid fa-check"></i>
               </div>
@@ -2781,7 +2781,7 @@ async function openSellerPanel() {
   const pCity = document.getElementById('seller-profile-city');
   const pHours = document.getElementById('seller-profile-hours');
 
-  if (pAvatar) pAvatar.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80';
+  if (pAvatar) pAvatar.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=200&auto=format&fit=crop&q=80';
   if (pName) pName.textContent = state.currentStore.name;
   if (pDesc) pDesc.textContent = state.currentStore.description || 'Sin descripción aún. Toca en "Editar Perfil" para personalizar tu información.';
   if (pWa) pWa.textContent = state.currentStore.whatsapp;
@@ -3657,7 +3657,7 @@ async function loadAdminModeration() {
         return `
           <div class="admin-mod-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
             <div style="display: flex; gap: 12px; align-items: center;">
-              <img src="${s.avatar}" alt="${escapeHtml(s.name)}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--spot-gold); flex-shrink: 0;" onerror="this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120';">
+              <img src="${s.avatar}" alt="${escapeHtml(s.name)}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--spot-gold); flex-shrink: 0;" onerror="this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120';">
               <div style="flex: 1; min-width: 0;">
                 <div style="display: flex; align-items: center; gap: 6px;">
                   <h4 style="margin: 0; color: #fff; font-size: 0.94rem;">${escapeHtml(s.name)}</h4>
@@ -5269,7 +5269,7 @@ function setupEventListeners() {
 
     // Extraer datos del formulario en vivo
     const storeName = document.getElementById('upload-store-name')?.value.trim() || state.currentStore?.name || 'Mi Negocio';
-    const storeAvatar = state.currentStore?.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop&q=80';
+    const storeAvatar = state.currentStore?.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=100&auto=format&fit=crop&q=80';
     const titleVal = document.getElementById('upload-title')?.value.trim() || 'Título de tu producto o servicio';
     const priceNum = Number(document.getElementById('upload-price')?.value || 0);
     const priceText = priceNum > 0 ? `$${priceNum.toLocaleString('es-CO')} COP` : 'Precio a Convenir';
@@ -6239,7 +6239,7 @@ function setupEventListeners() {
     const avatarInput = document.getElementById('edit-profile-avatar-input');
     const filenameEl = document.getElementById('edit-avatar-filename');
 
-    if (previewImg) previewImg.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80';
+    if (previewImg) previewImg.src = state.currentStore.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=200&auto=format&fit=crop&q=80';
     if (nameInput) nameInput.value = state.currentStore.name || '';
     if (waInput) waInput.value = (state.currentStore.whatsapp || '').replace('+57', '').replace(/[^0-9]/g, '');
     if (emailInput) emailInput.value = state.currentStore.email || '';
