@@ -944,30 +944,23 @@ function renderContinuousFeed() {
       <div class="welcome-hook-bg-overlay"></div>
 
       <div class="welcome-hook-content">
-        <div class="welcome-hook-badge-row">
-          <span class="welcome-hook-badge">
-            <i class="fa-solid fa-store text-gold"></i> VITRINA COMERCIAL 🇨🇴
-          </span>
-          <span class="welcome-hook-trust-pill">
-            <i class="fa-solid fa-shield-halved"></i> Trato Directo & Seguro
-          </span>
+        <!-- CABECERA COMPACTA -->
+        <div class="welcome-compact-header">
+          <div class="welcome-hook-badge-row">
+            <span class="welcome-hook-badge">
+              <i class="fa-solid fa-store text-gold"></i> VITRINA COMERCIAL 🇨🇴
+            </span>
+            <span class="welcome-hook-trust-pill">
+              <i class="fa-solid fa-shield-halved text-cyan"></i> Trato Directo & Seguro
+            </span>
+          </div>
+
+          <h2 class="welcome-hook-title">
+            Tu Catálogo Digital, <span class="text-neon">Pedidos al Chat Directo</span>
+          </h2>
         </div>
 
-        <div class="welcome-hook-brand">
-          <span class="welcome-brand-text">Vitrina<span class="logo-highlight">Spot</span></span>
-        </div>
-
-        <h2 class="welcome-hook-title">
-          Tu Catálogo Digital, <br>
-          <span class="text-neon">Pedidos al Chat Directo</span>
-        </h2>
-
-        <p class="welcome-hook-sub">
-          Explora cientos de tiendas, marcas y ofertas locales en Colombia. <br>
-          <span class="welcome-sub-highlight">¿Vendes productos o tienes negocio?</span> Publica tu vitrina <strong>100% GRATIS</strong> sin comisiones ni intermediarios.
-        </p>
-
-        <!-- SHOWCASE VISUAL: SMARTPHONE CON EL FEED ENCENDIDO EN UN SPOT PUBLICITARIO -->
+        <!-- SHOWCASE VISUAL: SMARTPHONE CON EL FEED ENCENDIDO Y RIELES DE BOTONES REALISTAS -->
         <div class="welcome-phone-showcase">
           <div class="phone-showcase-caption">
             <i class="fa-solid fa-wand-magic-sparkles text-gold"></i>
@@ -988,24 +981,45 @@ function renderContinuousFeed() {
                     <span class="phone-spot-badge-live">
                       <span class="live-dot-pulse"></span> SPOT EN VIVO
                     </span>
-                    <span class="phone-spot-badge-quota">
-                      ${Number(state.pricing?.free_spots_quota) || 100} SPOTS $0 COP
+                    <span class="phone-spot-badge-photo">
+                      <i class="fa-solid fa-camera"></i> 1/5
                     </span>
+                    <span class="phone-spot-badge-quota">
+                      ${Number(state.pricing?.free_spots_quota) || 100} SPOTS $0
+                    </span>
+                  </div>
+
+                  <!-- Riel lateral de botones estilo Reel / TikTok -->
+                  <div class="phone-mockup-actions-rail">
+                    <div class="phone-rail-btn phone-rail-like">
+                      <i class="fa-solid fa-heart"></i>
+                      <span>142</span>
+                    </div>
+                    <div class="phone-rail-btn phone-rail-chat">
+                      <i class="fa-solid fa-comments"></i>
+                      <span>Chat</span>
+                    </div>
+                    <div class="phone-rail-btn phone-rail-share">
+                      <i class="fa-solid fa-share-nodes"></i>
+                      <span>Share</span>
+                    </div>
+                    <div class="phone-rail-btn phone-rail-store">
+                      <i class="fa-solid fa-store"></i>
+                      <span>Tienda</span>
+                    </div>
                   </div>
 
                   <!-- Contenido inferior del Spot dentro del teléfono -->
                   <div class="phone-spot-bottom">
                     <div class="phone-spot-store">
                       <span class="phone-store-avatar">🏬</span>
-                      <span class="phone-store-name">Tu Tienda Oficial</span>
+                      <span class="phone-store-name">${escapeHtml(state.currentStore?.name || 'Variedades Leo')}</span>
                       <i class="fa-solid fa-circle-check text-green phone-verified"></i>
                     </div>
                     <div class="phone-spot-title">Zapatillas Urbanas Red Edition</div>
                     <div class="phone-spot-action-row">
                       <span class="phone-spot-price">$189.900 COP</span>
-                      <span class="phone-spot-chat-btn">
-                        <i class="fa-solid fa-comments"></i> Chat Directo
-                      </span>
+                      <span class="phone-spot-shipping"><i class="fa-solid fa-motorcycle"></i> Gratis</span>
                     </div>
                   </div>
                 </div>
@@ -1020,48 +1034,39 @@ function renderContinuousFeed() {
           </div>
         </div>
 
-        <!-- ACCIONES PRINCIPALES: COMERCIANTE + COMPRADOR -->
+        <!-- ACCIONES PRINCIPALES: BOTÓN INMEDIATO DEBAJO DE LA IMAGEN PUBLICITARIA -->
         <div class="welcome-hook-actions-group">
           ${state.currentStore ? `
           <button type="button" class="btn-welcome-cta" onclick="handleWelcomeHookCTA()">
-            <i class="fa-solid fa-plus"></i>
+            <i class="fa-solid fa-plus-circle"></i>
             <span>Publicar SPOT (${escapeHtml(state.currentStore.name)})</span>
             <i class="fa-solid fa-arrow-right cta-arrow"></i>
           </button>
-          <button type="button" class="btn-welcome-login-direct" onclick="openSellerPanel()">
-            <i class="fa-solid fa-chart-line text-gold"></i>
-            <span>Ir al <strong>Panel de Mi Tienda</strong></span>
-          </button>
+          <div class="welcome-secondary-actions-row">
+            <button type="button" class="btn-welcome-login-link" onclick="openSellerPanel()">
+              <i class="fa-solid fa-chart-line text-gold"></i> Panel Mi Tienda
+            </button>
+            <span class="welcome-sep">•</span>
+            <button type="button" class="btn-welcome-explore-link" onclick="scrollToFirstProduct()">
+              <i class="fa-solid fa-bag-shopping text-cyan"></i> Explorar Vitrina
+            </button>
+          </div>
           ` : `
           <button type="button" class="btn-welcome-cta" onclick="handleWelcomeHookCTA()">
             <i class="fa-solid fa-store"></i>
-            <span>Crear Mi Tienda Gratis (${Number(state.pricing?.free_spots_quota) || 5} SPOTS $0 COP)</span>
+            <span>Crear Mi Tienda Gratis (${Number(state.pricing?.free_spots_quota) || 100} SPOTS $0 COP)</span>
             <i class="fa-solid fa-arrow-right cta-arrow"></i>
           </button>
-          <button type="button" class="btn-welcome-login-direct" onclick="openStoreLoginDirectly()">
-            <i class="fa-solid fa-right-to-bracket text-gold"></i>
-            <span>¿Ya tienes tienda? <strong>Entrar a Mi Negocio</strong></span>
-          </button>
+          <div class="welcome-secondary-actions-row">
+            <button type="button" class="btn-welcome-login-link" onclick="openStoreLoginDirectly()">
+              <i class="fa-solid fa-right-to-bracket text-gold"></i> Entrar a Mi Negocio
+            </button>
+            <span class="welcome-sep">•</span>
+            <button type="button" class="btn-welcome-explore-link" onclick="scrollToFirstProduct()">
+              <i class="fa-solid fa-bag-shopping text-cyan"></i> Explorar Vitrina
+            </button>
+          </div>
           `}
-          ${(Array.isArray(state.videos) && state.videos.length > 0) ? `
-          <button type="button" class="btn-welcome-explore" onclick="scrollToFirstProduct()">
-            <i class="fa-solid fa-bag-shopping text-gold"></i>
-            <span>Explorar Productos y Ofertas</span>
-            <i class="fa-solid fa-arrow-down"></i>
-          </button>
-          ` : `
-          <button type="button" class="btn-welcome-explore" onclick="handleWelcomeHookCTA()">
-            <i class="fa-solid fa-rocket text-gold"></i>
-            <span>¡Sé el Primero en Anunciar GRATIS!</span>
-          </button>
-          `}
-        </div>
-      </div>
-
-      <div class="welcome-hook-footer" onclick="${(Array.isArray(state.videos) && state.videos.length > 0) ? 'scrollToFirstProduct()' : 'handleWelcomeHookCTA()'}">
-        <span class="welcome-footer-hint">${(Array.isArray(state.videos) && state.videos.length > 0) ? 'Desliza para explorar la vitrina comercial' : '🇨🇴 ¡Sé el primer negocio en abrir tu vitrina en Colombia!'}</span>
-        <div class="welcome-scroll-pill">
-          <i class="fa-solid fa-${(Array.isArray(state.videos) && state.videos.length > 0) ? 'chevron-down' : 'plus'} bounce-arrow"></i>
         </div>
       </div>
     </article>

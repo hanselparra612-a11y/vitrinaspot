@@ -1812,14 +1812,13 @@ body.vitrina-header-collapsed .categories-nav {
 }
 
 /* CONTROLES FLECHAS PC */
+/* NAVEGACIÓN Y PANEL LATERAL PC - MOBILE FIRST (Ocultos por defecto en móviles) */
 .pc-nav-arrows {
-  position: absolute;
-  right: -55px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: none !important;
+}
+
+.desktop-details-panel {
+  display: none !important;
 }
 
 .arrow-nav-btn {
@@ -1841,13 +1840,24 @@ body.vitrina-header-collapsed .categories-nav {
   color: #000;
 }
 
-/* PANEL LATERAL PC */
-.desktop-details-panel {
-  width: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  z-index: 10;
+@media (min-width: 901px) {
+  .pc-nav-arrows {
+    position: absolute;
+    right: -55px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .desktop-details-panel {
+    width: 360px;
+    display: flex !important;
+    flex-direction: column;
+    gap: 18px;
+    z-index: 10;
+  }
 }
 
 .desk-store-card {
@@ -9668,5 +9678,345 @@ body.spotplay-active #spotplay-top-bar {
     font-size: 0.78rem;
     padding: 4px 12px;
     margin-bottom: 8px;
+  }
+}
+
+
+
+/* ==========================================================================
+   SHOWCASE DE SMARTPHONE V25.8: MÁS GRANDE, DETALLADO Y CON RIELES DE BOTONES
+   ========================================================================== */
+.welcome-compact-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.welcome-compact-header .welcome-hook-badge-row {
+  margin-bottom: 2px;
+}
+
+.welcome-compact-header .welcome-hook-title {
+  font-size: 1.15rem;
+  line-height: 1.22;
+  margin: 0;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.welcome-phone-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 4px auto 8px auto;
+  position: relative;
+  z-index: 5;
+}
+
+.phone-showcase-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 184, 0, 0.14);
+  border: 1px solid rgba(255, 184, 0, 0.45);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+  box-shadow: 0 4px 16px rgba(255, 184, 0, 0.25);
+  animation: pulseCaptionGlow 2.6s infinite ease-in-out;
+}
+
+.phone-mockup-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phone-mockup-body {
+  width: 216px;
+  height: 274px;
+  background: #080b12;
+  border-radius: 28px;
+  border: 3.5px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 30px rgba(255, 184, 0, 0.25), inset 0 0 14px rgba(255, 255, 255, 0.12);
+  padding: 4px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.phone-mockup-notch {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 8px;
+  background: #000;
+  border-radius: 8px;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.phone-mockup-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 23px;
+  position: relative;
+  overflow: hidden;
+  background: #060911;
+}
+
+.phone-mockup-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+.phone-mockup-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 9, 17, 0.82) 0%, rgba(6, 9, 17, 0.05) 30%, rgba(6, 9, 17, 0.25) 55%, rgba(6, 9, 17, 0.96) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 8px 8px 8px;
+  box-sizing: border-box;
+  z-index: 4;
+}
+
+.phone-spot-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 3px;
+}
+
+.phone-spot-badge-live {
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 255, 136, 0.55);
+  color: #00ff88;
+  font-size: 0.5rem;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  backdrop-filter: blur(4px);
+}
+
+.phone-spot-badge-photo {
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 0.5rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 10px;
+}
+
+.phone-spot-badge-quota {
+  background: rgba(255, 184, 0, 0.22);
+  border: 1px solid rgba(255, 184, 0, 0.6);
+  color: #ffb800;
+  font-size: 0.5rem;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+/* RIEL LATERAL DE BOTONES DENTRO DEL SMARTPHONE MOCKUP */
+.phone-mockup-actions-rail {
+  position: absolute;
+  right: 5px;
+  bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  z-index: 6;
+}
+
+.phone-rail-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.phone-rail-btn i {
+  font-size: 0.62rem;
+}
+
+.phone-rail-btn span {
+  font-size: 0.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.phone-rail-like i { color: #ff2d55; }
+.phone-rail-chat i { color: #00ff88; }
+.phone-rail-share i { color: #ffb800; }
+.phone-rail-store i { color: #00e5ff; }
+
+.phone-spot-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: calc(100% - 32px);
+  text-align: left;
+}
+
+.phone-spot-store {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.phone-spot-store .phone-store-name {
+  max-width: 105px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.phone-spot-title {
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 1px 0 2px 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.phone-spot-action-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.phone-spot-price {
+  background: rgba(255, 184, 0, 0.25);
+  border: 1px solid rgba(255, 184, 0, 0.65);
+  color: #ffb800;
+  font-size: 0.58rem;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 6px;
+}
+
+.phone-spot-shipping {
+  background: rgba(0, 229, 255, 0.18);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  color: #00e5ff;
+  font-size: 0.5rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* BOTONES DE ACCIÓN DEBAJO DE LA IMAGEN */
+.welcome-hook-actions-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  max-width: 380px;
+  margin-top: 0;
+}
+
+.btn-welcome-cta {
+  width: 100%;
+  padding: 11px 16px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(255, 184, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.welcome-secondary-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-welcome-login-link,
+.btn-welcome-explore-link {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 5px;
+  transition: color 0.2s ease;
+}
+
+.btn-welcome-login-link:hover,
+.btn-welcome-explore-link:hover {
+  color: #ffffff;
+}
+
+.welcome-sep {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .welcome-hook-card {
+    padding: 8px 10px 8px 10px !important;
+  }
+  .phone-mockup-body {
+    width: 204px;
+    height: 254px;
+  }
+  .welcome-compact-header .welcome-hook-title {
+    font-size: 1.05rem;
+  }
+  .btn-welcome-cta {
+    padding: 10px 14px;
+    font-size: 0.84rem;
   }
 }
