@@ -960,7 +960,7 @@ function renderContinuousFeed() {
           </h2>
         </div>
 
-        <!-- SHOWCASE VISUAL: SMARTPHONE CON EL FEED ENCENDIDO Y RIELES DE BOTONES REALISTAS -->
+        <!-- SHOWCASE VISUAL: SMARTPHONE ULTRA-REALISTA (CHASIS METÁLICO TITANIO, DYNAMIC ISLAND, STATUS BAR Y SPOT EN VIVO) -->
         <div class="welcome-phone-showcase">
           <div class="phone-showcase-caption">
             <i class="fa-solid fa-wand-magic-sparkles text-gold"></i>
@@ -968,15 +968,33 @@ function renderContinuousFeed() {
           </div>
 
           <div class="phone-mockup-wrapper">
+            <!-- BOTONES FÍSICOS EXTERIORES DEL CELULAR -->
+            <div class="phone-physical-btn phone-btn-action"></div>
+            <div class="phone-physical-btn phone-btn-vol-up"></div>
+            <div class="phone-physical-btn phone-btn-vol-down"></div>
+            <div class="phone-physical-btn phone-btn-power"></div>
+
             <div class="phone-mockup-body">
-              <div class="phone-mockup-notch"></div>
-              
-              <!-- PANTALLA DEL CELULAR CON SPOT PUBLICITARIO EN VIVO -->
+              <!-- PANTALLA OLED DEL CELULAR -->
               <div class="phone-mockup-screen">
-                <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop&q=80" alt="Spot en Vivo" class="phone-mockup-img" loading="eager">
+                <!-- FOTO ULTRA-ESTILIZADA SIN MARCAS REGISTRADAS QUE LLENA PERFECTAMENTE EL ENCUADRE SIN ESPACIO VACÍO ARRIBA -->
+                <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=700&auto=format&fit=crop&q=80" alt="Spot en Vivo" class="phone-mockup-img" loading="eager">
                 
                 <div class="phone-mockup-overlay">
-                  <!-- Header del Spot dentro del teléfono -->
+                  <!-- BARRA DE ESTADO REALISTA (HORA + DYNAMIC ISLAND + BATERÍA) -->
+                  <div class="phone-status-bar">
+                    <span class="phone-status-time">9:41</span>
+                    <div class="phone-dynamic-island">
+                      <span class="dynamic-island-lens"></span>
+                    </div>
+                    <div class="phone-status-icons">
+                      <i class="fa-solid fa-signal"></i>
+                      <i class="fa-solid fa-wifi"></i>
+                      <i class="fa-solid fa-battery-three-quarters"></i>
+                    </div>
+                  </div>
+
+                  <!-- HEADER DEL SPOT DENTRO DEL TELÉFONO -->
                   <div class="phone-spot-top">
                     <span class="phone-spot-badge-live">
                       <span class="live-dot-pulse"></span> SPOT EN VIVO
@@ -989,7 +1007,7 @@ function renderContinuousFeed() {
                     </span>
                   </div>
 
-                  <!-- Riel lateral de botones estilo Reel / TikTok -->
+                  <!-- RIEL LATERAL DE BOTONES ESTILO REELS / TIKTOK -->
                   <div class="phone-mockup-actions-rail">
                     <div class="phone-rail-btn phone-rail-like">
                       <i class="fa-solid fa-heart"></i>
@@ -1009,7 +1027,7 @@ function renderContinuousFeed() {
                     </div>
                   </div>
 
-                  <!-- Contenido inferior del Spot dentro del teléfono -->
+                  <!-- CONTENIDO INFERIOR DEL SPOT DENTRO DEL TELÉFONO -->
                   <div class="phone-spot-bottom">
                     <div class="phone-spot-store">
                       <span class="phone-store-avatar">🏬</span>
@@ -1022,14 +1040,17 @@ function renderContinuousFeed() {
                       <span class="phone-spot-shipping"><i class="fa-solid fa-motorcycle"></i> Gratis</span>
                     </div>
                   </div>
+
+                  <!-- BARRA DE INICIO INFERIOR TIPO IOS HOME INDICATOR -->
+                  <div class="phone-home-indicator"></div>
                 </div>
 
-                <!-- Efecto reflejo de cristal del teléfono -->
+                <!-- EFECTO REFLEJO DE CRISTAL BISELADO -->
                 <div class="phone-screen-glare"></div>
               </div>
             </div>
 
-            <!-- Sombra y resplandor neón exterior del teléfono -->
+            <!-- SOMBRA Y RESPLANDOR NEÓN AMBIENTAL EXTERIOR -->
             <div class="phone-ambient-glow"></div>
           </div>
         </div>
