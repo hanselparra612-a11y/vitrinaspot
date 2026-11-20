@@ -956,7 +956,7 @@ function buildSingleProductCardHTML(video, idx) {
 
       <!-- COLUMNA DERECHA DE ACCIONES FLOTANTES (ICONOS TIKTOK / INSTAGRAM REELS) -->
       <div class="reel-side-actions">
-        <!-- LOGO TIENDA CON ANILLO DE ESTADO -->
+        <!-- 1. LOGO TIENDA CON ANILLO DE ESTADO -->
         <button type="button" class="side-action-btn store-badge-action" onclick="openStoreCatalog('${video.storeId}')" title="Ver Tienda y Catálogo">
           <div class="store-ring-wrapper ${video.hasSpot ? 'has-spot' : ''}">
             <img src="${video.storeAvatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(video.storeName)}" class="reel-store-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80';" loading="lazy">
@@ -967,41 +967,41 @@ function buildSingleProductCardHTML(video, idx) {
           <span class="action-label">Tienda</span>
         </button>
 
-        <!-- ME GUSTA (❤️ PURO SIN AROS ROJOS) -->
-        <button type="button" class="side-action-btn like-action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLikeSpot('${video.id}', event)" title="Me Gusta">
-          <div class="side-icon-circle">
+        <!-- 2. ME GUSTA (❤️ PURO SIN AROS ROJOS) -->
+        <button type="button" class="side-action-btn like-action-btn ${isLiked ? 'liked' : ''}" data-id="${video.id}" onclick="toggleLikeSpot('${video.id}', event)" title="Me Gusta">
+          <div class="action-icon-circle side-icon-circle">
             <i class="fa-solid fa-heart"></i>
           </div>
-          <span class="action-label like-count-label" id="like-count-${uid}">${video.likes || 0}</span>
+          <span class="action-label like-count-label" id="like-count-${uid}">${formatNumber(video.likes || 0)}</span>
         </button>
 
-        <!-- COMENTARIOS Y PREGUNTAS -->
+        <!-- 3. COMENTARIOS Y PREGUNTAS -->
         <button type="button" class="side-action-btn comments-action-btn" onclick="openCommentsSheet('${video.id}', event)" title="Preguntas y Comentarios">
-          <div class="side-icon-circle">
+          <div class="action-icon-circle side-icon-circle">
             <i class="fa-solid fa-comments"></i>
           </div>
           <span class="action-label" id="comments-count-${uid}">${video.commentsCount || 0}</span>
         </button>
 
-        <!-- COMPARTIR SPOT -->
+        <!-- 4. COMPARTIR SPOT -->
         <button type="button" class="side-action-btn share-action-btn" onclick="shareSpot('${video.id}', event)" title="Compartir este producto">
-          <div class="side-icon-circle">
+          <div class="action-icon-circle side-icon-circle">
             <i class="fa-solid fa-share-nodes"></i>
           </div>
           <span class="action-label">Compartir</span>
         </button>
 
-        <!-- VER DETALLE COMPLETO -->
+        <!-- 5. VER DETALLE COMPLETO -->
         <button type="button" class="side-action-btn detail-action-btn" onclick="openProductDetailSheet('${video.id}', event)" title="Ver detalles y fotos">
-          <div class="side-icon-circle">
+          <div class="action-icon-circle side-icon-circle">
             <i class="fa-solid fa-circle-info"></i>
           </div>
           <span class="action-label">Info</span>
         </button>
 
-        <!-- MENÚ DE OPCIONES DEL SPOT -->
+        <!-- 6. MENÚ DE OPCIONES DEL SPOT -->
         <button type="button" class="side-action-btn more-options-btn" onclick="openSpotOptionsMenu('${video.id}', event)" title="Más opciones">
-          <div class="side-icon-circle">
+          <div class="action-icon-circle side-icon-circle">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </div>
         </button>
@@ -2204,15 +2204,16 @@ function spawnFloatingHeart(videoId) {
 }
 window.spawnFloatingHeart = spawnFloatingHeart;
 
-// Funciones interactivas directas en cada tarjeta (Likes calibrados con sincronización bidireccional)
-async function toggleCardLike(videoId, btnEl) {
+// ==========================================
+// ACCIONES INTERACTIVAS DEL RIEL DERECHO (TIENDA, LIKE, COMENTARIOS, COMPARTIR, INFO, OPCIONES)
+// ==========================================
+async function toggleLikeSpot(videoId, e) {
+  if (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
   const video = state.videos.find(v => v.id === videoId);
   if (!video) return;
-
-  if (!btnEl) {
-    btnEl = document.querySelector(`#card-${videoId} .btn-card-like`);
-  }
-  const countEl = btnEl ? btnEl.querySelector('.action-count') : null;
 
   const isLiked = state.likedVideoIds.has(video.id);
   const action = isLiked ? 'unlike' : 'like';
@@ -2220,26 +2221,31 @@ async function toggleCardLike(videoId, btnEl) {
   if (isLiked) {
     state.likedVideoIds.delete(video.id);
     video.likes = Math.max(0, (video.likes || 1) - 1);
-    if (btnEl) btnEl.classList.remove('liked');
   } else {
     state.likedVideoIds.add(video.id);
     video.likes = (video.likes || 0) + 1;
-    if (btnEl) {
-      btnEl.classList.add('liked');
-      const icon = btnEl.querySelector('.fa-heart');
-      if (icon) {
-        icon.style.animation = 'none';
-        icon.offsetHeight; /* trigger reflow */
-        icon.style.animation = 'heartPulseAnim 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-      }
-    }
     spawnFloatingHeart(video.id);
   }
 
-  if (countEl) countEl.textContent = formatNumber(video.likes);
+  // Actualizar estado visual de los botones de like de este video
+  document.querySelectorAll(`.like-action-btn[data-id="${video.id}"], #card-${video.id} .like-action-btn`).forEach(btn => {
+    btn.classList.toggle('liked', !isLiked);
+    const icon = btn.querySelector('.fa-heart');
+    if (icon && !isLiked) {
+      icon.style.animation = 'none';
+      icon.offsetHeight;
+      icon.style.animation = 'heartPulseAnim 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    }
+  });
+
+  // Actualizar todos los contadores de texto de likes de este video
+  document.querySelectorAll(`[id^="like-count-${video.id}"]`).forEach(lbl => {
+    lbl.textContent = formatNumber(video.likes);
+  });
+
   localStorage.setItem('vitrina_likes', JSON.stringify(Array.from(state.likedVideoIds)));
 
-  // Sincronizar con el servidor y conciliar contador real confirmado
+  // Sincronizar con el backend
   try {
     const res = await fetch(`/api/videos/${video.id}/like`, {
       method: 'POST',
@@ -2250,14 +2256,139 @@ async function toggleCardLike(videoId, btnEl) {
       const data = await res.json();
       if (typeof data.likes === 'number') {
         video.likes = data.likes;
-        if (countEl) countEl.textContent = formatNumber(video.likes);
+        document.querySelectorAll(`[id^="like-count-${video.id}"]`).forEach(lbl => {
+          lbl.textContent = formatNumber(video.likes);
+        });
       }
     }
   } catch (err) {
     console.warn('Sincronización de like pendiente:', err);
   }
 }
-window.toggleCardLike = toggleCardLike;
+window.toggleLikeSpot = toggleLikeSpot;
+window.toggleCardLike = toggleLikeSpot;
+
+function shareSpot(videoId, e) {
+  if (e) e.stopPropagation();
+  const video = state.videos.find(v => v.id === videoId);
+  if (!video) return;
+
+  const store = state.stores.find(s => s.id === video.storeId);
+  const videoDirectUrl = getPublicShareUrl('?v=' + video.id);
+  const shareTitle = `${video.title} - ${store?.name || video.storeName || 'VitrinaSpot'}`;
+  const shareText = `🛍️ ¡Mira este producto en VitrinaSpot Colombia!\n*${video.title}* ${video.priceFormatted ? '- ' + video.priceFormatted : ''}\n📍 ${video.city || 'Colombia'}\n\n👉 Ver producto y contactar directo: ${videoDirectUrl}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: shareTitle,
+      text: shareText,
+      url: videoDirectUrl
+    }).catch(err => {
+      if (err.name !== 'AbortError') {
+        fallbackShare(videoDirectUrl, shareText);
+      }
+    });
+  } else {
+    fallbackShare(videoDirectUrl, shareText);
+  }
+}
+window.shareSpot = shareSpot;
+
+function openProductDetailSheet(videoId, e) {
+  if (e) e.stopPropagation();
+  const video = state.videos.find(v => v.id === videoId);
+  if (!video) return;
+  const store = state.stores.find(s => s.id === video.storeId) || {
+    name: video.storeName,
+    avatar: video.storeAvatar,
+    city: video.city,
+    whatsapp: video.storeWhatsapp
+  };
+  openCatalogProductSheet(video, store);
+}
+window.openProductDetailSheet = openProductDetailSheet;
+
+let activeOptionsMenuVideoId = null;
+
+function openSpotOptionsMenu(videoId, e) {
+  if (e) e.stopPropagation();
+  const video = state.videos.find(v => v.id === videoId);
+  if (!video) return;
+  activeOptionsMenuVideoId = video.id;
+
+  const titleEl = document.getElementById('spot-options-title');
+  if (titleEl) titleEl.textContent = video.title || 'Opciones del SPOT';
+
+  const modal = document.getElementById('modal-spot-options-menu');
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+}
+window.openSpotOptionsMenu = openSpotOptionsMenu;
+
+function closeSpotOptionsMenu() {
+  const modal = document.getElementById('modal-spot-options-menu');
+  if (modal) modal.style.display = 'none';
+  activeOptionsMenuVideoId = null;
+}
+window.closeSpotOptionsMenu = closeSpotOptionsMenu;
+
+// Inicialización de eventos para el menú de opciones del SPOT (⋮)
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('btn-opt-share-wa')?.addEventListener('click', () => {
+    if (activeOptionsMenuVideoId) {
+      const vid = activeOptionsMenuVideoId;
+      closeSpotOptionsMenu();
+      shareSpot(vid);
+    }
+  });
+
+  document.getElementById('btn-opt-copy-link')?.addEventListener('click', () => {
+    if (activeOptionsMenuVideoId) {
+      const directUrl = getPublicShareUrl('?v=' + activeOptionsMenuVideoId);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(directUrl).then(() => {
+          showToast('📋 ¡Enlace copiado al portapapeles!');
+        }).catch(() => {
+          legacyClipboardCopy(directUrl);
+        });
+      } else {
+        legacyClipboardCopy(directUrl);
+      }
+      closeSpotOptionsMenu();
+    }
+  });
+
+  document.getElementById('btn-opt-store-catalog')?.addEventListener('click', () => {
+    if (activeOptionsMenuVideoId) {
+      const video = state.videos.find(v => v.id === activeOptionsMenuVideoId);
+      closeSpotOptionsMenu();
+      if (video && video.storeId) openStoreCatalog(video.storeId);
+    }
+  });
+
+  document.getElementById('btn-opt-details')?.addEventListener('click', () => {
+    if (activeOptionsMenuVideoId) {
+      const vid = activeOptionsMenuVideoId;
+      closeSpotOptionsMenu();
+      openProductDetailSheet(vid);
+    }
+  });
+
+  document.getElementById('btn-opt-report')?.addEventListener('click', () => {
+    if (activeOptionsMenuVideoId) {
+      const video = state.videos.find(v => v.id === activeOptionsMenuVideoId);
+      closeSpotOptionsMenu();
+      if (video) openReportModal(video.id, video.title);
+    }
+  });
+
+  document.getElementById('modal-spot-options-menu')?.addEventListener('click', (e) => {
+    if (e.target.id === 'modal-spot-options-menu') {
+      closeSpotOptionsMenu();
+    }
+  });
+});
 
 function toggleCardSave(videoId, btnEl) {
   const video = state.videos.find(v => v.id === videoId);
@@ -7115,7 +7246,12 @@ function closeCommentsSheet() {
   }
 }
 
-function openCommentsSheet(video) {
+function openCommentsSheet(videoOrId, e) {
+  if (e) e.stopPropagation();
+  let video = videoOrId;
+  if (typeof videoOrId === 'string') {
+    video = state.videos.find(v => v.id === videoOrId);
+  }
   if (!video) return;
   activeCommentsVideoId = video.id;
 

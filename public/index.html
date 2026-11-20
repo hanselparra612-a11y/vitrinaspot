@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=26.3">
+  <link rel="stylesheet" href="css/style.css?v=26.5">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=26.3').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=26.5').catch(function() {});
     }
   </script>
 
@@ -1434,6 +1434,44 @@
     </div>
   </div>
 
+  <!-- MODAL: MENÚ DE OPCIONES DEL SPOT (ESTILO TIKTOK / INSTAGRAM REELS - BOTÓN ⋮) -->
+  <div class="modal-overlay" id="modal-spot-options-menu" style="display: none; z-index: 10400;">
+    <div class="spot-options-dialog">
+      <div class="sheet-drag-handle-bar" onclick="closeSpotOptionsMenu()">
+        <div class="sheet-drag-pill"></div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 0 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <h4 id="spot-options-title" style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85%;">Opciones del SPOT</h4>
+        <button type="button" class="btn-close-comments-round" onclick="closeSpotOptionsMenu()" style="width: 28px; height: 28px; font-size: 0.9rem;">&times;</button>
+      </div>
+      <div class="spot-options-list">
+        <button type="button" class="spot-option-btn" id="btn-opt-share-wa">
+          <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i>
+          <span>Compartir por WhatsApp</span>
+        </button>
+        <button type="button" class="spot-option-btn" id="btn-opt-copy-link">
+          <i class="fa-solid fa-link text-spot"></i>
+          <span>Copiar enlace directo del SPOT</span>
+        </button>
+        <button type="button" class="spot-option-btn" id="btn-opt-store-catalog">
+          <i class="fa-solid fa-store text-gold"></i>
+          <span>Ver catálogo de la tienda</span>
+        </button>
+        <button type="button" class="spot-option-btn" id="btn-opt-details">
+          <i class="fa-solid fa-circle-info text-spot"></i>
+          <span>Ver ficha y fotos del producto</span>
+        </button>
+        <button type="button" class="spot-option-btn btn-opt-danger" id="btn-opt-report">
+          <i class="fa-solid fa-flag"></i>
+          <span>Reportar contenido o vendedor</span>
+        </button>
+        <button type="button" class="spot-option-btn btn-opt-cancel" onclick="closeSpotOptionsMenu()">
+          <span>Cancelar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 5: CALIFICAR TIENDA (1 A 5 ESTRELLAS) -->
   <div class="modal-overlay" id="modal-rate-store" style="display: none;">
     <div class="modal-dialog modal-sm">
@@ -2176,6 +2214,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=26.3"></script>
+  <script src="js/app.js?v=26.5"></script>
 </body>
 </html>

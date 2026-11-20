@@ -1174,11 +1174,11 @@ body.vitrina-header-collapsed .categories-nav {
 .reel-side-actions {
   position: absolute;
   right: 14px;
-  bottom: 125px;
+  bottom: 155px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   z-index: 25;
   will-change: opacity;
 }
@@ -1255,10 +1255,11 @@ body.vitrina-header-collapsed .categories-nav {
 }
 .side-action-btn:hover { transform: scale(1.08); }
 
-.action-icon-circle {
+.action-icon-circle,
+.side-icon-circle {
   width: 38px;
   height: 38px;
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -1312,10 +1313,14 @@ body.vitrina-header-collapsed .categories-nav {
   100% { transform: scale(1.15) rotate(0deg); }
 }
 
-.action-count {
-  font-size: 0.75rem;
+.action-count,
+.action-label {
+  font-size: 0.68rem;
   font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  line-height: 1.1;
+  text-align: center;
 }
 
 /* CORAZÓN FLOTANTE GIGANTE EN EL CENTRO AL DAR LIKE */
@@ -4739,8 +4744,8 @@ body.admin-active-view .main-viewport {
   .floating-fab-upload {
     display: flex !important;
     position: fixed !important;
-    right: 14px !important;
-    bottom: max(88px, calc(env(safe-area-inset-bottom, 0px) + 82px)) !important;
+    right: 12px !important;
+    bottom: max(78px, calc(env(safe-area-inset-bottom, 0px) + 72px)) !important;
     width: 44px !important;
     height: 44px !important;
     border-radius: 50% !important;
@@ -4938,11 +4943,11 @@ body.admin-active-view .main-viewport {
     margin-top: 2px !important;
   }
 
-  /* COLUMNA LATERAL EN MÓVIL: AVATAR Y ACCIONES ELEVADAS CON DISTANCIAS IDÉNTICAS */
+  /* COLUMNA LATERAL EN MÓVIL: AVATAR Y ACCIONES ELEVADAS (TOTALMENTE DESPEJADAS DEL BOTÓN +) */
   .reel-side-actions {
     right: 10px !important;
-    bottom: max(120px, calc(env(safe-area-inset-bottom, 0px) + 112px)) !important;
-    gap: 9px !important;
+    bottom: max(158px, calc(env(safe-area-inset-bottom, 0px) + 152px)) !important;
+    gap: 8px !important;
   }
 
   .store-badge-action {
@@ -4957,14 +4962,15 @@ body.admin-active-view .main-viewport {
     box-sizing: border-box !important;
   }
 
-  .action-icon-circle {
+  .action-icon-circle,
+  .side-icon-circle {
     width: 36px !important;
     height: 36px !important;
     font-size: 1.05rem !important;
-    background: rgba(0, 0, 0, 0.42) !important;
+    background: rgba(0, 0, 0, 0.45) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35) !important;
   }
 
@@ -4974,7 +4980,8 @@ body.admin-active-view .main-viewport {
     margin: 0 !important;
   }
 
-  .side-action-btn .action-count {
+  .side-action-btn .action-count,
+  .side-action-btn .action-label {
     font-size: 0.65rem !important;
     font-weight: 600 !important;
     color: rgba(255, 255, 255, 0.9) !important;
@@ -5004,20 +5011,22 @@ body.admin-active-view .main-viewport {
   /* AJUSTE PARA PANTALLAS MÓVILES COMPACTAS O DE ALTURA REDUCIDA (Evita colisiones entre acciones y WhatsApp) */
   @media (max-height: 720px), (max-width: 390px) {
     .reel-side-actions {
-      bottom: max(112px, calc(env(safe-area-inset-bottom, 0px) + 108px)) !important;
+      bottom: max(148px, calc(env(safe-area-inset-bottom, 0px) + 142px)) !important;
       gap: 6px !important;
       right: 8px !important;
     }
-    .action-icon-circle {
-      width: 33px !important;
-      height: 33px !important;
+    .action-icon-circle,
+    .side-icon-circle {
+      width: 32px !important;
+      height: 32px !important;
       font-size: 0.95rem !important;
     }
     .store-ring-wrapper {
-      width: 33px !important;
-      height: 33px !important;
+      width: 32px !important;
+      height: 32px !important;
     }
-    .side-action-btn .action-count {
+    .side-action-btn .action-count,
+    .side-action-btn .action-label {
       font-size: 0.58rem !important;
     }
     .reel-bottom-info {
@@ -10573,4 +10582,81 @@ body.spotplay-active #spotplay-top-bar {
     padding: 10px 14px;
     font-size: 0.84rem;
   }
+}
+
+/* =========================================================
+   MODAL HOJA DE ACCIONES Y MENÚ DE OPCIONES DEL SPOT (⋮)
+   ========================================================= */
+.spot-options-dialog {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  margin: auto auto 0 auto !important;
+  background-color: #121620 !important;
+  border-radius: 22px 22px 0 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-bottom: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 10px 16px 24px 16px !important;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.95) !important;
+  animation: slideUpOptions 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes slideUpOptions {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.spot-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.spot-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 15px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.spot-option-btn:hover,
+.spot-option-btn:active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(0.99);
+}
+
+.spot-option-btn i {
+  font-size: 1.15rem;
+  width: 22px;
+  text-align: center;
+}
+
+.spot-option-btn.btn-opt-danger {
+  color: #ff4d4f;
+  border-color: rgba(255, 77, 79, 0.25);
+}
+
+.spot-option-btn.btn-opt-danger:hover {
+  background: rgba(255, 77, 79, 0.12);
+}
+
+.spot-option-btn.btn-opt-cancel {
+  margin-top: 4px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
 }
