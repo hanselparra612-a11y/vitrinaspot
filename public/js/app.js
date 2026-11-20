@@ -967,17 +967,58 @@ function renderContinuousFeed() {
           <span class="welcome-sub-highlight">¿Vendes productos o tienes negocio?</span> Publica tu vitrina <strong>100% GRATIS</strong> sin comisiones ni intermediarios.
         </p>
 
-        <!-- PÍLDORAS VIP DE NEÓN 3D (BENEFICIOS DEL NUEVO MODELO) -->
-        <div class="welcome-hook-benefits-grid">
-          <div class="welcome-benefit-item benefit-free">
-            <div class="benefit-icon-wrapper">
-              <i class="fa-solid fa-gift text-green"></i>
-            </div>
-            <div>
-              <strong>100% Gratuito</strong>
-              <span>${Number(state.pricing?.free_spots_quota) || 5} SPOTS a $0 COP</span>
-            </div>
+        <!-- SHOWCASE VISUAL: SMARTPHONE CON EL FEED ENCENDIDO EN UN SPOT PUBLICITARIO -->
+        <div class="welcome-phone-showcase">
+          <div class="phone-showcase-caption">
+            <i class="fa-solid fa-wand-magic-sparkles text-gold"></i>
+            <span>Publica tus productos como SPOTS</span>
           </div>
+
+          <div class="phone-mockup-wrapper">
+            <div class="phone-mockup-body">
+              <div class="phone-mockup-notch"></div>
+              
+              <!-- PANTALLA DEL CELULAR CON SPOT PUBLICITARIO EN VIVO -->
+              <div class="phone-mockup-screen">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80" alt="Spot en Vivo" class="phone-mockup-img" loading="eager">
+                
+                <div class="phone-mockup-overlay">
+                  <!-- Header del Spot dentro del teléfono -->
+                  <div class="phone-spot-top">
+                    <span class="phone-spot-badge-live">
+                      <span class="live-dot-pulse"></span> SPOT EN VIVO
+                    </span>
+                    <span class="phone-spot-badge-quota">
+                      ${Number(state.pricing?.free_spots_quota) || 100} SPOTS $0 COP
+                    </span>
+                  </div>
+
+                  <!-- Contenido inferior del Spot dentro del teléfono -->
+                  <div class="phone-spot-bottom">
+                    <div class="phone-spot-store">
+                      <span class="phone-store-avatar">🏬</span>
+                      <span class="phone-store-name">Tu Tienda Oficial</span>
+                      <i class="fa-solid fa-circle-check text-green phone-verified"></i>
+                    </div>
+                    <div class="phone-spot-title">Zapatillas Urbanas Red Edition</div>
+                    <div class="phone-spot-action-row">
+                      <span class="phone-spot-price">$189.900 COP</span>
+                      <span class="phone-spot-chat-btn">
+                        <i class="fa-solid fa-comments"></i> Chat Directo
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Efecto reflejo de cristal del teléfono -->
+                <div class="phone-screen-glare"></div>
+              </div>
+            </div>
+
+            <!-- Sombra y resplandor neón exterior del teléfono -->
+            <div class="phone-ambient-glow"></div>
+          </div>
+        </div>
           <div class="welcome-benefit-item benefit-wa">
             <div class="benefit-icon-wrapper">
               <i class="fa-solid fa-comments text-green"></i>
