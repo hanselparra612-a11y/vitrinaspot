@@ -219,20 +219,13 @@
   </div>
 
   <!-- =========================================================
-       2 y 3. CABECERA COLAPSABLE INTELIGENTE DE VITRINA (HISTORIAS + CATEGORÍAS)
-       Al deslizar el feed hacia abajo se recoge suavemente para dar altura completa a las fotos
+       2. RIEL SUPERIOR DE HISTORIAS RETIRADO (PANTALLA DESPEJADA 100% LIMPIA)
+       Mi Tienda trasladada abajo junto al botón + con distancia equilibrada
        ========================================================= -->
-  <div id="vitrina-collapsible-header" class="vitrina-collapsible-header">
-    <!-- 2. BARRA DE SPOTS DESTACADOS (HISTORIAS VIP) -->
-    <section class="stories-bar-section" id="stories-section">
-      <!-- PERFIL FIJO DEL USUARIO / MI NEGOCIO (ANCLADO A LA IZQUIERDA, NUNCA SE DESPLAZA) -->
-      <div class="my-profile-pinned-slot" id="my-profile-pinned-slot">
-        <!-- Se inyecta dinámicamente Mi Negocio fijo -->
-      </div>
-      <!-- RIEL HORIZONTAL DE LAS DEMÁS TIENDAS (DESLIZABLE) -->
-      <div class="stories-scroll-container" id="stories-container">
-        <!-- Se cargan dinámicamente las tiendas que se deslizan -->
-      </div>
+  <div id="vitrina-collapsible-header" class="vitrina-collapsible-header" style="display: none !important;">
+    <section class="stories-bar-section" id="stories-section" style="display: none !important;">
+      <div class="my-profile-pinned-slot" id="my-profile-pinned-slot"></div>
+      <div class="stories-scroll-container" id="stories-container"></div>
     </section>
   </div>
 
@@ -2243,6 +2236,11 @@
     <i class="fa-solid fa-plus"></i>
   </button>
 
+  <!-- BOTÓN FLOTANTE MI TIENDA (JUSTO DEBAJO DEL BOTÓN + CON DISTANCIA EQUILIBRADA) -->
+  <button type="button" class="floating-fab-my-store" id="btn-floating-my-store" title="Mi Tienda">
+    <i class="fa-solid fa-store"></i>
+  </button>
+
   <!-- TOAST FLOTANTE DE NOTIFICACIONES -->
   <div class="toast-bubble" id="app-toast" style="display: none;">
     <i class="fa-solid fa-circle-check toast-bubble-icon" id="toast-icon"></i>
@@ -2251,6 +2249,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=26.5"></script>
+  <script src="js/app.js?v=26.7"></script>
 </body>
 </html>

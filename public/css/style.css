@@ -481,54 +481,18 @@ body.dark-theme {
    tras la Navbar para expandir el 100% de la pantalla para los videos.
    Al volver al inicio (scroll up), se despliega de nuevo con fluidez.
    ========================================================= */
-.vitrina-collapsible-header {
-  position: relative;
-  z-index: 900;
-  background-color: var(--bg-deep);
-  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease;
-  will-change: max-height, transform, opacity;
-}
-
-/* RIEL SUPERIOR 1: HISTORIAS VIP (SE RECOGE SUAVEMENTE TRAS LA NAVBAR) */
+.vitrina-collapsible-header,
 .stories-bar-section {
-  position: relative;
-  z-index: 850;
-  background-color: var(--bg-deep);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 8px 14px;
-  max-height: 85px;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  opacity: 1;
-  transform: translateY(0);
-  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease,
-              padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              margin 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-bottom 0.25s ease;
-  overflow: hidden;
-  will-change: max-height, transform, opacity;
-}
-
-/* REPLIEGUE COMPLETO: DESLIZAMIENTO SUAVE HACIA ARRIBA TRAS LA NAVBAR */
-body.vitrina-header-collapsed .vitrina-collapsible-header,
-body.vitrina-header-collapsed .stories-bar-section {
-  max-height: 0 !important;
+  display: none !important;
   height: 0 !important;
+  max-height: 0 !important;
   min-height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  border-bottom: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
   opacity: 0 !important;
-  transform: translateY(-100%) !important;
   pointer-events: none !important;
-  overflow: hidden !important;
+  visibility: hidden !important;
 }
 
 /* RANURA FIJA DEL PERFIL DE USUARIO (ANCLADO A LA IZQUIERDA, NUNCA SE DESPLAZA) */
@@ -4741,6 +4705,33 @@ body.admin-active-view .main-viewport {
   }
 
   /* BOTÓN FLOTANTE VIP DE PUBLICACIÓN EN MÓVILES (+ BLANCO Y POSICIÓN ELEVADA SEGURA) */
+  /* BOTÓN FLOTANTE MI TIENDA (JUSTO DEBAJO DEL BOTÓN + CON DISTANCIA EQUILIBRADA) */
+  .floating-fab-my-store {
+    display: flex !important;
+    position: fixed !important;
+    right: 12px !important;
+    bottom: max(22px, calc(env(safe-area-inset-bottom, 0px) + 16px)) !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: #0f172a !important;
+    color: #ffb800 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 2px solid rgba(255, 184, 0, 0.85) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), 0 0 12px rgba(255, 184, 0, 0.25) !important;
+    z-index: 950 !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .floating-fab-my-store:active {
+    transform: scale(0.90) !important;
+  }
+
   .floating-fab-upload {
     display: flex !important;
     position: fixed !important;
@@ -4800,8 +4791,10 @@ body.admin-active-view .main-viewport {
   .user-dropdown.show {
     display: flex !important;
     position: fixed !important;
-    top: 128px !important;
-    left: 12px !important;
+    bottom: max(74px, calc(env(safe-area-inset-bottom, 0px) + 68px)) !important;
+    right: 12px !important;
+    left: auto !important;
+    top: auto !important;
     right: auto !important;
     width: 290px !important;
     max-width: calc(100vw - 24px) !important;

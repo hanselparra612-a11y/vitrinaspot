@@ -504,6 +504,25 @@ function updateNavStoreUI() {
     }
   }
 
+  // Actualizar Botón Flotante "Mi Tienda" en Móviles (Debajo del botón +)
+  const floatingMyStoreBtn = document.getElementById('btn-floating-my-store');
+  if (floatingMyStoreBtn) {
+    if (state.currentStore) {
+      floatingMyStoreBtn.innerHTML = `
+        <img src="${state.currentStore.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=100&auto=format&fit=crop&q=80'}" alt="Mi Tienda" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=100&auto=format&fit=crop&q=80';">
+        <span class="my-store-fab-badge" style="position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #ffb800; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #000; border: 1.5px solid #0b0f19; font-weight: 900;">⭐</span>
+      `;
+      floatingMyStoreBtn.title = `Mi Negocio: ${state.currentStore.name}`;
+      floatingMyStoreBtn.style.borderColor = 'rgba(255, 184, 0, 0.9)';
+    } else {
+      floatingMyStoreBtn.innerHTML = `
+        <i class="fa-solid fa-store" style="font-size: 1.25rem; color: #ffb800;"></i>
+      `;
+      floatingMyStoreBtn.title = 'Crear Mi Tienda / Ingresar';
+      floatingMyStoreBtn.style.borderColor = 'rgba(255, 184, 0, 0.6)';
+    }
+  }
+
   // Acceso al Panel Maestro: PRIVADO Y CONFIDENCIAL (SOLO VISIBLE PARA EL DUEÑO)
   // El público general y tiendas normales nunca ven este botón.
   const isOwner = Boolean(state.adminToken) || (state.currentStore && state.currentStore.email === 'admin@vitrinaspot.com');
@@ -5333,10 +5352,17 @@ function setupEventListeners() {
     userDropdown.classList.toggle('show');
   });
 
+  // Botón flotante Mi Tienda en móvil (debajo del botón +)
+  const floatingMyStoreBtn = document.getElementById('btn-floating-my-store');
+  floatingMyStoreBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDropdown?.classList.toggle('show');
+  });
+
   // Cierre limpio al hacer clic o tocar FUERA del menú
   document.addEventListener('click', (e) => {
     cityMenu?.classList.remove('show');
-    if (!e.target.closest('#user-dropdown-menu') && !e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu')) {
+    if (!e.target.closest('#user-dropdown-menu') && !e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu') && !e.target.closest('#btn-floating-my-store')) {
       userDropdown?.classList.remove('show');
     }
     if (floatingSearchBar && floatingSearchBar.style.display === 'block') {
@@ -5347,7 +5373,7 @@ function setupEventListeners() {
 
   document.addEventListener('touchend', (e) => {
     if (userDropdown && userDropdown.classList.contains('show')) {
-      if (!e.target.closest('#user-dropdown-menu') && !e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu')) {
+      if (!e.target.closest('#user-dropdown-menu') && !e.target.closest('#story-my-business-btn') && !e.target.closest('#btn-nav-store-menu') && !e.target.closest('#btn-floating-my-store')) {
         userDropdown.classList.remove('show');
       }
     }
@@ -8103,8 +8129,12 @@ function showView(viewId) {
 
   // Ocultar botón flotante FAB fuera del feed público
   const floatingFab = document.getElementById('btn-floating-fab-upload');
+  const floatingMyStore = document.getElementById('btn-floating-my-store');
   if (floatingFab) {
     floatingFab.style.display = isFeedView ? '' : 'none';
+  }
+  if (floatingMyStore) {
+    floatingMyStore.style.display = isFeedView ? '' : 'none';
   }
 
   // Pausar video si sale del feed
