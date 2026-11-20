@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=26.1">
+  <link rel="stylesheet" href="css/style.css?v=26.2">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=26.1').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=26.2').catch(function() {});
     }
   </script>
 
@@ -84,7 +84,7 @@
         </div>
 
         <!-- SELECTOR DE CATEGORÍA UNIFICADO EN BARRA SUPERIOR (31 CATEGORÍAS) -->
-        <button type="button" class="city-btn category-nav-btn" id="btn-nav-category-picker" title="Explorar 31 Categorías Comerciales">
+        <button type="button" class="city-btn category-nav-btn" id="btn-nav-category-picker" title="Explorar 32 Categorías Comerciales">
           <i class="fa-solid fa-layer-group" style="color: var(--spot-gold, #ffb800);"></i>
           <span id="current-category-label">Categorías</span>
           <i class="fa-solid fa-chevron-down city-arrow"></i>
@@ -1793,6 +1793,7 @@
               <option value="Remodelaciones & Oficios">🧱 Remodelaciones & Oficios (Pintura, Drywall, Plomería, Talleres)</option>
               <option value="Acarreos & Mudanzas">🚚 Acarreos & Mudanzas (Fletes, Trasteos, Carga)</option>
               <option value="Empleo & Vacantes">📢 Empleo & Vacantes (Ofertas Laborales, Contratación)</option>
+              <option value="Busco Empleo / Se Ofrece">💼 Busco Empleo / Se Ofrece (Profesiones, Técnicos, Ayudantes)</option>
               <option value="Instrumentos Musicales">🎸 Instrumentos Musicales (Guitarras, Teclados, Sonido)</option>
               <option value="Arte & Manualidades">🎨 Arte & Manualidades (Pinturas, Esculturas, Tejidos)</option>
               <option value="Antigüedades & Colección">🏺 Antigüedades & Colección (Monedas, Vinilos, Reliquias)</option>
@@ -2155,6 +2156,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=26.1"></script>
+  <script src="js/app.js?v=26.2"></script>
 </body>
 </html>
