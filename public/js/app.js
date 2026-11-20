@@ -803,7 +803,7 @@ function scrollCardPhoto(videoId, direction = 'next', e) {
     e.preventDefault();
     e.stopPropagation();
   }
-  const slider = document.getElementById(`slider-${videoId}`);
+  const slider = document.getElementById(`slider-${videoId}`) || document.querySelector(`.reel-photos-slider[data-id="${videoId}"]`);
   if (slider) {
     const slideW = slider.clientWidth || 360;
     const currentScroll = slider.scrollLeft;
@@ -882,6 +882,285 @@ window.prevProductPhoto = prevProductPhoto;
 // SCROLL CONTINUO NATIVO TIKTOK/REELS (CSS SCROLL SNAP)
 // ==========================================
 let feedObserver = null;
+
+
+// ==========================================================================
+// MOTOR DE DESCUBRIMIENTO CONTINUO: BUCLE INFINITO ALEATORIO (ENDLESS FEED)
+// ==========================================================================
+function buildSingleProductCardHTML(video, idx) {
+  let photos = [];
+  if (Array.isArray(video.photos) && video.photos.length > 0) {
+    photos = video.photos.filter(p => typeof p === 'string' && p.trim().length > 0);
+  } else if (Array.isArray(video.detailPhotos) && video.detailPhotos.length > 0) {
+    photos = video.detailPhotos.filter(p => typeof p === 'string' && p.trim().length > 0);
+  } else if (video.thumbnailUrl) {
+    photos = [video.thumbnailUrl];
+  }
+  if (photos.length === 0) {
+    photos.push('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80');
+  }
+  video._allPhotos = photos;
+  video._currentPhotoIdx = 0;
+
+  const isLiked = state.likedVideoIds.has(video.id);
+  const isSaved = state.savedVideoIds.has(video.id);
+  const isReported = state.reportedVideoIds.has(video.id);
+  const isMyVideo = state.currentStore && state.currentStore.id === video.storeId;
+
+  const store = state.stores.find(s => s.id === video.storeId) || { whatsapp: video.storeWhatsapp || '+573128525929' };
+  const rawWa = store.whatsapp || video.storeWhatsapp || '+573128525929';
+  let waClean = rawWa.replace(/[^0-9]/g, '');
+  if (waClean.length === 10 && !waClean.startsWith('57')) {
+    waClean = '57' + waClean;
+  }
+  const videoDirectUrl = getPublicShareUrl('?v=' + video.id);
+  const rawWaMsg = '¡Hola! Me interesa este producto, ¿sigue disponible?\n\n' + videoDirectUrl;
+  const msg = encodeURIComponent(rawWaMsg);
+  const waLink = 'https://wa.me/' + waClean + '?text=' + msg;
+  const tgLink = getTelegramLink(store.telegram || video.storeTelegram, rawWaMsg);
+  const primaryChat = store.primaryChat || 'whatsapp';
+
+  const uid = video.id + '_' + idx;
+
+  return `
+    <article class="reel-player-card" id="card-${uid}" data-id="${video.id}" data-uid="${uid}" data-index="${idx}">
+      <!-- CARRUSEL DE FOTOS NATIVO (HASTA 5 FOTOS DESLIZABLES HORIZONTALMENTE) -->
+      <div class="reel-photo-viewport" id="viewport-${uid}">
+        <div class="reel-photos-slider" id="slider-${uid}" data-id="${video.id}">
+          ${photos.map((pUrl, pIdx) => `
+          <div class="reel-photo-slide" data-idx="${pIdx}">
+            <img id="photo-${uid}-${pIdx}" class="reel-hero-photo" src="${pUrl}" alt="${escapeHtml(video.title)} - Foto ${pIdx + 1}" loading="${pIdx === 0 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';">
+          </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- INDICADOR ÚNICO MULTIFOTO (SI TIENE MÁS DE 1 FOTO) -->
+      ${photos.length > 1 ? `
+      <button type="button" class="photo-counter-badge" id="badge-photos-${uid}" onclick="openCardPhotoGallery('${video.id}', event)" title="Ver todas las fotos">
+        <i class="fa-solid fa-images"></i>
+        <span class="counter-text">1/${photos.length}</span>
+      </button>
+
+      <!-- FLECHAS LATERALES Y PUNTOS INDICADORES DE FOTOS -->
+      <button type="button" class="photo-nav-arrow photo-nav-prev" onclick="scrollCardPhoto('${uid}', 'prev', event)" title="Foto Anterior" aria-label="Foto Anterior">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button type="button" class="photo-nav-arrow photo-nav-next" onclick="scrollCardPhoto('${uid}', 'next', event)" title="Siguiente Foto" aria-label="Siguiente Foto">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <div class="photo-dots-row" id="dots-${uid}">
+        ${photos.map((_, pIdx) => `<div class="photo-dot ${pIdx === 0 ? 'active' : ''}" onclick="selectCardPhoto('${uid}', ${pIdx}, event)"></div>`).join('')}
+      </div>
+      ` : ''}
+
+      <!-- COLUMNA DERECHA DE ACCIONES FLOTANTES (ICONOS TIKTOK / INSTAGRAM REELS) -->
+      <div class="reel-side-actions">
+        <!-- LOGO TIENDA CON ANILLO DE ESTADO -->
+        <button type="button" class="side-action-btn store-badge-action" onclick="openStoreCatalog('${video.storeId}')" title="Ver Tienda y Catálogo">
+          <div class="store-ring-wrapper ${video.hasSpot ? 'has-spot' : ''}">
+            <img src="${video.storeAvatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(video.storeName)}" class="reel-store-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80';" loading="lazy">
+            <div class="verified-mini-check">
+              <i class="fa-solid fa-check"></i>
+            </div>
+          </div>
+          <span class="action-label">Tienda</span>
+        </button>
+
+        <!-- ME GUSTA (❤️ PURO SIN AROS ROJOS) -->
+        <button type="button" class="side-action-btn like-action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLikeSpot('${video.id}', event)" title="Me Gusta">
+          <div class="side-icon-circle">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <span class="action-label like-count-label" id="like-count-${uid}">${video.likes || 0}</span>
+        </button>
+
+        <!-- COMENTARIOS Y PREGUNTAS -->
+        <button type="button" class="side-action-btn comments-action-btn" onclick="openCommentsSheet('${video.id}', event)" title="Preguntas y Comentarios">
+          <div class="side-icon-circle">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <span class="action-label" id="comments-count-${uid}">${video.commentsCount || 0}</span>
+        </button>
+
+        <!-- COMPARTIR SPOT -->
+        <button type="button" class="side-action-btn share-action-btn" onclick="shareSpot('${video.id}', event)" title="Compartir este producto">
+          <div class="side-icon-circle">
+            <i class="fa-solid fa-share-nodes"></i>
+          </div>
+          <span class="action-label">Compartir</span>
+        </button>
+
+        <!-- VER DETALLE COMPLETO -->
+        <button type="button" class="side-action-btn detail-action-btn" onclick="openProductDetailSheet('${video.id}', event)" title="Ver detalles y fotos">
+          <div class="side-icon-circle">
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+          <span class="action-label">Info</span>
+        </button>
+
+        <!-- MENÚ DE OPCIONES DEL SPOT -->
+        <button type="button" class="side-action-btn more-options-btn" onclick="openSpotOptionsMenu('${video.id}', event)" title="Más opciones">
+          <div class="side-icon-circle">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </div>
+        </button>
+      </div>
+
+      <!-- INFORMACIÓN INFERIOR DEL PRODUCTO -->
+      <div class="reel-bottom-info">
+        <div class="store-info-row" onclick="openStoreCatalog('${video.storeId}')">
+          <h4 class="store-display-name">${escapeHtml(video.storeName)}</h4>
+          <span class="store-stars-badge" onclick="event.stopPropagation(); openRateModal('${video.storeId}', '${escapeHtml(video.storeName)}')">
+            <i class="fa-solid fa-star"></i> <span>${video.storeRating || '5.0'}</span>
+          </span>
+          <span class="city-location-badge">
+            <i class="fa-solid fa-location-dot"></i> <span>${escapeHtml(video.city || 'Colombia')}</span>
+          </span>
+        </div>
+
+        <!-- TÍTULO DEL PRODUCTO Y PRECIO DESTACADO -->
+        <h3 class="reel-product-title">${escapeHtml(video.title)}</h3>
+
+        <div class="price-and-desc-row">
+          <div class="price-tag-badge">${escapeHtml(video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP'))}</div>
+          ${video.delivery ? `<div class="delivery-pill-badge">${escapeHtml(cleanDelivery(video.delivery))}</div>` : ''}
+        </div>
+
+        ${video.description && !video.description.startsWith('Contáctanos') ? `
+        <p class="reel-product-desc" onclick="this.classList.toggle('expanded')" title="Toca para ver u ocultar descripción completa">${escapeHtml(video.description)}</p>` : ''}
+
+        <!-- BOTONES PROTAGONISTAS: CHAT DIRECTO (WHATSAPP / TELEGRAM / AMBOS) -->
+        ${(tgLink && primaryChat === 'both' && waLink) ? `
+        <div class="reel-action-main-container dual-chat-actions">
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
+            <div class="btn-wa-inner">
+              <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
+              <span class="btn-wa-text">WhatsApp</span>
+            </div>
+          </a>
+          <a href="${tgLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn telegram-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por Telegram">
+            <div class="btn-wa-inner">
+              <i class="fa-brands fa-telegram wa-logo-bounce"></i>
+              <span class="btn-wa-text">Telegram</span>
+            </div>
+          </a>
+        </div>
+        ` : (tgLink && primaryChat === 'telegram') ? `
+        <div class="reel-action-main-container">
+          <a href="${tgLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn telegram-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por Telegram">
+            <div class="btn-wa-inner">
+              <i class="fa-brands fa-telegram wa-logo-bounce"></i>
+              <span class="btn-wa-text">Pedir por Telegram</span>
+            </div>
+          </a>
+        </div>
+        ` : `
+        <div class="reel-action-main-container">
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
+            <div class="btn-wa-inner">
+              <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
+              <span class="btn-wa-text">Pedir al Chat Directo</span>
+            </div>
+          </a>
+        </div>
+        `}
+
+        <!-- LEYENDA LEGAL DE SEGURIDAD -->
+        <div class="safety-legal-text">
+          <i class="fa-solid fa-shield-halved"></i> VitrinaSpot es vitrina publicitaria. Acuerdos y envíos directos vía chat.
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function appendInfiniteDiscoveryBatch() {
+  if (state._isAppendingInfiniteBatch) return;
+  if (!Array.isArray(state.videos) || state.videos.length === 0) return;
+  const feedContainer = document.getElementById('feed-scroll-container');
+  if (!feedContainer || feedContainer.style.display === 'none') return;
+
+  state._isAppendingInfiniteBatch = true;
+
+  // Barajar aleatoriamente una copia de los videos disponibles (Shuffle inteligente)
+  const pool = [...state.videos];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = pool[i];
+    pool[i] = pool[j];
+    pool[j] = temp;
+  }
+
+  // Anti-repetición consecutiva: evitar que el primer elemento sea idéntico al último mostrado
+  const lastVideo = state._infiniteFeedList && state._infiniteFeedList.length > 0 ? state._infiniteFeedList[state._infiniteFeedList.length - 1] : null;
+  if (lastVideo && pool.length > 1 && pool[0].id === lastVideo.id) {
+    const swapIdx = Math.floor(Math.random() * (pool.length - 1)) + 1;
+    const temp = pool[0];
+    pool[0] = pool[swapIdx];
+    pool[swapIdx] = temp;
+  }
+
+  // Tomar lote (mínimo 4 o todo el catálogo)
+  const batchSize = Math.max(4, Math.min(pool.length, 8));
+  const batch = pool.slice(0, batchSize);
+
+  const feedFreq = Math.max(2, Number(state.admobConfig?.feedAdFrequency) || 4);
+  let batchHTML = '';
+
+  batch.forEach(video => {
+    const newIdx = state._totalRenderedSpotsCount || state.videos.length;
+    state._totalRenderedSpotsCount = (state._totalRenderedSpotsCount || state.videos.length) + 1;
+    if (!state._infiniteFeedList) state._infiniteFeedList = [...state.videos];
+    state._infiniteFeedList.push(video);
+
+    const cardHTML = buildSingleProductCardHTML(video, newIdx);
+    let adMobCardHTML = '';
+    if ((newIdx + 1) % feedFreq === 0) {
+      adMobCardHTML = `
+        <article class="reel-player-card reel-admob-card" id="card-admob-${newIdx}" data-id="admob-${newIdx}" data-index="admob-${newIdx}">
+          <div class="admob-card-badge"><i class="fa-solid fa-bullhorn text-gold"></i> Publicidad Patrocinada</div>
+          <div class="admob-card-viewport">
+            <div class="admob-card-inner">
+              <div class="admob-icon-circle"><i class="fa-solid fa-store text-gold"></i></div>
+              <h3>Espacio Publicitario Google AdMob</h3>
+              <p>Promociones y anuncios personalizados para Colombia vía Google AdMob.</p>
+              <div class="admob-pill-tag"><i class="fa-brands fa-google"></i> Google AdMob Ready</div>
+            </div>
+          </div>
+          <div class="reel-bottom-sheet">
+            <div class="safety-legal-text">
+              <i class="fa-brands fa-google text-gold"></i> Anuncios gestionados automáticamente por la red de Google AdMob.
+            </div>
+          </div>
+        </article>
+      `;
+    }
+    batchHTML += (cardHTML + adMobCardHTML);
+  });
+
+  feedContainer.insertAdjacentHTML('beforeend', batchHTML);
+
+  // Observar nuevas tarjetas con el IntersectionObserver
+  if (feedObserver) {
+    feedContainer.querySelectorAll('.reel-player-card:not([data-observed="true"])').forEach(card => {
+      card.setAttribute('data-observed', 'true');
+      feedObserver.observe(card);
+    });
+  }
+
+  // Conectar gestos en nuevas tarjetas
+  setupHorizontalPhotoGestures();
+
+  // Pre-cargar fotos de las nuevas tarjetas
+  batch.slice(0, 3).forEach(v => preloadAdjacentPhotos(v));
+
+  setTimeout(() => {
+    state._isAppendingInfiniteBatch = false;
+  }, 300);
+}
+window.appendInfiniteDiscoveryBatch = appendInfiniteDiscoveryBatch;
+
 
 function renderContinuousFeed() {
   const emptyState = document.getElementById('feed-empty-state');
@@ -1093,207 +1372,18 @@ function renderContinuousFeed() {
     </article>
   ` : '';
 
-  // Renderizar todas las tarjetas de productos
+  // Renderizar todas las tarjetas de productos con soporte de Bucle Infinito
+  state._infiniteFeedList = [...state.videos];
+  state._totalRenderedSpotsCount = state.videos.length;
+  state._isAppendingInfiniteBatch = false;
+
+  const feedFreq = Math.max(2, Number(state.admobConfig?.feedAdFrequency) || 4);
   const productCardsHTML = state.videos.map((video, idx) => {
-    // 1. Preparar lista canónica de fotos (evita duplicados o imágenes eliminadas)
-    let photos = [];
-    if (Array.isArray(video.photos) && video.photos.length > 0) {
-      photos = video.photos.filter(p => typeof p === 'string' && p.trim().length > 0);
-    } else if (Array.isArray(video.detailPhotos) && video.detailPhotos.length > 0) {
-      photos = video.detailPhotos.filter(p => typeof p === 'string' && p.trim().length > 0);
-    } else if (video.thumbnailUrl) {
-      photos = [video.thumbnailUrl];
-    }
-    if (photos.length === 0) {
-      photos.push('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80');
-    }
-    video._allPhotos = photos;
-    video._currentPhotoIdx = 0;
-
-    const isLiked = state.likedVideoIds.has(video.id);
-    const isSaved = state.savedVideoIds.has(video.id);
-    const isReported = state.reportedVideoIds.has(video.id);
-    const isMyVideo = state.currentStore && state.currentStore.id === video.storeId;
-
-    // Enlace de WhatsApp directo (100% visible en todos los anuncios)
-    const store = state.stores.find(s => s.id === video.storeId) || { whatsapp: video.storeWhatsapp || '+573128525929' };
-    const rawWa = store.whatsapp || video.storeWhatsapp || '+573128525929';
-    let waClean = rawWa.replace(/[^0-9]/g, '');
-    if (waClean.length === 10 && !waClean.startsWith('57')) {
-      waClean = `57${waClean}`;
-    }
-    const videoDirectUrl = getPublicShareUrl(`?v=${video.id}`);
-    const rawWaMsg = `¡Hola! Me interesa este producto, ¿sigue disponible?\n\n${videoDirectUrl}`;
-    const msg = encodeURIComponent(rawWaMsg);
-    const waLink = `https://wa.me/${waClean}?text=${msg}`;
-    const tgLink = getTelegramLink(store.telegram || video.storeTelegram, rawWaMsg);
-    const primaryChat = store.primaryChat || 'whatsapp';
-
-    return `
-      <article class="reel-player-card" id="card-${video.id}" data-id="${video.id}" data-index="${idx}">
-        <!-- CARRUSEL DE FOTOS NATIVO (HASTA 5 FOTOS DESLIZABLES HORIZONTALMENTE) -->
-        <div class="reel-photo-viewport" id="viewport-${video.id}">
-          <div class="reel-photos-slider" id="slider-${video.id}" data-id="${video.id}">
-            ${photos.map((pUrl, pIdx) => `
-            <div class="reel-photo-slide" data-idx="${pIdx}">
-              <img id="photo-${video.id}-${pIdx}" class="reel-hero-photo" src="${pUrl}" alt="${escapeHtml(video.title)} - Foto ${pIdx + 1}" loading="${pIdx === 0 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';">
-            </div>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- INDICADOR ÚNICO MULTIFOTO (SI TIENE MÁS DE 1 FOTO) -->
-        ${photos.length > 1 ? `
-        <button type="button" class="photo-counter-badge" id="badge-photos-${video.id}" onclick="openCardPhotoGallery('${video.id}', event)" title="Ver todas las fotos">
-          <i class="fa-solid fa-images"></i>
-          <span class="counter-text">1/${photos.length}</span>
-        </button>
-
-        <!-- FLECHAS LATERALES Y PUNTOS INDICADORES DE FOTOS -->
-        <button type="button" class="photo-nav-arrow photo-nav-prev" onclick="scrollCardPhoto('${video.id}', 'prev', event)" title="Foto Anterior" aria-label="Foto Anterior">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <button type="button" class="photo-nav-arrow photo-nav-next" onclick="scrollCardPhoto('${video.id}', 'next', event)" title="Siguiente Foto" aria-label="Siguiente Foto">
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
-        <div class="photo-dots-row" id="dots-${video.id}">
-          ${photos.map((_, pIdx) => `<div class="photo-dot ${pIdx === 0 ? 'active' : ''}" onclick="selectCardPhoto('${video.id}', ${pIdx}, event)"></div>`).join('')}
-        </div>
-        ` : ''}
-
-        <!-- COLUMNA DERECHA DE ACCIONES FLOTANTES (ICONOS TIKTOK / INSTAGRAM REELS) -->
-        <div class="reel-side-actions">
-          <!-- LOGO TIENDA CON ANILLO DE ESTADO -->
-          <button type="button" class="side-action-btn store-badge-action" onclick="openStoreCatalog('${video.storeId}')" title="Ver Tienda y Catálogo">
-            <div class="store-ring-wrapper ${video.hasSpot ? 'has-spot' : ''}">
-              <img src="${video.storeAvatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80'}" alt="${escapeHtml(video.storeName)}" class="reel-store-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=120&auto=format&fit=crop&q=80';" loading="lazy">
-              <div class="verified-mini-check">
-                <i class="fa-solid fa-check"></i>
-              </div>
-            </div>
-            <span class="action-count">Tienda</span>
-          </button>
-
-          <!-- BOTÓN LIKE -->
-          <button type="button" class="side-action-btn btn-card-like ${isLiked ? 'liked' : ''}" onclick="toggleCardLike('${video.id}', this)" title="Me gusta">
-            <div class="action-icon-circle">
-              <i class="fa-solid fa-heart"></i>
-            </div>
-            <span class="action-count">${formatNumber(video.likes || 0)}</span>
-          </button>
-
-          <!-- BOTÓN COMENTARIOS -->
-          <button type="button" class="side-action-btn btn-card-comment" onclick="openCommentsSheetById('${video.id}')" title="Comentarios">
-            <div class="action-icon-circle">
-              <i class="fa-solid fa-comment-dots"></i>
-            </div>
-            <span class="action-count">${formatNumber(video.comments?.length || 0)}</span>
-          </button>
-
-          <!-- BOTÓN GUARDAR (LISTA DE DESEOS) -->
-          <button type="button" class="side-action-btn btn-card-save ${isSaved ? 'saved' : ''}" onclick="toggleCardSave('${video.id}', this)" title="Guardar en Favoritos">
-            <div class="action-icon-circle">
-              <i class="fa-solid fa-bookmark"></i>
-            </div>
-            <span class="action-count">Guardar</span>
-          </button>
-
-          <!-- BOTÓN COMPARTIR -->
-          <button type="button" class="side-action-btn btn-card-share" onclick="executeShareVideoById('${video.id}')" title="Compartir Anuncio">
-            <div class="action-icon-circle">
-              <i class="fa-solid fa-share-nodes"></i>
-            </div>
-            <span class="action-count">Compartir</span>
-          </button>
-
-          <!-- BOTÓN REPORTAR -->
-          <button type="button" class="side-action-btn btn-card-report ${isReported ? 'reported' : ''}" onclick="openReportModal('${video.id}', '${escapeHtml(video.title)}')" title="${isReported ? 'Ya has reportado este anuncio' : 'Reportar contenido inapropiado'}">
-            <div class="action-icon-circle">
-              <i class="fa-solid fa-flag"></i>
-            </div>
-            <span class="action-count">${isReported ? 'Reportado' : 'Reportar'}</span>
-          </button>
-        </div>
-
-        <!-- CONTENIDO INFERIOR FLOTANTE SOBRE EL PRODUCTO -->
-        <div class="reel-bottom-info">
-          ${video.promoBadge ? `
-          <div class="promo-tag-pill">
-            <i class="fa-solid fa-tag"></i> <span>${escapeHtml(video.promoBadge)}</span>
-          </div>` : ''}
-
-          <!-- FILA DEL NOMBRE DE LA TIENDA Y REPUTACIÓN -->
-          <div class="store-info-row" onclick="openStoreCatalog('${video.storeId}')">
-            <h4 class="store-display-name">${escapeHtml(video.storeName)}</h4>
-            <span class="store-stars-badge" onclick="event.stopPropagation(); openRateModal('${video.storeId}', '${escapeHtml(video.storeName)}')">
-              <i class="fa-solid fa-star"></i> <span>${video.storeRating || '5.0'}</span>
-            </span>
-            <span class="city-location-badge">
-              <i class="fa-solid fa-location-dot"></i> <span>${escapeHtml(video.city || 'Colombia')}</span>
-            </span>
-          </div>
-
-          <!-- TÍTULO DEL PRODUCTO Y PRECIO DESTACADO -->
-          <h3 class="reel-product-title">${escapeHtml(video.title)}</h3>
-
-          <div class="price-and-desc-row">
-            <div class="price-tag-badge">${escapeHtml(video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP'))}</div>
-            ${video.delivery ? `<div class="delivery-pill-badge">${escapeHtml(cleanDelivery(video.delivery))}</div>` : ''}
-          </div>
-
-          ${video.description && !video.description.startsWith('Contáctanos') ? `
-          <p class="reel-product-desc" onclick="this.classList.toggle('expanded')" title="Toca para ver u ocultar descripción completa">${escapeHtml(video.description)}</p>` : ''}
-
-          <!-- BOTONES PROTAGONISTAS: CHAT DIRECTO (WHATSAPP / TELEGRAM / AMBOS) -->
-          ${(tgLink && primaryChat === 'both' && waLink) ? `
-          <div class="reel-action-main-container dual-chat-actions">
-            <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
-              <div class="btn-wa-inner">
-                <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
-                <span class="btn-wa-text">WhatsApp</span>
-              </div>
-            </a>
-            <a href="${tgLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn telegram-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por Telegram">
-              <div class="btn-wa-inner">
-                <i class="fa-brands fa-telegram wa-logo-bounce"></i>
-                <span class="btn-wa-text">Telegram</span>
-              </div>
-            </a>
-          </div>
-          ` : (tgLink && primaryChat === 'telegram') ? `
-          <div class="reel-action-main-container">
-            <a href="${tgLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn telegram-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por Telegram">
-              <div class="btn-wa-inner">
-                <i class="fa-brands fa-telegram wa-logo-bounce"></i>
-                <span class="btn-wa-text">Pedir por Telegram</span>
-              </div>
-            </a>
-          </div>
-          ` : `
-          <div class="reel-action-main-container">
-            <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
-              <div class="btn-wa-inner">
-                <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
-                <span class="btn-wa-text">Pedir al Chat Directo</span>
-              </div>
-            </a>
-          </div>
-          `}
-
-          <!-- LEYENDA LEGAL DE SEGURIDAD -->
-          <div class="safety-legal-text">
-            <i class="fa-solid fa-shield-halved"></i> VitrinaSpot es vitrina publicitaria. Acuerdos y envíos directos vía WhatsApp.
-          </div>
-        </div>
-      </article>
-    `;
-
-    // Inserción de Espacio Publicitario Google AdMob según la frecuencia configurada por el Administrador
+    const cardHTML = buildSingleProductCardHTML(video, idx);
     let adMobCardHTML = '';
-    const feedFreq = Math.max(2, Number(state.admobConfig?.feedAdFrequency) || 4);
     if ((idx + 1) % feedFreq === 0 && idx < state.videos.length - 1) {
       adMobCardHTML = `
-        <article class="reel-player-card reel-admob-card">
+        <article class="reel-player-card reel-admob-card" id="card-admob-${idx}" data-id="admob-${idx}" data-index="admob-${idx}">
           <div class="admob-card-badge"><i class="fa-solid fa-bullhorn text-gold"></i> Publicidad Patrocinada</div>
           <div class="admob-card-viewport">
             <div class="admob-card-inner">
@@ -1530,6 +1620,15 @@ function setupFeedIntersectionObserver() {
 
   if (feedObserver) {
     feedObserver.disconnect();
+  }
+
+  if (!container._hasInfiniteScrollAttached) {
+    container._hasInfiniteScrollAttached = true;
+    container.addEventListener('scroll', () => {
+      if (container.scrollTop + container.clientHeight >= container.scrollHeight - (container.clientHeight * 1.5)) {
+        appendInfiniteDiscoveryBatch();
+      }
+    }, { passive: true });
   }
 
   const observerOptions = {
@@ -1968,7 +2067,7 @@ function updateActiveFeedItem(idx) {
     return;
   }
 
-  const video = state.videos[idx];
+  const video = (state._infiniteFeedList && state._infiniteFeedList[idx]) || state.videos[idx % (state.videos.length || 1)];
   if (!video) return;
 
   // 1. Ambilight ambiental
@@ -2293,7 +2392,8 @@ function renderDesktopComments(comments) {
 // ==========================================
 function scrollToFeedIndex(idx, smooth = true) {
   if (!state.videos || state.videos.length === 0) return;
-  const targetIdx = Math.max(0, Math.min(idx, state.videos.length - 1));
+  const maxLimit = (state._infiniteFeedList && state._infiniteFeedList.length) ? state._infiniteFeedList.length - 1 : (state.videos.length - 1);
+  const targetIdx = Math.max(0, Math.min(idx, maxLimit));
   state.currentIndex = targetIdx;
   closeCommentsSheet();
 
@@ -2315,9 +2415,11 @@ function scrollToFeedIndex(idx, smooth = true) {
 window.scrollToFeedIndex = scrollToFeedIndex;
 
 function nextVideo() {
-  if (state.currentIndex < state.videos.length - 1) {
-    scrollToFeedIndex(state.currentIndex + 1, true);
+  const maxLimit = (state._infiniteFeedList && state._infiniteFeedList.length) ? state._infiniteFeedList.length - 1 : (state.videos.length - 1);
+  if (state.currentIndex >= maxLimit - 1) {
+    appendInfiniteDiscoveryBatch();
   }
+  scrollToFeedIndex(state.currentIndex + 1, true);
 }
 window.nextVideo = nextVideo;
 
