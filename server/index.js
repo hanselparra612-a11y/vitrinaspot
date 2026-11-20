@@ -118,6 +118,100 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// Endpoint dedicado para servir la miniatura de producto en formato binario JPEG/PNG
+// Compatible 100% con crawlers de WhatsApp, Facebook, Twitter y Telegram
+app.get('/api/videos/:id/thumbnail.jpg', (req, res) => {
+  try {
+    const video = db.getVideoById(req.params.id);
+    if (!video) {
+      return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+    }
+
+    const img = (Array.isArray(video.photos) && video.photos[0]) || 
+                (Array.isArray(video.detailPhotos) && video.detailPhotos[0]) || 
+                video.thumbnailUrl || '';
+
+    if (!img) {
+      return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+    }
+
+    // 1. Imagen Base64 Data URI
+    if (img.startsWith('data:image/')) {
+      const commaIdx = img.indexOf(',');
+      if (commaIdx !== -1) {
+        const header = img.substring(0, commaIdx);
+        const mimeMatch = header.match(/^data:([^;]+);base64/);
+        const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+        const base64Data = img.substring(commaIdx + 1);
+        const buffer = Buffer.from(base64Data, 'base64');
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.send(buffer);
+      }
+    }
+
+    // 2. URL externa (http / https)
+    if (img.startsWith('http://') || img.startsWith('https://')) {
+      return res.redirect(302, img);
+    }
+
+    // 3. Archivo local relativo (/uploads/...)
+    const cleanPath = img.replace(/^\/+/, '');
+    const localFile = path.join(rootDir, cleanPath);
+    if (fs.existsSync(localFile)) {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return res.sendFile(localFile);
+    }
+
+    return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+  } catch (err) {
+    console.error('Error sirviendo thumbnail.jpg:', err);
+    return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+  }
+});
+
+// Endpoint dedicado para servir el avatar de la tienda en formato binario JPEG/PNG
+app.get('/api/stores/:id/avatar.jpg', (req, res) => {
+  try {
+    const store = db.getStoreById(req.params.id);
+    if (!store || !store.avatar) {
+      return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+    }
+
+    const img = store.avatar;
+    if (img.startsWith('data:image/')) {
+      const commaIdx = img.indexOf(',');
+      if (commaIdx !== -1) {
+        const header = img.substring(0, commaIdx);
+        const mimeMatch = header.match(/^data:([^;]+);base64/);
+        const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+        const base64Data = img.substring(commaIdx + 1);
+        const buffer = Buffer.from(base64Data, 'base64');
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.send(buffer);
+      }
+    }
+
+    if (img.startsWith('http://') || img.startsWith('https://')) {
+      return res.redirect(302, img);
+    }
+
+    const cleanPath = img.replace(/^\/+/, '');
+    const localFile = path.join(rootDir, cleanPath);
+    if (fs.existsSync(localFile)) {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return res.sendFile(localFile);
+    }
+
+    return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+  } catch (err) {
+    console.error('Error sirviendo avatar.jpg:', err);
+    return res.sendFile(path.join(rootDir, 'public', 'icons', 'app-icon-commerce.jpg'));
+  }
+});
+
 // Inyección dinámica de Meta Tags Open Graph (Vista Previa con Miniatura en WhatsApp/Redes Sociales)
 app.get('/', (req, res, next) => {
   const videoId = req.query.v;
@@ -137,36 +231,36 @@ app.get('/', (req, res, next) => {
 
     let ogTitle = 'VitrinaSpot Colombia - Tu vitrina digital, directo a WhatsApp';
     let ogDesc = 'Compra y vende productos directamente por WhatsApp sin intermediarios ni comisiones.';
-    let ogImage = `${baseUrl}/uploads/thumbnails/placeholder.jpg`;
+    let ogImage = `${baseUrl}/icons/app-icon-commerce.jpg`;
     let ogUrl = `${baseUrl}/`;
 
     if (videoId) {
       const video = db.getVideoById(videoId);
       if (video) {
-        ogTitle = `${video.title} - ${video.priceFormatted} | VitrinaSpot`;
+        ogTitle = `${video.title} - ${video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP')} | VitrinaSpot`;
         ogDesc = `Vendido por "${video.storeName}" en ${video.city || 'Colombia'}. ${video.delivery ? `(${video.delivery}). ` : ''}Toca aquí para ver fotos y contactar por WhatsApp.`;
-        ogUrl = `${baseUrl}/?v=${video.id}`;
-        let img = (video.photos && video.photos[0]) || video.thumbnailUrl || '';
-        if (img) {
-          ogImage = img.startsWith('http') ? img : `${baseUrl}${img}`;
-        }
+        ogUrl = `${baseUrl}/?v=${encodeURIComponent(video.id)}`;
+        ogImage = `${baseUrl}/api/videos/${encodeURIComponent(video.id)}/thumbnail.jpg`;
       }
     } else if (storeId) {
       const store = db.getStoreById(storeId);
       if (store) {
         ogTitle = `Tienda ${store.name} - Catálogo Oficial | VitrinaSpot`;
         ogDesc = `Explora los productos de ${store.name} en ${store.city || 'Colombia'}. Contacta directamente a su WhatsApp.`;
-        ogUrl = `${baseUrl}/?store=${store.id}`;
-        let img = store.avatar || '';
-        if (img) {
-          ogImage = img.startsWith('http') ? img : `${baseUrl}${img}`;
-        }
+        ogUrl = `${baseUrl}/?store=${encodeURIComponent(store.id)}`;
+        ogImage = `${baseUrl}/api/stores/${encodeURIComponent(store.id)}/avatar.jpg`;
       }
     }
 
     const cleanStr = str => (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-    const dynamicTags = `
+    // Limpiar etiquetas meta Open Graph previas para que los crawlers lean las etiquetas dinámicas sin conflictos
+    let cleanHtml = html
+      .replace(/<meta\s+property="og:[^"]*"\s+content="[^"]*"\s*\/?>\s*/gi, '')
+      .replace(/<meta\s+name="twitter:[^"]*"\s+content="[^"]*"\s*\/?>\s*/gi, '')
+      .replace(/<title>.*?<\/title>\s*/gi, '');
+
+    const dynamicTags = `  <title>${cleanStr(ogTitle)}</title>
   <!-- VISTA PREVIA OFICIAL EN WHATSAPP Y REDES SOCIALES (OPEN GRAPH) -->
   <meta property="og:type" content="product">
   <meta property="og:site_name" content="VitrinaSpot Colombia">
@@ -181,9 +275,9 @@ app.get('/', (req, res, next) => {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${cleanStr(ogTitle)}">
   <meta name="twitter:description" content="${cleanStr(ogDesc)}">
-  <meta name="twitter:image" content="${cleanStr(ogImage)}">`;
+  <meta name="twitter:image" content="${cleanStr(ogImage)}">\n`;
 
-    const injectedHtml = html.replace('</head>', `${dynamicTags}\n</head>`);
+    const injectedHtml = cleanHtml.replace('<head>', `<head>\n${dynamicTags}`);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('X-Robots-Tag', 'all, index, follow');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

@@ -926,14 +926,15 @@ function buildSingleProductCardHTML(video, idx) {
   const isReported = state.reportedVideoIds.has(video.id);
   const isMyVideo = state.currentStore && state.currentStore.id === video.storeId;
 
-  const store = state.stores.find(s => s.id === video.storeId) || { whatsapp: video.storeWhatsapp || '+573128525929' };
+  const store = state.stores.find(s => s.id === video.storeId) || { name: video.storeName, whatsapp: video.storeWhatsapp || '+573128525929' };
   const rawWa = store.whatsapp || video.storeWhatsapp || '+573128525929';
   let waClean = rawWa.replace(/[^0-9]/g, '');
   if (waClean.length === 10 && !waClean.startsWith('57')) {
     waClean = '57' + waClean;
   }
   const videoDirectUrl = getPublicShareUrl('?v=' + video.id);
-  const rawWaMsg = '¡Hola! Me interesa este producto, ¿sigue disponible?\n\n' + videoDirectUrl;
+  const formattedPrice = video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP');
+  const rawWaMsg = `¡Hola ${store.name || ''}! Me interesa este producto visto en VitrinaSpot:\n\n🛍️ *${video.title}*\n💰 *${formattedPrice}*\n📍 *${video.city || 'Colombia'}*\n\n👉 Enlace: ${videoDirectUrl}`;
   const msg = encodeURIComponent(rawWaMsg);
   const waLink = 'https://wa.me/' + waClean + '?text=' + msg;
   const tgLink = getTelegramLink(store.telegram || video.storeTelegram, rawWaMsg);
@@ -1052,7 +1053,7 @@ function buildSingleProductCardHTML(video, idx) {
         <!-- BOTONES PROTAGONISTAS: CHAT DIRECTO (WHATSAPP / TELEGRAM / AMBOS) -->
         ${(tgLink && primaryChat === 'both' && waLink) ? `
         <div class="reel-action-main-container dual-chat-actions">
-          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="openDirectChatOrder('${video.id}', event)" title="Pedir por WhatsApp">
             <div class="btn-wa-inner">
               <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
               <span class="btn-wa-text">WhatsApp</span>
@@ -1076,7 +1077,7 @@ function buildSingleProductCardHTML(video, idx) {
         </div>
         ` : `
         <div class="reel-action-main-container">
-          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="openDirectChatOrder('${video.id}', event)" title="Pedir al Chat Directo">
             <div class="btn-wa-inner">
               <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
               <span class="btn-wa-text">Pedir al Chat Directo</span>
@@ -1547,7 +1548,7 @@ function renderGridFeed() {
             <span class="feed-grid-price">${video.priceFormatted}</span>
             <span class="feed-grid-delivery">${escapeHtml(cleanDelivery(video.delivery || 'Domicilio Gratis'))}</span>
           </div>
-          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="feed-grid-wa-btn" onclick="event.stopPropagation();">
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="feed-grid-wa-btn" onclick="openDirectChatOrder('${video.id}', event);">
             <i class="fa-brands fa-whatsapp"></i> Pedir por WhatsApp
           </a>
         </div>
@@ -2331,7 +2332,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
-async function generateSpotShareCardBlob(video, store) {
+async function generateSpotShareCardBlob(video, store, mimeType = 'image/jpeg') {
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
   canvas.height = 1080;
@@ -2542,7 +2543,8 @@ async function generateSpotShareCardBlob(video, store) {
   ctx.restore();
 
   return new Promise((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
+    const quality = mimeType === 'image/jpeg' ? 0.92 : undefined;
+    canvas.toBlob((blob) => resolve(blob), mimeType, quality);
   });
 }
 
@@ -2663,6 +2665,41 @@ async function shareSpot(videoId, e) {
   }
 }
 window.shareSpot = shareSpot;
+
+// ==========================================================================
+// PEDIDO DIRECTO AL CHAT (WHATSAPP) CON IMAGEN INTEGRADA Y VISTA PREVIA RICA
+// ==========================================================================
+async function openDirectChatOrder(videoId, e) {
+  const video = state.videos.find(v => v.id === videoId);
+  if (!video) return;
+
+  const store = state.stores.find(s => s.id === video.storeId) || {
+    name: video.storeName,
+    whatsapp: video.storeWhatsapp || '+573128525929'
+  };
+
+  // Registrar clic analítico en métricas de WhatsApp
+  trackWaClick(video.id);
+
+  // Copiar tarjeta visual con la foto del producto al portapapeles si el navegador lo admite
+  if (navigator.clipboard && window.ClipboardItem) {
+    try {
+      const pngPromise = generateSpotShareCardBlob(video, store, 'image/png');
+      navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': pngPromise })
+      ]).then(() => {
+        showToast('📋 ¡Foto del producto copiada! Puedes pegarla en el chat con el vendedor.', 'info', 3000);
+      }).catch(err => {
+        console.warn('Clipboard write image opcional cancelado:', err);
+      });
+    } catch (err) {
+      console.warn('ClipboardItem error:', err);
+    }
+  } else {
+    showToast('📲 Abriendo WhatsApp con el vendedor...', 'info', 2000);
+  }
+}
+window.openDirectChatOrder = openDirectChatOrder;
 
 function openProductDetailSheet(videoId, e) {
   if (e) e.stopPropagation();
@@ -3172,7 +3209,7 @@ function openCatalogProductSheet(video, store) {
   const sheetWaBtn = document.getElementById('btn-sheet-whatsapp');
   if (sheetWaBtn) {
     sheetWaBtn.href = `https://wa.me/${waClean}?text=${encodeURIComponent(rawMsg)}`;
-    sheetWaBtn.onclick = () => trackWaClick(video.id);
+    sheetWaBtn.onclick = (e) => openDirectChatOrder(video.id, e);
   }
   const sheetTgBtn = document.getElementById('btn-sheet-telegram');
   if (sheetTgBtn) {
@@ -3332,7 +3369,7 @@ async function openSavedView() {
             <button class="btn-saved-action-play" onclick="playSavedVideo('${v.id}')" title="Ver producto en vitrina">
               <i class="fa-solid fa-eye text-gold"></i> Ver Producto
             </button>
-            <a class="btn-saved-action-wa" href="${waLink}" target="_blank" title="Contactar y pedir por WhatsApp">
+            <a class="btn-saved-action-wa" href="${waLink}" target="_blank" onclick="openDirectChatOrder('${v.id}', event)" title="Contactar y pedir por WhatsApp">
               <i class="fa-brands fa-whatsapp"></i> Pedir
             </a>
             <button class="btn-saved-action-del" onclick="removeSavedItem('${v.id}')" title="Quitar de guardados">
