@@ -2139,34 +2139,7 @@ body.vitrina-header-collapsed .categories-nav {
   box-shadow: 0 4px 20px var(--wa-glow);
 }
 
-.accepted-payments-box {
-  background-color: var(--bg-card);
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-}
 
-.payments-title {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: block;
-  margin-bottom: 6px;
-}
-
-.payment-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.pay-chip {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #fff;
-}
 
 .catalog-gallery-heading {
   display: flex;

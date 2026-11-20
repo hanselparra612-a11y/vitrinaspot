@@ -2324,47 +2324,6 @@ async function openStoreCatalog(storeId) {
     }
     document.getElementById('cat-videos-count').textContent = `${videos.length} producto${videos.length === 1 ? '' : 's'}`;
 
-    // Renderizado estilizado de medios de pago colombianos
-    const payChipsContainer = document.getElementById('cat-payment-chips');
-    if (payChipsContainer) {
-      const methods = (store.paymentMethods && store.paymentMethods.trim())
-        ? store.paymentMethods.split(',').map(m => m.trim()).filter(Boolean)
-        : ['Nequi', 'Bancolombia', 'Daviplata', 'Contraentrega', 'Efectivo'];
-      
-      const getPayIcon = (name) => {
-        const lower = name.toLowerCase();
-        if (lower.includes('nequi')) return '<i class="fa-solid fa-mobile-screen-button" style="color: #ec4899;"></i>';
-        if (lower.includes('bancolombia')) return '<i class="fa-solid fa-building-columns" style="color: #ffb800;"></i>';
-        if (lower.includes('daviplata')) return '<i class="fa-solid fa-wallet" style="color: #ef4444;"></i>';
-        if (lower.includes('contraentrega') || lower.includes('entrega')) return '<i class="fa-solid fa-hand-holding-dollar" style="color: #00ff88;"></i>';
-        if (lower.includes('efectivo')) return '<i class="fa-solid fa-money-bill-wave" style="color: #22c55e;"></i>';
-        return '<i class="fa-solid fa-circle-check text-green"></i>';
-      };
-
-      payChipsContainer.innerHTML = methods.map(m => `<span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;">${getPayIcon(m)} ${escapeHtml(m)}</span>`).join('');
-    }
-
-
-    // Renderizado estilizado de medios de pago colombianos
-    const payChipsContainer = document.getElementById('cat-payment-chips');
-    if (payChipsContainer) {
-      const methods = (store.paymentMethods && store.paymentMethods.trim())
-        ? store.paymentMethods.split(',').map(m => m.trim()).filter(Boolean)
-        : ['Nequi', 'Bancolombia', 'Daviplata', 'Contraentrega', 'Efectivo'];
-      
-      const getPayIcon = (name) => {
-        const lower = name.toLowerCase();
-        if (lower.includes('nequi')) return '<i class="fa-solid fa-mobile-screen-button" style="color: #ec4899;"></i>';
-        if (lower.includes('bancolombia')) return '<i class="fa-solid fa-building-columns" style="color: #ffb800;"></i>';
-        if (lower.includes('daviplata')) return '<i class="fa-solid fa-wallet" style="color: #ef4444;"></i>';
-        if (lower.includes('contraentrega') || lower.includes('entrega')) return '<i class="fa-solid fa-hand-holding-dollar" style="color: #00ff88;"></i>';
-        if (lower.includes('efectivo')) return '<i class="fa-solid fa-money-bill-wave" style="color: #22c55e;"></i>';
-        return '<i class="fa-solid fa-circle-check text-green"></i>';
-      };
-
-      payChipsContainer.innerHTML = methods.map(m => `<span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;">${getPayIcon(m)} ${escapeHtml(m)}</span>`).join('');
-    }
-
 
     // Horario de atención
     const catHoursPill = document.getElementById('cat-store-hours');

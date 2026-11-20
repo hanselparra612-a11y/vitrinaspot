@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=25.3">
+  <link rel="stylesheet" href="css/style.css?v=25.4">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=25.3').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=25.4').catch(function() {});
     }
   </script>
 
@@ -371,17 +371,6 @@
               <a href="#" class="btn btn-ghost" id="btn-cat-call" style="flex: 1; min-width: 140px; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); color: #fff;">
                 <i class="fa-solid fa-phone"></i> Llamar al Comercio
               </a>
-            </div>
-
-            <div class="accepted-payments-box" style="margin-top: 10px;">
-              <span class="payments-title"><i class="fa-solid fa-wallet text-gold"></i> Medios de pago que recibe:</span>
-              <div class="payment-chips" id="cat-payment-chips">
-                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-mobile-screen-button" style="color: #ec4899;"></i> Nequi</span>
-                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-building-columns" style="color: #ffb800;"></i> Bancolombia</span>
-                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-wallet" style="color: #ef4444;"></i> Daviplata</span>
-                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-hand-holding-dollar" style="color: #00ff88;"></i> Contraentrega</span>
-                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-money-bill-wave" style="color: #22c55e;"></i> Efectivo</span>
-              </div>
             </div>
           </div>
         </div>
@@ -1543,11 +1532,6 @@
           <label>Correo Electrónico de Respaldo <small class="text-muted">(Opcional - Para recuperar tu cuenta)</small></label>
           <input type="email" id="edit-store-email" name="email" placeholder="ejemplo@correo.com" autocomplete="email">
         </div>
-
-        <div class="form-group">
-          <label><i class="fa-solid fa-wallet text-gold"></i> Medios de Pago Aceptados <small class="text-muted">(Separados por coma)</small></label>
-          <input type="text" id="edit-store-payments" name="paymentMethods" placeholder="Ej: Nequi, Bancolombia, Daviplata, Contraentrega, Efectivo">
-        </div>
         <div class="form-group">
           <label>Descripción / Biografía del Negocio</label>
           <textarea id="edit-store-desc" name="description" rows="2" placeholder="¿Qué vendes? ¿Por qué los clientes deberían comprarte?"></textarea>
@@ -2171,6 +2155,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=25.3"></script>
+  <script src="js/app.js?v=25.4"></script>
 </body>
 </html>
