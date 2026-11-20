@@ -1019,34 +1019,6 @@ function renderContinuousFeed() {
             <div class="phone-ambient-glow"></div>
           </div>
         </div>
-          <div class="welcome-benefit-item benefit-wa">
-            <div class="benefit-icon-wrapper">
-              <i class="fa-solid fa-comments text-green"></i>
-            </div>
-            <div>
-              <strong>Chat Inmediato</strong>
-              <span>Pedidos directos con el vendedor</span>
-            </div>
-          </div>
-          <div class="welcome-benefit-item benefit-photos">
-            <div class="benefit-icon-wrapper">
-              <i class="fa-solid fa-images text-cyan"></i>
-            </div>
-            <div>
-              <strong>Carrusel HD</strong>
-              <span>Hasta 5 fotos por producto</span>
-            </div>
-          </div>
-          <div class="welcome-benefit-item benefit-fees">
-            <div class="benefit-icon-wrapper">
-              <i class="fa-solid fa-hand-holding-dollar text-gold"></i>
-            </div>
-            <div>
-              <strong>0% Comisiones</strong>
-              <span>Venta y ganancia 100% tuya</span>
-            </div>
-          </div>
-        </div>
 
         <!-- ACCIONES PRINCIPALES: COMERCIANTE + COMPRADOR -->
         <div class="welcome-hook-actions-group">
