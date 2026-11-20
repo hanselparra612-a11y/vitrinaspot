@@ -950,7 +950,7 @@ function renderContinuousFeed() {
 
         <h2 class="welcome-hook-title">
           Tu Catálogo Digital, <br>
-          <span class="text-neon">Directo a WhatsApp</span>
+          <span class="text-neon">Pedidos al Chat Directo</span>
         </h2>
 
         <p class="welcome-hook-sub">
@@ -971,11 +971,11 @@ function renderContinuousFeed() {
           </div>
           <div class="welcome-benefit-item benefit-wa">
             <div class="benefit-icon-wrapper">
-              <i class="fa-brands fa-whatsapp text-green"></i>
+              <i class="fa-solid fa-comments text-green"></i>
             </div>
             <div>
-              <strong>WhatsApp Directo</strong>
-              <span>Pedidos al chat del vendedor</span>
+              <strong>Chat Inmediato</strong>
+              <span>Pedidos directos con el vendedor</span>
             </div>
           </div>
           <div class="welcome-benefit-item benefit-photos">
@@ -5549,7 +5549,7 @@ function setupEventListeners() {
     if (shareBtn) {
       shareBtn.onclick = () => {
         const shareUrl = getPublicShareUrl();
-        const shareMsg = `¡Hola colega! 👋 Mira esta nueva vitrina comercial en Colombia que encontré: *VitrinaSpot* (Tu vitrina digital, directo a WhatsApp).\n\n` +
+        const shareMsg = `¡Hola colega! 👋 Mira esta nueva vitrina comercial en Colombia que encontré: *VitrinaSpot* (Tu catálogo digital, pedidos al chat directo).\n\n` +
           `🎁 Acabo de subir mi SPOT y están regalando *${freeQuota} SPOTS 100% GRATIS* y fijos para los primeros 1.000 comercios pioneros.\n\n` +
           `Aprovecha y sube tus productos antes de que se completen los 1.000 cupos aquí:\n\n` +
           `${shareUrl}`;
@@ -6820,7 +6820,7 @@ function openShareAppModal() {
   const shareUrl = getPublicShareUrl();
   const freeQuota = Number(state.pricing?.free_spots_quota) || 5;
   const shareTitle = `VitrinaSpot - ${freeQuota} SPOTS Gratis para Comercios`;
-  const shareMsg = `🛍️ ¡Hola! Te recomiendo *VitrinaSpot Colombia* (Tu vitrina digital, directo a WhatsApp).\n\n` +
+  const shareMsg = `🛍️ ¡Hola! Te recomiendo *VitrinaSpot Colombia* (Tu catálogo digital, pedidos al chat directo).\n\n` +
     `🎁 Para comercios y emprendedores están regalando *${freeQuota} SPOTS 100% GRATIS* y permanentes para exhibir tus productos con fotos y videos.\n\n` +
     `Es una plataforma genial para descubrir tiendas reales y hacer pedidos directo por WhatsApp sin intermediarios ni comisiones:\n\n` +
     `👉 ${shareUrl}`;
