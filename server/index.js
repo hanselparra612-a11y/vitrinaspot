@@ -509,7 +509,7 @@ app.post('/api/videos', upload.fields([
       boostLevel: isBoosted ? boostLevel : 'none',
       isPermanent: true, // Fijo indefinido hasta que el propio vendedor lo elimine
       title: title || 'Producto en VitrinaSpot',
-      description: description || 'Contáctanos por WhatsApp para consultar disponibilidad y pedidos.',
+      description: description || 'Contáctanos al chat directo para consultar disponibilidad y pedidos.',
       category: category || 'Emprendimientos',
       city: city || store.city || 'Bogotá',
       videoType: req.body.videoType || (isCommercial ? 'product' : 'entertainment'),

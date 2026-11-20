@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=25.2">
+  <link rel="stylesheet" href="css/style.css?v=25.3">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=25.2').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=25.3').catch(function() {});
     }
   </script>
 
@@ -354,10 +354,10 @@
           <div class="catalog-hero-actions">
             <div class="catalog-actions-primary-row" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
               <a href="#" target="_blank" class="btn btn-wa-giant" id="btn-cat-whatsapp" style="flex: 2; min-width: 170px;">
-                <i class="fa-brands fa-whatsapp"></i> Chatear por WhatsApp
+                <i class="fa-brands fa-whatsapp"></i> Pedir al Chat Directo
               </a>
               <a href="#" target="_blank" class="btn btn-tg-giant" id="btn-cat-telegram" style="flex: 2; min-width: 170px; display: none; text-decoration: none; padding: 14px 18px; border-radius: 12px; font-weight: 800; align-items: center; justify-content: center; gap: 8px;">
-                <i class="fa-brands fa-telegram"></i> Chatear por Telegram
+                <i class="fa-brands fa-telegram"></i> Pedir por Telegram
               </a>
               <button type="button" class="btn btn-spot" id="btn-cat-share" style="flex: 1; min-width: 160px; padding: 14px 18px; font-weight: 700; border-radius: 12px; gap: 8px; display: inline-flex; align-items: center; justify-content: center;">
                 <i class="fa-solid fa-share-nodes"></i> Compartir Catálogo
@@ -365,7 +365,7 @@
             </div>
             
             <div class="catalog-actions-secondary-row" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap; margin-top: 6px;">
-              <a href="#" target="_blank" class="btn btn-ghost" id="btn-cat-maps" style="flex: 1; min-width: 140px; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,184,0,0.3); color: var(--spot-gold);">
+              <a href="javascript:void(0)" class="btn btn-ghost" id="btn-cat-maps" style="flex: 1; min-width: 140px; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,184,0,0.3); color: var(--spot-gold);">
                 <i class="fa-solid fa-location-arrow"></i> Cómo Llegar (Maps)
               </a>
               <a href="#" class="btn btn-ghost" id="btn-cat-call" style="flex: 1; min-width: 140px; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,255,255,0.15); color: #fff;">
@@ -374,12 +374,13 @@
             </div>
 
             <div class="accepted-payments-box" style="margin-top: 10px;">
-              <span class="payments-title">Medios de pago que recibe:</span>
+              <span class="payments-title"><i class="fa-solid fa-wallet text-gold"></i> Medios de pago que recibe:</span>
               <div class="payment-chips" id="cat-payment-chips">
-                <span class="pay-chip">Nequi</span>
-                <span class="pay-chip">Daviplata</span>
-                <span class="pay-chip">Contraentrega</span>
-                <span class="pay-chip">Efectivo</span>
+                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-mobile-screen-button" style="color: #ec4899;"></i> Nequi</span>
+                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-building-columns" style="color: #ffb800;"></i> Bancolombia</span>
+                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-wallet" style="color: #ef4444;"></i> Daviplata</span>
+                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-hand-holding-dollar" style="color: #00ff88;"></i> Contraentrega</span>
+                <span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-money-bill-wave" style="color: #22c55e;"></i> Efectivo</span>
               </div>
             </div>
           </div>
@@ -404,7 +405,7 @@
         </button>
         <div class="saved-header">
           <h2><i class="fa-solid fa-bookmark text-gold"></i> Mis Guardados (Lista de Deseos)</h2>
-          <p>Productos y negocios que guardaste para contactar y comprar por WhatsApp.</p>
+          <p>Productos y negocios que guardaste para contactar y pedir al chat directo.</p>
         </div>
         <div class="catalog-grid" id="saved-videos-grid">
           <!-- Videos guardados -->
@@ -1544,6 +1545,10 @@
         </div>
 
         <div class="form-group">
+          <label><i class="fa-solid fa-wallet text-gold"></i> Medios de Pago Aceptados <small class="text-muted">(Separados por coma)</small></label>
+          <input type="text" id="edit-store-payments" name="paymentMethods" placeholder="Ej: Nequi, Bancolombia, Daviplata, Contraentrega, Efectivo">
+        </div>
+        <div class="form-group">
           <label>Descripción / Biografía del Negocio</label>
           <textarea id="edit-store-desc" name="description" rows="2" placeholder="¿Qué vendes? ¿Por qué los clientes deberían comprarte?"></textarea>
         </div>
@@ -1639,7 +1644,7 @@
         <!-- BOTÓN PROTAGONISTA: WHATSAPP DIRECTO DE ESTE PRODUCTO -->
         <div id="sheet-chat-actions-container" style="display: flex; gap: 8px; width: 100%; margin-top: 4px; flex-wrap: wrap;">
           <a href="#" target="_blank" rel="noopener noreferrer" id="btn-sheet-whatsapp" class="btn btn-wa-giant flex-1" style="padding: 12px; border-radius: 12px; font-size: 0.92rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 160px;">
-            <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Pedir por WhatsApp
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Pedir al Chat Directo
           </a>
           <a href="#" target="_blank" rel="noopener noreferrer" id="btn-sheet-telegram" class="btn btn-tg-giant flex-1" style="display: none; padding: 12px; border-radius: 12px; font-size: 0.92rem; font-weight: 800; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 160px;">
             <i class="fa-brands fa-telegram" style="font-size: 1.25rem;"></i> Pedir por Telegram
@@ -2166,6 +2171,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=25.2"></script>
+  <script src="js/app.js?v=25.3"></script>
 </body>
 </html>

@@ -1235,7 +1235,7 @@ function renderContinuousFeed() {
             <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-action-btn" onclick="trackWaClick('${video.id}')" title="Pedir por WhatsApp">
               <div class="btn-wa-inner">
                 <i class="fa-brands fa-whatsapp wa-logo-bounce"></i>
-                <span class="btn-wa-text">Pedir por WhatsApp</span>
+                <span class="btn-wa-text">Pedir al Chat Directo</span>
               </div>
             </a>
           </div>
@@ -2310,7 +2310,11 @@ async function openStoreCatalog(storeId) {
     document.getElementById('cat-store-name').textContent = store.name;
     document.getElementById('cat-store-city').textContent = store.city;
     document.getElementById('cat-store-address').textContent = store.address || 'Venta online';
-    document.getElementById('cat-store-desc').textContent = store.description;
+    let cleanDesc = store.description || '¡Bienvenidos a nuestra vitrina oficial en VitrinaSpot! Escríbenos al chat directo para atenderte.';
+    cleanDesc = cleanDesc.replace(/Escríbenos por WhatsApp/gi, 'Escríbenos al chat directo')
+                         .replace(/por WhatsApp/gi, 'al chat directo')
+                         .replace(/a su WhatsApp/gi, 'a su chat directo');
+    document.getElementById('cat-store-desc').textContent = cleanDesc;
     const catRatingPill = document.getElementById('cat-store-rating');
     if (catRatingPill) {
       catRatingPill.innerHTML = `<i class="fa-solid fa-star text-gold"></i> ${store.rating} (${store.ratingCount} opiniones)`;
@@ -2319,6 +2323,48 @@ async function openStoreCatalog(storeId) {
       catRatingPill.onclick = () => openRateModal(store.id, store.name);
     }
     document.getElementById('cat-videos-count').textContent = `${videos.length} producto${videos.length === 1 ? '' : 's'}`;
+
+    // Renderizado estilizado de medios de pago colombianos
+    const payChipsContainer = document.getElementById('cat-payment-chips');
+    if (payChipsContainer) {
+      const methods = (store.paymentMethods && store.paymentMethods.trim())
+        ? store.paymentMethods.split(',').map(m => m.trim()).filter(Boolean)
+        : ['Nequi', 'Bancolombia', 'Daviplata', 'Contraentrega', 'Efectivo'];
+      
+      const getPayIcon = (name) => {
+        const lower = name.toLowerCase();
+        if (lower.includes('nequi')) return '<i class="fa-solid fa-mobile-screen-button" style="color: #ec4899;"></i>';
+        if (lower.includes('bancolombia')) return '<i class="fa-solid fa-building-columns" style="color: #ffb800;"></i>';
+        if (lower.includes('daviplata')) return '<i class="fa-solid fa-wallet" style="color: #ef4444;"></i>';
+        if (lower.includes('contraentrega') || lower.includes('entrega')) return '<i class="fa-solid fa-hand-holding-dollar" style="color: #00ff88;"></i>';
+        if (lower.includes('efectivo')) return '<i class="fa-solid fa-money-bill-wave" style="color: #22c55e;"></i>';
+        return '<i class="fa-solid fa-circle-check text-green"></i>';
+      };
+
+      payChipsContainer.innerHTML = methods.map(m => `<span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;">${getPayIcon(m)} ${escapeHtml(m)}</span>`).join('');
+    }
+
+
+    // Renderizado estilizado de medios de pago colombianos
+    const payChipsContainer = document.getElementById('cat-payment-chips');
+    if (payChipsContainer) {
+      const methods = (store.paymentMethods && store.paymentMethods.trim())
+        ? store.paymentMethods.split(',').map(m => m.trim()).filter(Boolean)
+        : ['Nequi', 'Bancolombia', 'Daviplata', 'Contraentrega', 'Efectivo'];
+      
+      const getPayIcon = (name) => {
+        const lower = name.toLowerCase();
+        if (lower.includes('nequi')) return '<i class="fa-solid fa-mobile-screen-button" style="color: #ec4899;"></i>';
+        if (lower.includes('bancolombia')) return '<i class="fa-solid fa-building-columns" style="color: #ffb800;"></i>';
+        if (lower.includes('daviplata')) return '<i class="fa-solid fa-wallet" style="color: #ef4444;"></i>';
+        if (lower.includes('contraentrega') || lower.includes('entrega')) return '<i class="fa-solid fa-hand-holding-dollar" style="color: #00ff88;"></i>';
+        if (lower.includes('efectivo')) return '<i class="fa-solid fa-money-bill-wave" style="color: #22c55e;"></i>';
+        return '<i class="fa-solid fa-circle-check text-green"></i>';
+      };
+
+      payChipsContainer.innerHTML = methods.map(m => `<span class="pay-chip" style="display: inline-flex; align-items: center; gap: 5px;">${getPayIcon(m)} ${escapeHtml(m)}</span>`).join('');
+    }
+
 
     // Horario de atención
     const catHoursPill = document.getElementById('cat-store-hours');
@@ -2375,7 +2421,7 @@ async function openStoreCatalog(storeId) {
         catMapsBtn.onclick = null;
       } else {
         // Tienda virtual / online: distintivo claro sin abrir errores de mapas
-        catMapsBtn.href = '#';
+        catMapsBtn.href = "javascript:void(0)";
         catMapsBtn.innerHTML = '<i class="fa-solid fa-truck-fast"></i> Tienda Virtual (Envíos)';
         catMapsBtn.style.display = 'inline-flex';
         catMapsBtn.onclick = (e) => {
