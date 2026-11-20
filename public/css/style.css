@@ -358,8 +358,9 @@ body.dark-theme {
   justify-content: center;
 }
 
-/* Botón Flotante FAB para publicar en móvil (oculto en desktop) */
-.floating-fab-upload {
+/* Botones Flotantes FAB para publicar y Mi Tienda en móvil (ocultos en desktop) */
+.floating-fab-upload,
+.floating-fab-my-store {
   display: none;
 }
 

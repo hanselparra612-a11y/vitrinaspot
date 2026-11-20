@@ -1664,12 +1664,21 @@ function setupFeedIntersectionObserver() {
         // Gestión visual inteligente del botón flotante (+): ocultar en Reel Cero (Hook de bienvenida) y mostrar en catálogo
         const floatingFab = document.getElementById('btn-floating-fab-upload');
         if (floatingFab) {
+          const floatingMyStore = document.getElementById('btn-floating-my-store');
           if (entry.target.id === 'card-welcome-hook') {
             floatingFab.style.opacity = '0';
             floatingFab.style.pointerEvents = 'none';
+            if (floatingMyStore) {
+              floatingMyStore.style.opacity = '0';
+              floatingMyStore.style.pointerEvents = 'none';
+            }
           } else {
             floatingFab.style.opacity = '1';
             floatingFab.style.pointerEvents = 'auto';
+            if (floatingMyStore) {
+              floatingMyStore.style.opacity = '1';
+              floatingMyStore.style.pointerEvents = 'auto';
+            }
           }
         }
         // Telemetría automática de impresiones Google AdMob In-Feed
