@@ -610,8 +610,10 @@ class Database {
       return true;
     });
 
-    // Enriquecer cada video con la información y reputación actualizada de su tienda
+    // Enriquecer cada video con la información y reputación actualizada de su tienda y asegurar contador de comentarios
     list.forEach(v => {
+      v.comments = Array.isArray(v.comments) ? v.comments : [];
+      v.commentsCount = v.comments.length;
       const st = this.data.stores.find(s => s.id === v.storeId);
       if (st) {
         v.storeRating = (typeof st.rating === 'number' && !isNaN(st.rating)) ? st.rating : 5.0;
@@ -711,8 +713,12 @@ class Database {
 
   getVideoById(id) {
     this.cleanExpiredSpotsAndMemberships();
-    const video = this.data.videos.find(v => v.id === id);
+    if (!id) return null;
+    const targetId = String(id).trim().toLowerCase();
+    const video = this.data.videos.find(v => v && v.id && String(v.id).trim().toLowerCase() === targetId);
     if (video) {
+      video.comments = Array.isArray(video.comments) ? video.comments : [];
+      video.commentsCount = video.comments.length;
       video.views = (video.views || 0) + 1;
       this.data.config.telemetry.totalViews = (this.data.config.telemetry.totalViews || 0) + 1;
       this.save();
@@ -788,10 +794,13 @@ class Database {
   }
 
   addComment(videoId, comment) {
-    const video = this.data.videos.find(v => v.id === videoId);
+    if (!videoId) return null;
+    const targetId = String(videoId).trim().toLowerCase();
+    const video = this.data.videos.find(v => v && v.id && String(v.id).trim().toLowerCase() === targetId);
     if (video) {
-      if (!video.comments) video.comments = [];
+      if (!Array.isArray(video.comments)) video.comments = [];
       video.comments.unshift(comment);
+      video.commentsCount = video.comments.length;
 
       // Notificación para la tienda dueña SOLO si es de un cliente externo (Cero auto-notificaciones)
       const isOwner = comment.isStoreOwner || (comment.author && video.storeName && comment.author.trim().toLowerCase() === video.storeName.trim().toLowerCase());
@@ -800,7 +809,7 @@ class Database {
         this.data.notifications.unshift({
           id: `notif-${Date.now()}`,
           storeId: video.storeId,
-          text: `💬 ${comment.author} preguntó en "${video.title.substring(0, 28)}..."`,
+          text: `💬 ${comment.author} preguntó en "${(video.title || '').substring(0, 28)}..."`,
           date: new Date().toISOString(),
           read: false
         });

@@ -2148,6 +2148,43 @@
     </div>
   </div>
 
+  <!-- MODAL: COMPARTIR SPOT CON IMAGEN GENERADA Y MENSAJE -->
+  <div class="modal-overlay" id="modal-share-spot-card" style="display: none; z-index: 10000;">
+    <div class="modal-dialog" style="max-width: 440px; border-radius: 20px; overflow: hidden; background: #0b0f19; border: 1px solid rgba(255,255,255,0.12);">
+      <div class="modal-header" style="background: rgba(15, 23, 42, 0.95); padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
+        <h3 style="margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; color: #fff;">
+          <i class="fa-solid fa-share-nodes text-spot"></i> Compartir Spot con Imagen
+        </h3>
+        <button type="button" class="close-modal-btn" id="btn-close-share-spot-card">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px 18px; text-align: center;">
+        <!-- Previsualización de la tarjeta generada -->
+        <div id="share-spot-preview-container" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-bottom: 14px; background: #111827; border: 1px solid rgba(255,255,255,0.08);">
+          <img id="share-spot-preview-img" src="" alt="Tarjeta del Spot" style="width: 100%; height: auto; max-height: 280px; object-fit: contain; display: block; border-radius: 14px; margin: 0 auto;">
+        </div>
+
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0 0 14px; line-height: 1.4;">
+          ¡Tarjeta generada con éxito! Compártela con el mensaje y enlace directo al producto.
+        </p>
+
+        <!-- Botones de Acción -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" class="btn btn-primary" id="btn-share-spot-wa" style="width: 100%; background: #25D366; color: #fff; font-weight: 700; font-size: 0.95rem; padding: 12px; border-radius: 12px; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(37,211,102,0.35); cursor: pointer;">
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i> Enviar Mensaje a WhatsApp
+          </button>
+
+          <button type="button" class="btn btn-outline" id="btn-download-spot-card" style="width: 100%; font-size: 0.9rem; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: #fff; cursor: pointer;">
+            <i class="fa-solid fa-download"></i> Descargar Imagen del Spot
+          </button>
+
+          <button type="button" class="btn btn-ghost" id="btn-copy-spot-link" style="width: 100%; font-size: 0.85rem; padding: 8px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+            <i class="fa-solid fa-copy"></i> Copiar Enlace Directo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: DIRECTORIO COMPLETO DE CATEGORÍAS (31) GLASSMORPHISM & BOTONES FLOTANTES -->
   <div class="modal-overlay" id="modal-all-categories" style="display: none; z-index: 10000;">
     <div class="modal-dialog modal-categories-dialog">

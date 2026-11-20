@@ -980,7 +980,7 @@ function buildSingleProductCardHTML(video, idx) {
           <div class="action-icon-circle side-icon-circle">
             <i class="fa-solid fa-comments"></i>
           </div>
-          <span class="action-label" id="comments-count-${uid}">${video.commentsCount || 0}</span>
+          <span class="action-label comments-count-label comments-count-${video.id}" id="comments-count-${uid}">${formatNumber(video.commentsCount || 0)}</span>
         </button>
 
         <!-- 4. COMPARTIR SPOT -->
@@ -2268,27 +2268,369 @@ async function toggleLikeSpot(videoId, e) {
 window.toggleLikeSpot = toggleLikeSpot;
 window.toggleCardLike = toggleLikeSpot;
 
-function shareSpot(videoId, e) {
+// ==========================================
+// GENERADOR DE TARJETA VISUAL DE SPOT PARA COMPARTIR (IMAGEN + MENSAJE)
+// ==========================================
+function loadShareImage(src) {
+  return new Promise((resolve) => {
+    if (!src) return resolve(null);
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => {
+      // Si falla por CORS de origen externo, pasar por proxy seguro
+      if (src.startsWith('http')) {
+        const proxyImg = new Image();
+        proxyImg.crossOrigin = 'anonymous';
+        proxyImg.onload = () => resolve(proxyImg);
+        proxyImg.onerror = () => resolve(null);
+        proxyImg.src = '/api/image-proxy?url=' + encodeURIComponent(src);
+      } else {
+        resolve(null);
+      }
+    };
+    img.src = src;
+  });
+}
+
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y + width, x, y, radius);
+  ctx.closePath();
+}
+
+async function generateSpotShareCardBlob(video, store) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+
+  // 1. Fondo elegante oscuro estilo VitrinaSpot
+  const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
+  bgGrad.addColorStop(0, '#0f172a');
+  bgGrad.addColorStop(0.5, '#090d16');
+  bgGrad.addColorStop(1, '#020617');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  // 2. Imagen principal del Spot (Aspect Ratio Cover en contenedor redondeado)
+  const primaryImgUrl = (video.photos && video.photos[0]) || video.thumbnailUrl || '';
+  const img = await loadShareImage(primaryImgUrl);
+
+  const imgBoxX = 40;
+  const imgBoxY = 40;
+  const imgBoxW = 1000;
+  const imgBoxH = 670;
+  const radius = 28;
+
+  ctx.save();
+  drawRoundedRect(ctx, imgBoxX, imgBoxY, imgBoxW, imgBoxH, radius);
+  ctx.clip();
+
+  if (img && img.naturalWidth) {
+    const nw = img.naturalWidth;
+    const nh = img.naturalHeight;
+    const imgAspect = nw / nh;
+    const boxAspect = imgBoxW / imgBoxH;
+    let sx = 0, sy = 0, sw = nw, sh = nh;
+
+    if (imgAspect > boxAspect) {
+      sw = nh * boxAspect;
+      sx = (nw - sw) / 2;
+    } else {
+      sh = nw / boxAspect;
+      sy = (nh - sh) / 2;
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, imgBoxX, imgBoxY, imgBoxW, imgBoxH);
+  } else {
+    // Fallback si no hay foto
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(imgBoxX, imgBoxY, imgBoxW, imgBoxH);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 36px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('VitrinaSpot Colombia', imgBoxX + imgBoxW / 2, imgBoxY + imgBoxH / 2);
+  }
+
+  // Viñeta oscura suave en la base de la foto para contraste
+  const shadowGrad = ctx.createLinearGradient(0, imgBoxY + imgBoxH - 180, 0, imgBoxY + imgBoxH);
+  shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  shadowGrad.addColorStop(1, 'rgba(0,0,0,0.65)');
+  ctx.fillStyle = shadowGrad;
+  ctx.fillRect(imgBoxX, imgBoxY + imgBoxH - 180, imgBoxW, 180);
+
+  ctx.restore();
+
+  // Borde sutil del marco de la foto
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+  ctx.lineWidth = 3;
+  drawRoundedRect(ctx, imgBoxX, imgBoxY, imgBoxW, imgBoxH, radius);
+  ctx.stroke();
+  ctx.restore();
+
+  // Insignia Top-Left: VitrinaSpot Colombia
+  ctx.save();
+  const badgeX = 64, badgeY = 64, badgeW = 320, badgeH = 52;
+  drawRoundedRect(ctx, badgeX, badgeY, badgeW, badgeH, 26);
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255, 184, 0, 0.6)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#ffb800';
+  ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('🛍️ VitrinaSpot Colombia', badgeX + 22, badgeY + 35);
+  ctx.restore();
+
+  // Insignia Top-Right: Categoría o Promo
+  if (video.category || video.promoBadge) {
+    ctx.save();
+    const catText = video.promoBadge ? `🔥 ${video.promoBadge}` : video.category;
+    ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const textWidth = ctx.measureText(catText).width;
+    const catBadgeW = textWidth + 36;
+    const catBadgeH = 48;
+    const catBadgeX = imgBoxX + imgBoxW - catBadgeW - 24;
+    const catBadgeY = 64;
+
+    drawRoundedRect(ctx, catBadgeX, catBadgeY, catBadgeW, catBadgeH, 24);
+    ctx.fillStyle = video.promoBadge ? 'rgba(239, 68, 68, 0.9)' : 'rgba(30, 41, 59, 0.88)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'left';
+    ctx.fillText(catText, catBadgeX + 18, catBadgeY + 32);
+    ctx.restore();
+  }
+
+  // 3. Panel Inferior de Información Comercial
+  const infoBoxX = 40;
+  const infoBoxY = 735;
+  const infoBoxW = 1000;
+  const infoBoxH = 305;
+  const infoRadius = 24;
+
+  ctx.save();
+  drawRoundedRect(ctx, infoBoxX, infoBoxY, infoBoxW, infoBoxH, infoRadius);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+
+  // Fila 1: Tienda y Ciudad
+  ctx.save();
+  ctx.fillStyle = '#f1f5f9';
+  ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.textAlign = 'left';
+  const storeDisplayName = (store?.name || video.storeName || 'Tienda Oficial');
+  ctx.fillText(`🏪 ${storeDisplayName}`, infoBoxX + 28, infoBoxY + 48);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  const cityText = `📍 ${video.city || 'Colombia'}`;
+  ctx.fillText(cityText, infoBoxX + 28 + ctx.measureText(`🏪 ${storeDisplayName}`).width + 24, infoBoxY + 48);
+  ctx.restore();
+
+  // Fila 2: Título del Producto (hasta 2 líneas limpias)
+  ctx.save();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.textAlign = 'left';
+
+  const rawTitle = video.title || 'Producto en VitrinaSpot';
+  let titleLine1 = rawTitle;
+  let titleLine2 = '';
+
+  if (ctx.measureText(rawTitle).width > (infoBoxW - 60)) {
+    const words = rawTitle.split(' ');
+    titleLine1 = '';
+    titleLine2 = '';
+    let isSecondLine = false;
+    for (const w of words) {
+      if (!isSecondLine) {
+        if (ctx.measureText(titleLine1 + ' ' + w).width < (infoBoxW - 80)) {
+          titleLine1 += (titleLine1 ? ' ' : '') + w;
+        } else {
+          isSecondLine = true;
+          titleLine2 += w;
+        }
+      } else {
+        if (ctx.measureText(titleLine2 + ' ' + w).width < (infoBoxW - 120)) {
+          titleLine2 += ' ' + w;
+        } else {
+          titleLine2 += '...';
+          break;
+        }
+      }
+    }
+  }
+
+  ctx.fillText(titleLine1, infoBoxX + 28, infoBoxY + 104);
+  if (titleLine2) {
+    ctx.fillText(titleLine2, infoBoxX + 28, infoBoxY + 148);
+  }
+  ctx.restore();
+
+  // Fila 3: Precio Destacado e Información de Envío
+  ctx.save();
+  const priceY = titleLine2 ? (infoBoxY + 208) : (infoBoxY + 185);
+  const priceStr = video.priceFormatted || (video.price ? `$ ${Number(video.price).toLocaleString('es-CO')} COP` : 'Precio a convenir');
+  ctx.font = 'bold 38px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  const priceTextWidth = ctx.measureText(priceStr).width;
+  const pricePillW = priceTextWidth + 44;
+  const pricePillH = 54;
+
+  // Pastilla de precio verde esmeralda
+  drawRoundedRect(ctx, infoBoxX + 28, priceY - 40, pricePillW, pricePillH, 16);
+  ctx.fillStyle = '#10b981';
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'left';
+  ctx.fillText(priceStr, infoBoxX + 50, priceY);
+
+  // Texto de entrega / pedidos
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = '24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  const deliveryText = video.delivery ? `📦 ${video.delivery}` : '💬 Pedidos directos sin comisión';
+  ctx.fillText(deliveryText, infoBoxX + 28 + pricePillW + 20, priceY - 4);
+  ctx.restore();
+
+  // Fila 4: Footer CTA Call To Action
+  ctx.save();
+  ctx.fillStyle = '#f59e0b';
+  ctx.font = 'bold 21px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('✨ VitrinaSpot · Catálogo Digital y Conexión Directa al Vendedor', infoBoxX + 28, infoBoxY + 280);
+  ctx.restore();
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
+  });
+}
+
+let activeShareSpotBlobUrl = null;
+
+function openShareSpotCardModal(video, blob, file, shareText, videoDirectUrl) {
+  const modal = document.getElementById('modal-share-spot-card');
+  const previewImg = document.getElementById('share-spot-preview-img');
+  if (!modal || !previewImg) return;
+
+  if (activeShareSpotBlobUrl) {
+    URL.revokeObjectURL(activeShareSpotBlobUrl);
+  }
+  activeShareSpotBlobUrl = URL.createObjectURL(blob);
+  previewImg.src = activeShareSpotBlobUrl;
+
+  // Botón Descargar Tarjeta JPG
+  const btnDownload = document.getElementById('btn-download-spot-card');
+  if (btnDownload) {
+    btnDownload.onclick = () => {
+      const a = document.createElement('a');
+      a.href = activeShareSpotBlobUrl;
+      a.download = `vitrinaspot-${video.id}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('📥 ¡Imagen del Spot descargada con éxito!');
+    };
+  }
+
+  // Botón Compartir en WhatsApp con Texto y Enlace
+  const btnWa = document.getElementById('btn-share-spot-wa');
+  if (btnWa) {
+    btnWa.onclick = () => {
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+      window.open(waUrl, '_blank');
+      showToast('📲 Abriendo WhatsApp con el mensaje...');
+    };
+  }
+
+  // Botón Copiar Enlace
+  const btnCopy = document.getElementById('btn-copy-spot-link');
+  if (btnCopy) {
+    btnCopy.onclick = () => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(videoDirectUrl).then(() => {
+          showToast('📋 ¡Enlace copiado al portapapeles!');
+        }).catch(() => {
+          legacyClipboardCopy(videoDirectUrl);
+        });
+      } else {
+        legacyClipboardCopy(videoDirectUrl);
+      }
+    };
+  }
+
+  // Botón Cerrar
+  const btnClose = document.getElementById('btn-close-share-spot-card');
+  if (btnClose) {
+    btnClose.onclick = () => {
+      modal.style.display = 'none';
+    };
+  }
+  modal.onclick = (e) => {
+    if (e.target.id === 'modal-share-spot-card') {
+      modal.style.display = 'none';
+    }
+  };
+
+  modal.style.display = 'flex';
+}
+
+async function shareSpot(videoId, e) {
   if (e) e.stopPropagation();
-  const video = state.videos.find(v => v.id === videoId);
+  const video = state.videos.find(v => String(v.id).trim().toLowerCase() === String(videoId).trim().toLowerCase());
   if (!video) return;
 
-  const store = state.stores.find(s => s.id === video.storeId);
+  const store = state.stores.find(s => s.id === video.storeId) || {
+    name: video.storeName,
+    avatar: video.storeAvatar,
+    city: video.city
+  };
+
   const videoDirectUrl = getPublicShareUrl('?v=' + video.id);
   const shareTitle = `${video.title} - ${store?.name || video.storeName || 'VitrinaSpot'}`;
-  const shareText = `🛍️ ¡Mira este producto en VitrinaSpot Colombia!\n*${video.title}* ${video.priceFormatted ? '- ' + video.priceFormatted : ''}\n📍 ${video.city || 'Colombia'}\n\n👉 Ver producto y contactar directo: ${videoDirectUrl}`;
+  const shareText = `🛍️ ¡Mira este producto en VitrinaSpot Colombia!\n\n*${video.title}*\n💰 *${video.priceFormatted || (video.price ? '$ ' + Number(video.price).toLocaleString('es-CO') + ' COP' : 'A convenir')}*\n🏪 Tienda: *${store?.name || video.storeName || 'VitrinaSpot'}*\n📍 Ubicación: *${video.city || 'Colombia'}*\n\n👉 Ver fotos completas y contactar directo al vendedor:\n${videoDirectUrl}`;
 
-  if (navigator.share) {
-    navigator.share({
-      title: shareTitle,
-      text: shareText,
-      url: videoDirectUrl
-    }).catch(err => {
-      if (err.name !== 'AbortError') {
-        fallbackShare(videoDirectUrl, shareText);
+  showToast('🎨 Generando imagen del spot...', 'info', 1800);
+
+  try {
+    const blob = await generateSpotShareCardBlob(video, store);
+    if (!blob) throw new Error('No se pudo generar la imagen');
+
+    const file = new File([blob], `vitrinaspot-${video.id}.jpg`, { type: 'image/jpeg' });
+
+    // 1. Intentar Web Share API Level 2 con archivo de imagen adjunto (WhatsApp / Instagram / Móviles)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: shareTitle,
+          text: shareText
+        });
+        showToast('🚀 ¡Spot compartido con éxito!');
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return; // Cancelado por el usuario
+        console.warn('Share nativo con archivo cancelado o no disponible, abriendo modal:', err);
       }
-    });
-  } else {
+    }
+
+    // 2. Si no admite envío de archivos directo (PC, navegadores de escritorio o fallback):
+    openShareSpotCardModal(video, blob, file, shareText, videoDirectUrl);
+
+  } catch (err) {
+    console.error('Error al generar tarjeta del spot:', err);
     fallbackShare(videoDirectUrl, shareText);
   }
 }
@@ -7246,17 +7588,52 @@ function closeCommentsSheet() {
   }
 }
 
+function updateSpotCommentsBadges(videoId, count) {
+  const formatted = formatNumber(count || 0);
+  const vId = String(videoId).trim();
+  document.querySelectorAll(`.comments-count-${vId}`).forEach(el => {
+    el.textContent = formatted;
+  });
+  document.querySelectorAll(`[id^="comments-count-${vId}"]`).forEach(el => {
+    el.textContent = formatted;
+  });
+  const reelCommentCount = document.getElementById('reel-comment-count');
+  if (reelCommentCount) reelCommentCount.textContent = formatted;
+}
+window.updateSpotCommentsBadges = updateSpotCommentsBadges;
+
+function renderCommentsInSheet(comments) {
+  const container = document.getElementById('sheet-comments-container');
+  if (!container) return;
+  if (!comments || comments.length === 0) {
+    container.innerHTML = '<p class="text-muted" style="font-size:0.9rem; text-align: center; margin: 28px 0;"><i class="fa-regular fa-comments" style="font-size:1.8rem; display:block; margin-bottom:8px; opacity:0.5;"></i>Sé el primero en dejar una pregunta al vendedor.</p>';
+  } else {
+    container.innerHTML = comments.map(c => `
+      <div class="sheet-comment-item">
+        <img class="sheet-comment-avatar" src="${c.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}" alt="${escapeHtml(c.author)}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80';" loading="lazy">
+        <div class="sheet-comment-content">
+          <div class="sheet-comment-author-row">
+            <span class="sheet-comment-author">${escapeHtml(c.author)}</span>
+            ${c.isStoreOwner ? '<span class="badge-owner">Vendedor</span>' : (c.isVerifiedBuyer || (c.author && c.author !== 'Comprador Anónimo' && c.author !== 'Usuario VitrinaSpot') ? '<span class="badge-verified-buyer"><i class="fa-solid fa-circle-check"></i> Verificado</span>' : '')}
+            <span class="sheet-comment-time">${formatRelativeTime(c.createdAt)}</span>
+          </div>
+          <p class="sheet-comment-body">${escapeHtml(c.text)}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
 function openCommentsSheet(videoOrId, e) {
   if (e) e.stopPropagation();
   let video = videoOrId;
   if (typeof videoOrId === 'string') {
-    video = state.videos.find(v => v.id === videoOrId);
+    video = state.videos.find(v => String(v.id).trim().toLowerCase() === String(videoOrId).trim().toLowerCase());
   }
   if (!video) return;
   activeCommentsVideoId = video.id;
 
   const modal = document.getElementById('modal-comments-sheet');
-  const container = document.getElementById('sheet-comments-container');
   const myAvatarImg = document.getElementById('sheet-current-user-avatar');
   const commentInput = document.getElementById('sheet-comment-input');
   
@@ -7285,31 +7662,28 @@ function openCommentsSheet(videoOrId, e) {
     if (commentInput) commentInput.placeholder = 'Pregúntale al vendedor sobre este producto...';
   }
 
-  const comments = video.comments || [];
-  if (comments.length === 0) {
-    container.innerHTML = '<p class="text-muted" style="font-size:0.9rem; text-align: center; margin: 28px 0;"><i class="fa-regular fa-comments" style="font-size:1.8rem; display:block; margin-bottom:8px; opacity:0.5;"></i>Sé el primero en dejar una pregunta al vendedor.</p>';
-  } else {
-    container.innerHTML = comments.map(c => `
-      <div class="sheet-comment-item">
-        <img class="sheet-comment-avatar" src="${c.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'}" alt="${escapeHtml(c.author)}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80';" loading="lazy">
-        <div class="sheet-comment-content">
-          <div class="sheet-comment-author-row">
-            <span class="sheet-comment-author">${escapeHtml(c.author)}</span>
-            ${c.isStoreOwner ? '<span class="badge-owner">Vendedor</span>' : (c.isVerifiedBuyer || (c.author && c.author !== 'Comprador Anónimo' && c.author !== 'Usuario VitrinaSpot') ? '<span class="badge-verified-buyer"><i class="fa-solid fa-circle-check"></i> Verificado</span>' : '')}
-            <span class="sheet-comment-time">${formatRelativeTime(c.createdAt)}</span>
-          </div>
-          <p class="sheet-comment-body">${escapeHtml(c.text)}</p>
-        </div>
-      </div>
-    `).join('');
-  }
+  // 1. Render inmediato de comentarios en memoria
+  renderCommentsInSheet(video.comments || []);
+
+  // 2. Sincronización en segundo plano con el servidor (PostgreSQL)
+  fetch(`/api/videos/${encodeURIComponent(video.id)}/comments`)
+    .then(r => r.ok ? r.json() : null)
+    .then(freshComments => {
+      if (freshComments && Array.isArray(freshComments) && activeCommentsVideoId === video.id) {
+        video.comments = freshComments;
+        video.commentsCount = freshComments.length;
+        renderCommentsInSheet(freshComments);
+        updateSpotCommentsBadges(video.id, freshComments.length);
+        renderDesktopComments(freshComments);
+      }
+    }).catch(() => {});
 }
 
 async function submitComment(text) {
   if (!text || text.trim() === '') return;
   const targetId = activeCommentsVideoId || (state.videos[state.currentIndex] ? state.videos[state.currentIndex].id : null);
   if (!targetId) return;
-  const video = state.videos.find(v => v.id === targetId) || state.videos[state.currentIndex];
+  const video = state.videos.find(v => String(v.id).trim().toLowerCase() === String(targetId).trim().toLowerCase()) || state.videos[state.currentIndex];
   if (!video) return;
 
   // Foto y nombre real del usuario autenticado en VitrinaSpot
@@ -7321,24 +7695,28 @@ async function submitComment(text) {
   const isOwner = isLogged && state.currentStore.id === video.storeId;
 
   try {
-    const res = await fetch(`/api/videos/${video.id}/comments`, {
+    const res = await fetch(`/api/videos/${encodeURIComponent(video.id)}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, author, avatar, isStoreOwner: isOwner, isVerifiedBuyer: isLogged })
+      body: JSON.stringify({ text: text.trim(), author, avatar, isStoreOwner: isOwner, isVerifiedBuyer: isLogged })
     });
 
     if (res.ok) {
       const newComment = await res.json();
-      if (!video.comments) video.comments = [];
+      if (!Array.isArray(video.comments)) video.comments = [];
       video.comments.unshift(newComment);
+      video.commentsCount = video.comments.length;
       
-      const cardCommentCount = document.querySelector(`#card-${video.id} .btn-card-comment .action-count`);
-      if (cardCommentCount) cardCommentCount.textContent = formatNumber(video.comments.length);
-      const reelCommentCount = document.getElementById('reel-comment-count');
-      if (reelCommentCount) reelCommentCount.textContent = formatNumber(video.comments.length);
-      
-      openCommentsSheet(video);
+      // Actualizar contadores y badges en tiempo real en todas las tarjetas activas
+      updateSpotCommentsBadges(video.id, video.comments.length);
+      renderCommentsInSheet(video.comments);
       renderDesktopComments(video.comments);
+
+      // Limpiar campos de texto
+      const input = document.getElementById('sheet-comment-input');
+      if (input) input.value = '';
+      const deskInput = document.getElementById('desk-comment-input');
+      if (deskInput) deskInput.value = '';
 
       // Auto-scroll suave hacia el comentario publicado (arriba del listado)
       const container = document.getElementById('sheet-comments-container');
@@ -7352,10 +7730,13 @@ async function submitComment(text) {
       }
 
       showToast('🎉 ¡Pregunta enviada al vendedor!');
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      showToast(errData.error || 'Error al publicar comentario', 'error');
     }
   } catch (err) {
-    console.error(err);
-    showToast('Error al publicar comentario', 'error');
+    console.error('Error al enviar comentario:', err);
+    showToast('Error de red al publicar comentario', 'error');
   }
 }
 

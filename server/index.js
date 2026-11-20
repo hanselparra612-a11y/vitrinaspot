@@ -270,6 +270,45 @@ app.post('/api/videos/:id/gift', (req, res) => {
   res.json({ success: true, giftsCount });
 });
 
+// Obtener comentarios de un video en tiempo real
+app.get('/api/videos/:id/comments', (req, res) => {
+  const video = db.getVideoById(req.params.id);
+  if (!video) return res.status(404).json({ error: 'Video no encontrado' });
+  res.json(video.comments || []);
+});
+
+// Proxy seguro de imágenes para generación de Canvas / Web Share sin bloqueo CORS
+app.get('/api/image-proxy', async (req, res) => {
+  const targetUrl = req.query.url;
+  if (!targetUrl || (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://'))) {
+    return res.status(400).json({ error: 'URL de imagen no válida' });
+  }
+
+  try {
+    const response = await fetch(targetUrl, {
+      headers: {
+        'User-Agent': 'VitrinaSpot-ImageProxy/1.0',
+        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).end();
+    }
+
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    
+    const arrayBuffer = await response.arrayBuffer();
+    res.send(Buffer.from(arrayBuffer));
+  } catch (err) {
+    console.error('Error proxying image:', err.message);
+    res.status(500).json({ error: 'No se pudo cargar la imagen' });
+  }
+});
+
 // Agregar comentario a un video con verificación de cliente
 app.post('/api/videos/:id/comments', (req, res) => {
   const { text, author, avatar, isStoreOwner, isVerifiedBuyer } = req.body;
