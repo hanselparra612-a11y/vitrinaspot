@@ -1696,8 +1696,11 @@ function setupFeedIntersectionObserver() {
           // Montar automáticamente rieles según la tarjeta en foco
           if (idx > 0) {
             collapseHeader();
-          } else if (idx === 0 && feedContainer.scrollTop <= 20) {
-            expandHeader();
+          } else if (idx === 0) {
+            const feedScroll = document.getElementById('feed-scroll-container');
+            if (!feedScroll || feedScroll.scrollTop <= 20) {
+              expandHeader();
+            }
           }
         }
 
