@@ -345,7 +345,7 @@ app.post('/api/videos/:id/report', (req, res) => {
   });
 });
 
-// Subir nuevo anuncio comercial (Paquete de 5 Fotos Gratis o Video)
+// Subir nuevo anuncio comercial (Paquete de 7 Fotos Gratis o Video)
 app.post('/api/videos', upload.fields([
   { name: 'coverPhoto', maxCount: 1 },
   { name: 'photo1', maxCount: 1 },
@@ -353,11 +353,13 @@ app.post('/api/videos', upload.fields([
   { name: 'photo3', maxCount: 1 },
   { name: 'photo4', maxCount: 1 },
   { name: 'photo5', maxCount: 1 },
+  { name: 'photo6', maxCount: 1 },
+  { name: 'photo7', maxCount: 1 },
   { name: 'video', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const detailPhotos = [];
-    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
+    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7'];
     for (const fName of photoFields) {
       if (req.files && req.files[fName] && req.files[fName].length > 0) {
         const fileObj = req.files[fName][0];
@@ -684,7 +686,9 @@ app.post('/api/videos/:id/fix-rejected', upload.fields([
   { name: 'photo2', maxCount: 1 },
   { name: 'photo3', maxCount: 1 },
   { name: 'photo4', maxCount: 1 },
-  { name: 'photo5', maxCount: 1 }
+  { name: 'photo5', maxCount: 1 },
+  { name: 'photo6', maxCount: 1 },
+  { name: 'photo7', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const { storeId, title, price, description } = req.body;
@@ -694,7 +698,7 @@ app.post('/api/videos/:id/fix-rejected', upload.fields([
     }
 
     const detailPhotos = [...(video.detailPhotos || [])];
-    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
+    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7'];
     for (let i = 0; i < photoFields.length; i++) {
       const fName = photoFields[i];
       if (req.files && req.files[fName] && req.files[fName].length > 0) {
@@ -757,10 +761,10 @@ app.post('/api/videos/:id/photos', upload.single('photo'), async (req, res) => {
     const photos = Array.isArray(video.detailPhotos) ? [...video.detailPhotos] : [];
     const index = parseInt(req.body.index, 10);
 
-    if (!isNaN(index) && index >= 0 && index < 3) {
+    if (!isNaN(index) && index >= 0 && index < 7) {
       photos[index] = photoUrl;
     } else {
-      if (photos.length < 3) photos.push(photoUrl);
+      if (photos.length < 7) photos.push(photoUrl);
       else photos[photos.length - 1] = photoUrl;
     }
 

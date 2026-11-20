@@ -938,10 +938,10 @@
               <div class="plan-icon"><i class="fa-solid fa-gift text-gold"></i></div>
               <strong class="plan-title">Publicación Gratuita</strong>
               <span class="plan-price" id="plan-card-price-photos">Totalmente Gratis (Permanente)</span>
-              <p class="plan-desc" id="plan-card-desc-photos">Publica tu producto con hasta 5 fotos en alta definición y contacto directo a WhatsApp sin costo.</p>
+              <p class="plan-desc" id="plan-card-desc-photos">Publica tu producto con hasta 7 fotos en alta definición y contacto directo a WhatsApp sin costo.</p>
             </div>
           </div>
-          <input type="hidden" name="selectedPlan" id="upload-selected-plan" value="photos_5">
+          <input type="hidden" name="selectedPlan" id="upload-selected-plan" value="photos_7">
         </div>
 
         <!-- 1. FOTO PRINCIPAL / PORTADA (LA QUE SALE EN GRANDE EN EL FEED) -->
@@ -960,10 +960,10 @@
           </div>
         </div>
 
-        <!-- 2. LAS 4 FOTOS DE DETALLE (SECUNDARIAS / GALERÍA - 5 FOTOS EN TOTAL) -->
+        <!-- 2. LAS 6 FOTOS DE DETALLE (SECUNDARIAS / GALERÍA - 7 FOTOS EN TOTAL) -->
         <div class="form-group">
-          <label class="form-section-title"><i class="fa-solid fa-images text-spot"></i> 2. Cuatro Fotos de Detalle <small class="text-muted">(Ángulos, colores, empaque o carta - 5 fotos en total)</small></label>
-          <div class="four-photos-grid">
+          <label class="form-section-title"><i class="fa-solid fa-images text-spot"></i> 2. Seis Fotos de Detalle <small class="text-muted">(Ángulos, colores, empaque o carta - 7 fotos en total)</small></label>
+          <div class="six-photos-grid">
             <div class="mini-photo-picker" id="picker-wrapper-2">
               <label for="upload-photo-2" class="mini-picker-label" id="label-photo-2">
                 <i class="fa-solid fa-plus"></i>
@@ -1002,6 +1002,26 @@
               </label>
               <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-5" style="display: none;" title="Quitar Foto 5">&times;</button>
               <input type="file" id="upload-photo-5" name="photo5" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-6">
+              <label for="upload-photo-6" class="mini-picker-label" id="label-photo-6">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 6</span>
+                <img id="preview-photo-6" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-6" style="display: none;" title="Quitar Foto 6">&times;</button>
+              <input type="file" id="upload-photo-6" name="photo6" accept="image/*">
+            </div>
+
+            <div class="mini-photo-picker" id="picker-wrapper-7">
+              <label for="upload-photo-7" class="mini-picker-label" id="label-photo-7">
+                <i class="fa-solid fa-plus"></i>
+                <span>Foto 7</span>
+                <img id="preview-photo-7" class="mini-picker-img" style="display: none;">
+              </label>
+              <button type="button" class="mini-photo-remove-btn" id="btn-remove-photo-7" style="display: none;" title="Quitar Foto 7">&times;</button>
+              <input type="file" id="upload-photo-7" name="photo7" accept="image/*">
             </div>
           </div>
         </div>
@@ -1106,7 +1126,7 @@
         <!-- BARRA DE SUBIDA RÁPIDA -->
         <div class="upload-progress-card" id="upload-progress-card" style="display: none;">
           <div class="prog-info">
-            <span>Publicando anuncio de 5 fotos gratis...</span>
+            <span>Publicando anuncio de 7 fotos gratis...</span>
             <span id="upload-pct">0%</span>
           </div>
           <div class="prog-bg"><div class="prog-fill" id="upload-fill"></div></div>
@@ -1120,7 +1140,7 @@
             <div style="display: flex; gap: 8px;">
               <button type="button" class="btn btn-ghost" id="btn-cancel-upload">Cancelar</button>
               <button type="button" class="btn btn-spot" id="btn-submit-upload">
-                <i class="fa-solid fa-camera"></i> <span id="submit-upload-btn-text">Publicar 5 Fotos Gratis ($0 COP)</span>
+                <i class="fa-solid fa-camera"></i> <span id="submit-upload-btn-text">Publicar 7 Fotos Gratis ($0 COP)</span>
               </button>
             </div>
           </div>
@@ -1719,9 +1739,9 @@
         <div class="form-group" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <label style="font-weight: 700; color: #fff; margin: 0; font-size: 0.88rem;">
-              <i class="fa-solid fa-images text-spot"></i> Fotos del SPOT (<span id="edit-prod-photos-count">0</span>/3)
+              <i class="fa-solid fa-images text-spot"></i> Fotos del SPOT (<span id="edit-prod-photos-count">0</span>/7)
             </label>
-            <span style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 700;">3 fotos máx.</span>
+            <span style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 700;">7 fotos máx.</span>
           </div>
 
           <div id="edit-prod-photos-strip" style="display: flex; gap: 10px; align-items: center; overflow-x: auto; padding: 4px 0;">

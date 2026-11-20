@@ -5249,7 +5249,7 @@ function setupEventListeners() {
 
   async function prepareCompressedFormData(form) {
     const formData = new FormData(form);
-    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
+    const photoFields = ['coverPhoto', 'photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7'];
     for (const fName of photoFields) {
       const file = formData.get(fName);
       if (file && file instanceof File && file.size > 0) {
@@ -5318,8 +5318,8 @@ function setupEventListeners() {
     if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
   });
 
-  // Vistas previas instantáneas y botones de eliminación de Fotos 2, 3, 4 y 5
-  [2, 3, 4, 5].forEach(num => {
+  // Vistas previas instantáneas y botones de eliminación de Fotos 2, 3, 4, 5, 6 y 7
+  [2, 3, 4, 5, 6, 7].forEach(num => {
     const pInput = document.getElementById(`upload-photo-${num}`);
     const pImg = document.getElementById(`preview-photo-${num}`);
     const btnRemove = document.getElementById(`btn-remove-photo-${num}`);
@@ -5556,8 +5556,8 @@ function setupEventListeners() {
     };
 
     let amount = 0;
-    let typeKey = 'photos_5_pack';
-    let planTitle = `📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)`;
+    let typeKey = 'photos_7_pack';
+    let planTitle = `📸 Publicación 7 Fotos Gratis (100% GRATIS - Permanente)`;
     let isSpotPlan = false;
     let isStandardBoost = false;
 
@@ -5572,17 +5572,17 @@ function setupEventListeners() {
         (!state.currentStore.membershipExpiresAt || new Date(state.currentStore.membershipExpiresAt) > new Date())
       );
       if (!isMemActive && storeCount >= freeQuota) {
-        amount = 0; typeKey = 'photos_5_pack'; planTitle = '📸 Spot 5 Fotos Gratis (Permanente)';
+        amount = 0; typeKey = 'photos_7_pack'; planTitle = '📸 Spot 7 Fotos Gratis (Permanente)';
       } else {
         amount = 0;
-        typeKey = 'photos_5_pack';
-        planTitle = `📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)`;
+        typeKey = 'photos_7_pack';
+        planTitle = `📸 Publicación 7 Fotos Gratis (100% GRATIS - Permanente)`;
       }
 
     } else {
       amount = 0;
-      typeKey = 'photos_5_pack';
-      planTitle = '📸 Publicación 5 Fotos Gratis (100% GRATIS - Permanente)';
+      typeKey = 'photos_7_pack';
+      planTitle = '📸 Publicación 7 Fotos Gratis (100% GRATIS - Permanente)';
     }
 
     // Calcular etiqueta de domicilio configurada por el vendedor
@@ -6583,9 +6583,9 @@ function setupEventListeners() {
       `;
     });
 
-    if (editingSpotPhotos.length < 3) {
+    if (editingSpotPhotos.length < 7) {
       html += `
-        <div class="edit-photo-add-slot" id="btn-add-edit-photo" role="button" tabindex="0" title="Agregar foto (${editingSpotPhotos.length + 1}/3)">
+        <div class="edit-photo-add-slot" id="btn-add-edit-photo" role="button" tabindex="0" title="Agregar foto (${editingSpotPhotos.length + 1}/7)">
           <i class="fa-solid fa-plus"></i>
           <span>+ Foto ${editingSpotPhotos.length + 1}</span>
         </div>
@@ -6627,8 +6627,8 @@ function setupEventListeners() {
   if (editFileInput) {
     editFileInput.addEventListener('change', async () => {
       if (!editFileInput.files || editFileInput.files.length === 0) return;
-      if (editingSpotPhotos.length >= 3) {
-        alert('Este SPOT ya cuenta con las 3 fotos de detalle permitidas.');
+      if (editingSpotPhotos.length >= 7) {
+        alert('Este SPOT ya cuenta con las 7 fotos permitidas.');
         return;
       }
       const file = editFileInput.files[0];
