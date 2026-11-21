@@ -1695,11 +1695,11 @@ function setupFeedIntersectionObserver() {
 
           // Montar automáticamente rieles según la tarjeta en foco
           if (idx > 0) {
-            collapseHeader();
+            if (typeof window.collapseVitrinaHeader === 'function') window.collapseVitrinaHeader();
           } else if (idx === 0) {
             const feedScroll = document.getElementById('feed-scroll-container');
-            if (!feedScroll || feedScroll.scrollTop <= 20) {
-              expandHeader();
+            if ((!feedScroll || feedScroll.scrollTop <= 20) && typeof window.expandVitrinaHeader === 'function') {
+              window.expandVitrinaHeader();
             }
           }
         }
