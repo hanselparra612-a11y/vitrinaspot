@@ -7133,37 +7133,44 @@ body.admin-active-view .main-viewport {
   box-shadow: 0 0 12px rgba(255, 184, 0, 0.35);
 }
 
-/* Cuadrícula de Botones Flotantes */
+/* Cuadrícula de Botones del Directorio de Categorías (Diseño Completo & Legible) */
 .all-categories-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 4px;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 11px !important;
+  padding: 4px !important;
 }
 
-@media (min-width: 620px) {
+@media (min-width: 600px) {
   .all-categories-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
   }
 }
 
-/* Botones Flotantes 3D de Categorías (Píldoras de Cristal) */
+@media (min-width: 920px) {
+  .all-categories-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+}
+
+/* Botones Flotantes 3D de Categorías (Píldoras de Cristal con Texto Completo) */
 .category-directory-card {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: 14px !important;
   background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
   border: 1px solid rgba(255, 255, 255, 0.13) !important;
   border-radius: 16px !important;
-  padding: 12px 14px !important;
+  padding: 13px 16px !important;
   cursor: pointer !important;
   user-select: none !important;
   text-align: left !important;
   position: relative !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38),
               inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
   transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -7171,6 +7178,7 @@ body.admin-active-view .main-viewport {
               border-color 0.22s ease,
               background 0.22s ease !important;
   -webkit-tap-highlight-color: transparent !important;
+  min-height: 66px !important;
 }
 
 /* Efecto de Flotación y Destello al Tocar o Pasar el Cursor */
@@ -7178,8 +7186,8 @@ body.admin-active-view .main-viewport {
 .category-directory-card:active {
   background: rgba(255, 184, 0, 0.12) !important;
   border-color: rgba(255, 184, 0, 0.55) !important;
-  transform: translateY(-4px) scale(1.018) !important;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55),
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55),
               0 0 20px rgba(255, 184, 0, 0.25),
               inset 0 1px 2px rgba(255, 255, 255, 0.35) !important;
 }
@@ -7188,7 +7196,7 @@ body.admin-active-view .main-viewport {
 .category-directory-card.active {
   background: linear-gradient(135deg, rgba(255, 184, 0, 0.28), rgba(255, 136, 0, 0.16)) !important;
   border: 1.5px solid var(--spot-gold) !important;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5),
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5),
               0 0 24px rgba(255, 184, 0, 0.4),
               inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
   transform: translateY(-2px) !important;
@@ -7196,15 +7204,15 @@ body.admin-active-view .main-viewport {
 
 /* Burbuja Flotante para el Emoji */
 .category-directory-emoji-bubble {
-  width: 42px !important;
-  height: 42px !important;
-  border-radius: 12px !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 13px !important;
   background: rgba(255, 255, 255, 0.08) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 1.45rem !important;
+  font-size: 1.55rem !important;
   line-height: 1 !important;
   flex-shrink: 0 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.32),
@@ -7213,25 +7221,30 @@ body.admin-active-view .main-viewport {
 }
 
 .category-directory-card:hover .category-directory-emoji-bubble {
-  transform: scale(1.1) rotate(4deg);
+  transform: scale(1.08) rotate(3deg);
 }
 
-/* Textos dentro del Botón Flotante */
+/* Textos dentro del Botón Flotante (Completos sin recortes ni puntos suspensivos) */
 .category-directory-info {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  flex: 1;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+  flex: 1 !important;
+  min-width: 0 !important;
 }
 
 .category-directory-name {
-  font-size: 0.88rem !important;
+  font-size: 0.96rem !important;
   font-weight: 800 !important;
   color: #ffffff !important;
   letter-spacing: -0.2px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.25 !important;
+  display: block !important;
 }
 
 .category-directory-card:hover .category-directory-name,
@@ -7240,12 +7253,30 @@ body.admin-active-view .main-viewport {
 }
 
 .category-directory-sub {
-  font-size: 0.72rem !important;
-  color: rgba(255, 255, 255, 0.6) !important;
-  margin-top: 2px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  font-size: 0.79rem !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  margin-top: 3px !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.35 !important;
+  display: block !important;
+}
+
+.category-directory-arrow {
+  color: rgba(255, 255, 255, 0.32) !important;
+  font-size: 0.82rem !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease, color 0.2s ease !important;
+}
+
+.category-directory-card:hover .category-directory-arrow,
+.category-directory-card.active .category-directory-arrow {
+  color: var(--spot-gold) !important;
+  transform: translateX(3px) !important;
 }
 
 /* ========================================================
@@ -7610,13 +7641,16 @@ body.admin-active-view .main-viewport {
 }
 
 .cat-picker-card-name {
-  font-size: 0.86rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: normal;
+  overflow-wrap: break-word;
   display: block;
+  line-height: 1.25;
 }
 
 .cat-picker-card.active .cat-picker-card-name {
@@ -7624,13 +7658,16 @@ body.admin-active-view .main-viewport {
 }
 
 .cat-picker-card-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.77rem;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: normal;
+  overflow-wrap: break-word;
   display: block;
-  margin-top: 1px;
+  margin-top: 3px;
+  line-height: 1.35;
 }
 
 .cat-picker-card-check {

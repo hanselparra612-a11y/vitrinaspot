@@ -4768,39 +4768,39 @@ function setupEventListeners() {
   // Directorio Completo de Categorías (Modal y Cuadrícula de 31 Categorías ordenadas por mayor demanda)
   // Directorio Completo de Categorías (Modal y Cuadrícula de 31 Categorías ordenadas por mayor demanda)
   const ALL_CATEGORIES_CATALOG = [
-    { name: 'Todas', emoji: '✨', sub: 'Todo el catálogo' },
-    { name: 'Solo Ofertas', emoji: '🔥', sub: 'Precios de remate' },
-    { name: 'Calzado & Zapatos', emoji: '👟', sub: 'Tenis, zapatos, botas y sandalias' },
-    { name: 'Ropa de Mujer', emoji: '👗', sub: 'Vestidos, blusas y pantalones' },
-    { name: 'Electrónica & Tecnología', emoji: '📱', sub: 'Celulares, PCs y audio' },
-    { name: 'Vehículos & Motos', emoji: '🚗', sub: 'Carros y motocicletas' },
-    { name: 'Comida & Domicilios', emoji: '🍔', sub: 'Restaurantes y postres' },
-    { name: 'Empleo & Vacantes', emoji: '📢', sub: 'Ofertas laborales' },
-    { name: 'Busco Empleo / Se Ofrece', emoji: '💼', sub: 'Profesiones, técnicos y ayudantes' },
-    { name: 'Ropa de Hombre', emoji: '👔', sub: 'Camisas, jeans y chaquetas' },
-    { name: 'Salud & Belleza', emoji: '💄', sub: 'Cuidado y peluquería' },
-    { name: 'Muebles', emoji: '🛋️', sub: 'Salas, camas y clósets' },
-    { name: 'Electrodomésticos', emoji: '🔌', sub: 'Neveras, lavadoras y cocina' },
-    { name: 'Alquileres & Arriendos', emoji: '🔑', sub: 'Viviendas y locales' },
-    { name: 'Acarreos & Mudanzas', emoji: '🚚', sub: 'Trasteos y fletes' },
-    { name: 'Artículos Deportivos', emoji: '⚽', sub: 'Bicicletas y fitness' },
-    { name: 'Productos para Mascotas', emoji: '🐾', sub: 'Alimento y accesorios' },
-    { name: 'Autopartes & Repuestos', emoji: '⚙️', sub: 'Accesorios y repuestos' },
-    { name: 'Propiedades en Venta', emoji: '🏢', sub: 'Casas, lotes y fincas' },
-    { name: 'Hogar & Cocina', emoji: '🍳', sub: 'Menaje y decoración' },
-    { name: 'Joyas, Relojes & Accesorios', emoji: '⌚', sub: 'Oro, plata y relojes' },
-    { name: 'Ropa para Niños & Bebés', emoji: '👶', sub: 'Moda infantil' },
-    { name: 'Bebés & Maternidad', emoji: '🍼', sub: 'Cunas, coches y cuidados' },
-    { name: 'Equipaje & Bolsos', emoji: '🎒', sub: 'Morrales y maletas' },
-    { name: 'Juguetes & Juegos', emoji: '🧸', sub: 'Didácticos y videojuegos' },
-    { name: 'Venta de Garaje', emoji: '🏷️', sub: 'Segunda mano y liquidación' },
-    { name: 'Remodelaciones & Oficios', emoji: '🧱', sub: 'Pintores, plomeros y obra' },
-    { name: 'Patio & Jardín', emoji: '🌿', sub: 'Plantas y exteriores' },
-    { name: 'Instrumentos Musicales', emoji: '🎸', sub: 'Guitarras, audio y más' },
-    { name: 'Libros, Películas & Música', emoji: '📚', sub: 'Lectura y entretenimiento' },
-    { name: 'Arte & Manualidades', emoji: '🎨', sub: 'Escultura y artesanía' },
-    { name: 'Antigüedades & Colección', emoji: '🏺', sub: 'Reliquias y monedas' },
-    { name: 'Varios', emoji: '📦', sub: 'Otros productos y servicios' }
+    { name: 'Todas', emoji: '✨', sub: 'Todo el catálogo comercial en Colombia' },
+    { name: 'Solo Ofertas', emoji: '🔥', sub: 'Precios de remate, promociones y liquidaciones' },
+    { name: 'Calzado & Zapatos', emoji: '👟', sub: 'Tenis deportivos, zapatos casuales, botas y sandalias' },
+    { name: 'Ropa de Mujer', emoji: '👗', sub: 'Vestidos, blusas, jeans, conjuntos y moda femenina' },
+    { name: 'Ropa de Hombre', emoji: '👔', sub: 'Camisas, pantalones, chaquetas, trajes y moda masculina' },
+    { name: 'Electrónica & Tecnología', emoji: '📱', sub: 'Celulares, computadores, tablets, consolas y audio' },
+    { name: 'Vehículos & Motos', emoji: '🚗', sub: 'Carros, motocicletas, camionetas y vehículos comerciales' },
+    { name: 'Comida & Domicilios', emoji: '🍔', sub: 'Restaurantes, comidas rápidas, repostería y postres' },
+    { name: 'Empleo & Vacantes', emoji: '📢', sub: 'Ofertas laborales y convocatorias de contratación' },
+    { name: 'Busco Empleo / Se Ofrece', emoji: '💼', sub: 'Profesionales, técnicos, operarios y ayudantes disponibles' },
+    { name: 'Salud & Belleza', emoji: '💄', sub: 'Cuidado personal, maquillaje, estética y peluquería' },
+    { name: 'Muebles', emoji: '🛋️', sub: 'Salas, comedores, camas, clósets y mobiliario' },
+    { name: 'Electrodomésticos', emoji: '🔌', sub: 'Neveras, lavadoras, estufas, microondas y cocina' },
+    { name: 'Alquileres & Arriendos', emoji: '🔑', sub: 'Apartamentos, casas, habitaciones, fincas y locales' },
+    { name: 'Acarreos & Mudanzas', emoji: '🚚', sub: 'Trasteos, fletes locales y transporte de carga' },
+    { name: 'Artículos Deportivos', emoji: '⚽', sub: 'Bicicletas, máquinas fitness, balones y ropa deportiva' },
+    { name: 'Productos para Mascotas', emoji: '🐾', sub: 'Alimento, camas, collares, juguetes y salud animal' },
+    { name: 'Autopartes & Repuestos', emoji: '⚙️', sub: 'Llantas, lujos, baterías y repuestos mecánicos' },
+    { name: 'Propiedades en Venta', emoji: '🏢', sub: 'Casas, apartamentos, lotes, fincas y proyectos' },
+    { name: 'Hogar & Cocina', emoji: '🍳', sub: 'Menaje, vajillas, utensilios, sábanas y decoración' },
+    { name: 'Joyas, Relojes & Accesorios', emoji: '⌚', sub: 'Oro, plata, relojes originales, gafas y bisutería' },
+    { name: 'Ropa para Niños & Bebés', emoji: '👶', sub: 'Moda infantil, calzado para niños y conjuntos' },
+    { name: 'Bebés & Maternidad', emoji: '🍼', sub: 'Cunas, coches, corrales, pañales y cuidado infantil' },
+    { name: 'Equipaje & Bolsos', emoji: '🎒', sub: 'Morrales escolares, maletas de viaje y carteras' },
+    { name: 'Juguetes & Juegos', emoji: '🧸', sub: 'Juguetes didácticos, figuras de acción y videojuegos' },
+    { name: 'Venta de Garaje', emoji: '🏷️', sub: 'Artículos usados en buen estado y saldos de bodega' },
+    { name: 'Remodelaciones & Oficios', emoji: '🧱', sub: 'Pintores, plomeros, electricistas y albañiles' },
+    { name: 'Patio & Jardín', emoji: '🌿', sub: 'Plantas ornamentales, viveros y herramientas de jardín' },
+    { name: 'Instrumentos Musicales', emoji: '🎸', sub: 'Guitarras, teclados, percusión y audio profesional' },
+    { name: 'Libros, Películas & Música', emoji: '📚', sub: 'Libros impresos, vinilos, discos y películas' },
+    { name: 'Arte & Manualidades', emoji: '🎨', sub: 'Cuadros, esculturas, bordados y artesanías típicas' },
+    { name: 'Antigüedades & Colección', emoji: '🏺', sub: 'Monedas antiguas, reliquias y objetos coleccionables' },
+    { name: 'Varios', emoji: '📦', sub: 'Otros productos, servicios diversos y novedades' }
   ];
 
   // Diccionario Maestro de Sinónimos, Meta-Tags y Comercio Colombiano por Categoría
@@ -4904,6 +4904,7 @@ function setupEventListeners() {
             <span class="category-directory-name">${highlightCategoryText(c.name, query)}</span>
             <span class="category-directory-sub">${highlightCategoryText(c.sub, query)}</span>
           </div>
+          <i class="fa-solid fa-chevron-right category-directory-arrow"></i>
         </div>
       `;
     }).join('');
