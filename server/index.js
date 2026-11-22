@@ -231,7 +231,7 @@ app.get('/', (req, res, next) => {
 
     let ogTitle = 'VitrinaSpot Colombia - Tu vitrina digital, directo a WhatsApp';
     let ogDesc = 'Compra y vende productos directamente por WhatsApp sin intermediarios ni comisiones.';
-    let ogImage = `${baseUrl}/icons/app-icon-commerce.jpg`;
+    let ogImage = `${baseUrl}/icons/vitrinaspot-brand-logo.jpg?v=27.3`;
     let ogUrl = `${baseUrl}/`;
 
     if (videoId) {
@@ -269,8 +269,8 @@ app.get('/', (req, res, next) => {
   <meta property="og:image" content="${cleanStr(ogImage)}">
   <meta property="og:image:secure_url" content="${cleanStr(ogImage)}">
   <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="800">
-  <meta property="og:image:height" content="800">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="${cleanStr(ogUrl)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${cleanStr(ogTitle)}">
