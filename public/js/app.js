@@ -788,49 +788,76 @@ function updateCardPhotoDisplay(video, direction = 'next') {
   if (!video || !video._allPhotos || video._allPhotos.length === 0) return;
   const idx = video._currentPhotoIdx || 0;
   
-  const photoEl = document.getElementById(`photo-${video.id}`);
-  if (photoEl) {
-    photoEl.classList.remove('slide-in-right', 'slide-in-left');
-    void photoEl.offsetWidth; // Forzar reflow para reiniciar animación
-    photoEl.src = video._allPhotos[idx];
-    photoEl.classList.add(direction === 'next' ? 'slide-in-right' : 'slide-in-left');
+  // Actualizar todas las tarjetas asociadas a este video en el feed
+  const cards = document.querySelectorAll(`.reel-player-card[data-id="${video.id}"]`);
+  cards.forEach(card => {
+    const badgeText = card.querySelector('.photo-counter-badge .counter-text');
+    if (badgeText) badgeText.textContent = `${idx + 1}/${video._allPhotos.length}`;
 
-    // Micro-vibración háptica táctil en smartphones
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try { navigator.vibrate(10); } catch (_) {}
-    }
-  }
-
-  const badgeEl = document.getElementById(`badge-photos-${video.id}`);
-  if (badgeEl) {
-    const textEl = badgeEl.querySelector('.counter-text');
-    if (textEl) textEl.textContent = `${idx + 1}/${video._allPhotos.length}`;
-  }
-
-  const dotsEl = document.getElementById(`dots-${video.id}`);
-  if (dotsEl) {
-    const dots = dotsEl.querySelectorAll('.photo-dot');
+    const dots = card.querySelectorAll('.photo-dots-row .photo-dot');
     dots.forEach((dot, dIdx) => {
-      if (dIdx === idx) dot.classList.add('active');
-      else dot.classList.remove('active');
+      dot.classList.toggle('active', dIdx === idx);
     });
+
+    const slider = card.querySelector('.reel-photos-slider');
+    if (slider) {
+      const slideW = slider.clientWidth || 360;
+      slider.scrollTo({ left: idx * slideW, behavior: 'smooth' });
+    }
+  });
+
+  // Micro-vibración háptica táctil en smartphones
+  if (typeof navigator !== 'undefined' && navigator.vibrate) {
+    try { navigator.vibrate(10); } catch (_) {}
   }
 }
 
-function scrollCardPhoto(videoId, direction = 'next', e) {
+function scrollCardPhoto(idOrUid, direction = 'next', e) {
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
-  const slider = document.getElementById(`slider-${videoId}`) || document.querySelector(`.reel-photos-slider[data-id="${videoId}"]`);
+  const slider = document.getElementById(`slider-${idOrUid}`) 
+    || document.querySelector(`.reel-photos-slider[data-id="${idOrUid}"]`)
+    || document.querySelector(`#card-${idOrUid} .reel-photos-slider`)
+    || (e && e.target ? e.target.closest('.reel-player-card')?.querySelector('.reel-photos-slider') : null);
+
+  const card = slider ? slider.closest('.reel-player-card') : (e && e.target ? e.target.closest('.reel-player-card') : null);
+  const videoId = card ? card.dataset.id : (idOrUid ? idOrUid.split('_')[0] : null);
+  const video = state.videos.find(v => v.id === videoId);
+
   if (slider) {
     const slideW = slider.clientWidth || 360;
+    const slides = card ? card.querySelectorAll('.reel-photo-slide') : slider.querySelectorAll('.reel-photo-slide');
+    const totalPhotos = slides.length || (video?._allPhotos?.length || 1);
     const currentScroll = slider.scrollLeft;
-    const target = direction === 'next' ? currentScroll + slideW : currentScroll - slideW;
-    slider.scrollTo({ left: target, behavior: 'smooth' });
+    const currentIdx = Math.min(Math.max(Math.round(currentScroll / (slideW || 1)), 0), totalPhotos - 1);
+
+    let targetIdx;
+    if (direction === 'next') {
+      targetIdx = (currentIdx >= totalPhotos - 1) ? 0 : currentIdx + 1;
+    } else {
+      targetIdx = (currentIdx <= 0) ? totalPhotos - 1 : currentIdx - 1;
+    }
+
+    slider.scrollTo({ left: targetIdx * slideW, behavior: 'smooth' });
+
+    if (card) {
+      const badgeText = card.querySelector('.photo-counter-badge .counter-text');
+      const dots = card.querySelectorAll('.photo-dots-row .photo-dot');
+      if (badgeText) badgeText.textContent = `${targetIdx + 1}/${totalPhotos}`;
+      dots.forEach((dot, dIdx) => {
+        dot.classList.toggle('active', dIdx === targetIdx);
+      });
+    }
+
+    if (video) {
+      video._currentPhotoIdx = targetIdx;
+      preloadAdjacentPhotos(video);
+    }
     return;
   }
-  const video = state.videos.find(v => v.id === videoId);
+
   if (!video || !video._allPhotos || video._allPhotos.length <= 1) return;
   if (direction === 'next') {
     video._currentPhotoIdx = ((video._currentPhotoIdx || 0) + 1) % video._allPhotos.length;
@@ -842,28 +869,52 @@ function scrollCardPhoto(videoId, direction = 'next', e) {
 }
 window.scrollCardPhoto = scrollCardPhoto;
 
-function nextCardPhoto(videoId, e) {
-  scrollCardPhoto(videoId, 'next', e);
+function nextCardPhoto(idOrUid, e) {
+  scrollCardPhoto(idOrUid, 'next', e);
 }
 window.nextCardPhoto = nextCardPhoto;
 
-function prevCardPhoto(videoId, e) {
-  scrollCardPhoto(videoId, 'prev', e);
+function prevCardPhoto(idOrUid, e) {
+  scrollCardPhoto(idOrUid, 'prev', e);
 }
 window.prevCardPhoto = prevCardPhoto;
 
-function selectCardPhoto(videoId, pIdx, e) {
+function selectCardPhoto(idOrUid, pIdx, e) {
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
-  const slider = document.getElementById(`slider-${videoId}`);
+  const slider = document.getElementById(`slider-${idOrUid}`) 
+    || document.querySelector(`.reel-photos-slider[data-id="${idOrUid}"]`)
+    || document.querySelector(`#card-${idOrUid} .reel-photos-slider`)
+    || (e && e.target ? e.target.closest('.reel-player-card')?.querySelector('.reel-photos-slider') : null);
+
+  const card = slider ? slider.closest('.reel-player-card') : (e && e.target ? e.target.closest('.reel-player-card') : null);
+  const videoId = card ? card.dataset.id : (idOrUid ? idOrUid.split('_')[0] : null);
+  const video = state.videos.find(v => v.id === videoId);
+
   if (slider) {
     const slideW = slider.clientWidth || 360;
     slider.scrollTo({ left: pIdx * slideW, behavior: 'smooth' });
+
+    if (card) {
+      const slides = card.querySelectorAll('.reel-photo-slide');
+      const totalPhotos = slides.length || (video?._allPhotos?.length || 1);
+      const badgeText = card.querySelector('.photo-counter-badge .counter-text');
+      const dots = card.querySelectorAll('.photo-dots-row .photo-dot');
+      if (badgeText) badgeText.textContent = `${pIdx + 1}/${totalPhotos}`;
+      dots.forEach((dot, dIdx) => {
+        dot.classList.toggle('active', dIdx === pIdx);
+      });
+    }
+
+    if (video) {
+      video._currentPhotoIdx = pIdx;
+      preloadAdjacentPhotos(video);
+    }
     return;
   }
-  const video = state.videos.find(v => v.id === videoId);
+
   if (!video || !video._allPhotos || pIdx >= video._allPhotos.length) return;
   const oldIdx = video._currentPhotoIdx || 0;
   video._currentPhotoIdx = pIdx;
@@ -2124,8 +2175,8 @@ function setupHorizontalPhotoGestures() {
     const videoId = card.dataset.id;
     const viewport = card.querySelector('.reel-photo-viewport');
     const slider = card.querySelector('.reel-photos-slider');
-    const badgeText = card.querySelector(`#badge-photos-${videoId} .counter-text`);
-    const dots = card.querySelectorAll(`#dots-${videoId} .photo-dot`);
+    const badgeText = card.querySelector('.photo-counter-badge .counter-text');
+    const dots = card.querySelectorAll('.photo-dots-row .photo-dot');
     const slides = card.querySelectorAll('.reel-photo-slide');
     const totalPhotos = slides.length;
 
