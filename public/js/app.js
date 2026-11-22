@@ -7335,9 +7335,12 @@ function setupEventListeners() {
     try {
       const res = await fetch(`/api/videos/${vidId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-admin-token': state.adminToken || ''
+        },
         body: JSON.stringify({
-          storeId: state.currentStore ? state.currentStore.id : 'admin',
+          storeId: state.isAdmin ? 'admin' : (state.currentStore ? state.currentStore.id : 'admin'),
           title,
           price: price !== '' ? Number(price) : 0,
           delivery,
@@ -7351,18 +7354,30 @@ function setupEventListeners() {
         })
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get('content-type') || '';
+      let data = {};
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        data = { error: text || `Error ${res.status}` };
+      }
+
       if (res.ok && data.success) {
         showToast('✅ SPOT y fotos actualizados con éxito');
         document.getElementById('modal-edit-product').style.display = 'none';
         await loadVideos();
-        await openSellerPanel();
+        if (state.currentStore) {
+          await openSellerPanel();
+        } else if (state.isAdmin) {
+          await openAdminPortal();
+        }
       } else {
-        alert(data.error || 'No se pudo actualizar el producto.');
+        alert(data.error || `No se pudo actualizar el producto (${res.status}).`);
       }
     } catch (err) {
       console.error('Error al editar producto:', err);
-      alert('Error de conexión al guardar los cambios.');
+      alert('No se pudo guardar los cambios: ' + (err.message || 'Error de conexión. Inténtalo de nuevo.'));
     } finally {
       if (saveBtn) {
         saveBtn.disabled = false;

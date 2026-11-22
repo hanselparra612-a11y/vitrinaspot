@@ -106,8 +106,8 @@ function fileToDataUriIfReasonable(filePath, maxBytes = 850 * 1024) {
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Archivos estáticos con prevención estricta de caché para móviles
 app.use((req, res, next) => {
@@ -726,14 +726,16 @@ app.delete('/api/videos/:id', (req, res) => {
 });
 
 // Editar video / producto comercial (Blindaje Total de SPOT Pagado, Likes y Vistas)
-app.put('/api/videos/:id', express.json(), (req, res) => {
+app.put('/api/videos/:id', express.json({ limit: '50mb' }), (req, res) => {
   try {
+    const adminToken = req.headers['x-admin-token'];
+    const isAdmin = (adminToken && adminToken === db.getConfig().admin?.token) || req.body.storeId === 'admin';
     const { storeId, title, price, delivery, category, city, description, keywords, photos, detailPhotos, thumbnailUrl } = req.body;
     const video = db.getVideoById(req.params.id);
     if (!video) {
       return res.status(404).json({ error: 'Producto no encontrado.' });
     }
-    if (storeId !== 'admin' && video.storeId !== storeId) {
+    if (!isAdmin && video.storeId !== storeId) {
       return res.status(403).json({ error: 'No tienes permiso para modificar este producto.' });
     }
 
@@ -1875,7 +1877,20 @@ async function startServer() {
     }
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  
+// Manejador global de errores de Payload / JSON para responder siempre con formato JSON limpio
+app.use((err, req, res, next) => {
+  if (err && (err.type === 'entity.too.large' || err.status === 413)) {
+    return res.status(413).json({ error: 'Las fotos enviadas son demasiado pesadas (máximo 50MB en total).' });
+  }
+  if (err) {
+    console.error('Express error handler:', err);
+    return res.status(err.status || 500).json({ error: err.message || 'Error interno del servidor.' });
+  }
+  next();
+});
+
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`=======================================================`);
     console.log(`🚀 VitrinaSpot Server corriendo con éxito:`);
     console.log(`   - Local:    http://localhost:${PORT}`);
