@@ -10691,3 +10691,368 @@ body.spotplay-active #spotplay-top-bar {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-muted);
 }
+
+
+/* ==========================================================================
+   SMARTPHONE SHOWCASE ULTRA-REALISTA CON PROPORCIÓN VERTICAL AUTÉNTICA (v27.1)
+   Aspect Ratio ~19.5:9 (Silueta esbelta de celular real en lugar de pantalla ancha)
+   ========================================================================== */
+.welcome-phone-showcase {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin: 2px auto 10px auto !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.phone-mockup-wrapper {
+  position: relative !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* BOTONES FÍSICOS DE TITANIO ADAPTADOS A LA SILUETA ALARGADA */
+.phone-physical-btn {
+  position: absolute !important;
+  background: linear-gradient(180deg, #64748b, #334155, #64748b) !important;
+  border-radius: 2px !important;
+  z-index: 2 !important;
+  box-shadow: 0 0 2px rgba(0,0,0,0.8) !important;
+}
+
+.phone-btn-action {
+  top: 56px !important;
+  left: -4.5px !important;
+  width: 3.5px !important;
+  height: 16px !important;
+}
+
+.phone-btn-vol-up {
+  top: 82px !important;
+  left: -4.5px !important;
+  width: 3.5px !important;
+  height: 30px !important;
+}
+
+.phone-btn-vol-down {
+  top: 120px !important;
+  left: -4.5px !important;
+  width: 3.5px !important;
+  height: 30px !important;
+}
+
+.phone-btn-power {
+  top: 92px !important;
+  right: -4.5px !important;
+  width: 3.5px !important;
+  height: 42px !important;
+}
+
+/* CHASIS METÁLICO DEL CELULAR: ESBELTO, VERTICAL Y ESTILIZADO */
+.phone-mockup-body {
+  width: 168px !important;
+  height: 348px !important;
+  background: #090c14 !important;
+  border-radius: 34px !important;
+  border: 3.5px solid transparent !important;
+  background-image: linear-gradient(#090c14, #090c14), linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, rgba(130, 140, 160, 0.35) 35%, rgba(255, 255, 255, 0.15) 70%, rgba(255, 184, 0, 0.35) 100%) !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 184, 0, 0.22), inset 0 0 12px rgba(255, 255, 255, 0.1) !important;
+  padding: 3px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.phone-mockup-screen {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 28px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: #000000 !important;
+}
+
+.phone-mockup-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 30% !important;
+  display: block !important;
+  filter: contrast(1.08) saturate(1.15) !important;
+}
+
+.phone-mockup-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.02) 26%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 5px 6px 8px 6px !important;
+  box-sizing: border-box !important;
+  z-index: 4 !important;
+}
+
+.phone-status-bar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0 2px !important;
+  margin-bottom: 2px !important;
+  z-index: 10 !important;
+}
+
+.phone-status-time {
+  font-size: 0.5rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.2px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.phone-dynamic-island {
+  width: 38px !important;
+  height: 8px !important;
+  background: #000000 !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  padding-right: 4px !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+.dynamic-island-lens {
+  width: 3px !important;
+  height: 3px !important;
+  border-radius: 50% !important;
+  background: #0f1c30 !important;
+  border: 0.5px solid rgba(70, 120, 200, 0.4) !important;
+}
+
+.phone-status-icons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  font-size: 0.4rem !important;
+  color: #ffffff !important;
+}
+
+.phone-spot-top {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  gap: 2px !important;
+}
+
+.phone-spot-badge-live {
+  background: rgba(0, 0, 0, 0.75) !important;
+  border: 1px solid rgba(0, 255, 136, 0.55) !important;
+  color: #00ff88 !important;
+  font-size: 0.44rem !important;
+  font-weight: 800 !important;
+  padding: 2px 4px !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+.phone-spot-badge-photo {
+  background: rgba(0, 0, 0, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  font-size: 0.44rem !important;
+  font-weight: 700 !important;
+  padding: 2px 4px !important;
+  border-radius: 8px !important;
+}
+
+.phone-spot-badge-quota {
+  background: rgba(255, 184, 0, 0.22) !important;
+  border: 1px solid rgba(255, 184, 0, 0.6) !important;
+  color: #ffb800 !important;
+  font-size: 0.44rem !important;
+  font-weight: 800 !important;
+  padding: 2px 4px !important;
+  border-radius: 8px !important;
+}
+
+.phone-mockup-actions-rail {
+  position: absolute !important;
+  right: 4px !important;
+  bottom: 56px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  align-items: center !important;
+  z-index: 6 !important;
+}
+
+.phone-rail-btn {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.68) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.phone-rail-btn i {
+  font-size: 0.55rem !important;
+}
+
+.phone-rail-btn span {
+  font-size: 0.36rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  line-height: 1 !important;
+  margin-top: 1px !important;
+}
+
+.phone-rail-avatar-btn {
+  position: relative !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  padding: 1px !important;
+  background: linear-gradient(135deg, var(--spot-gold), #ff8800) !important;
+}
+
+.phone-rail-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.phone-spot-bottom {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  width: calc(100% - 28px) !important;
+  text-align: left !important;
+  margin-bottom: 2px !important;
+  z-index: 5 !important;
+}
+
+.phone-spot-seller-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.phone-spot-seller-name {
+  font-size: 0.5rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.phone-spot-seller-city {
+  font-size: 0.42rem !important;
+  color: var(--spot-gold) !important;
+  font-weight: 700 !important;
+}
+
+.phone-spot-product-title {
+  font-size: 0.58rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  line-height: 1.15 !important;
+  margin: 1px 0 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+}
+
+.phone-spot-price-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin: 1px 0 !important;
+}
+
+.phone-spot-price {
+  font-size: 0.62rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  background: rgba(0, 0, 0, 0.65) !important;
+  padding: 1px 4px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.phone-spot-badge-delivery {
+  font-size: 0.42rem !important;
+  font-weight: 800 !important;
+  color: #00ff88 !important;
+  background: rgba(0, 200, 83, 0.2) !important;
+  border: 1px solid rgba(0, 255, 136, 0.4) !important;
+  padding: 1px 3px !important;
+  border-radius: 4px !important;
+}
+
+.phone-spot-btn-order {
+  background: linear-gradient(135deg, #00c853, #009624) !important;
+  color: #ffffff !important;
+  border-radius: 7px !important;
+  padding: 4px 6px !important;
+  font-size: 0.48rem !important;
+  font-weight: 800 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4) !important;
+  margin-top: 2px !important;
+}
+
+@media (max-width: 480px) {
+  .phone-mockup-body {
+    width: 154px !important;
+    height: 326px !important;
+    border-radius: 32px !important;
+  }
+  .phone-mockup-screen {
+    border-radius: 26px !important;
+  }
+  .phone-mockup-actions-rail {
+    bottom: 52px !important;
+    right: 3px !important;
+  }
+}
+
+@media (max-height: 720px) and (max-width: 480px) {
+  .phone-mockup-body {
+    width: 144px !important;
+    height: 298px !important;
+    border-radius: 30px !important;
+  }
+  .phone-mockup-screen {
+    border-radius: 24px !important;
+  }
+  .phone-mockup-actions-rail {
+    bottom: 46px !important;
+  }
+  .welcome-phone-showcase {
+    margin: 1px auto 6px auto !important;
+  }
+}
+
