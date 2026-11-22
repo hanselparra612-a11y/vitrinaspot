@@ -1771,14 +1771,20 @@ function setupFeedIntersectionObserver() {
             if (!videoEl.src && videoEl.dataset.src) {
               videoEl.src = videoEl.dataset.src;
             }
-            videoEl.play().then(() => {
-              if (indicator) indicator.classList.remove('visible');
-            }).catch(() => {
-              // Autoplay policy: silenciar y arrancar
-              videoEl.muted = true;
-              state.spotPlayMuted = true;
-              videoEl.play().catch(() => {});
-            });
+            const playPromise = videoEl.play();
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                if (indicator) indicator.classList.remove('visible');
+              }).catch(err => {
+                // Si el usuario deslizó rápido a otra tarjeta (AbortError), no reintentar
+                if (err && err.name === 'AbortError') return;
+                if (entry.isIntersecting) {
+                  videoEl.muted = true;
+                  state.spotPlayMuted = true;
+                  videoEl.play().catch(() => {});
+                }
+              });
+            }
 
             // Pre-conectar el src de los videos adyacentes (anterior, siguiente y subsiguiente) para swipe instantáneo a 0ms
             const adjacentCards = [
