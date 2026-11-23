@@ -47,11 +47,11 @@ const state = {
   spotPlayMuted: true, // Silenciado por defecto para compatibilidad móvil con autoplay
   isSoundEnabled: false,
   currentPhotoIndex: 0, // Índice de la foto activa del producto (1 a 5)
-  savedVideoIds: new Set(JSON.parse(localStorage.getItem('vitrina_saved') || '[]')),
-  likedVideoIds: new Set(JSON.parse(localStorage.getItem('vitrina_likes') || '[]')),
-  reportedVideoIds: new Set(JSON.parse(localStorage.getItem('vitrina_reported_spots') || '[]')),
+  savedVideoIds: new Set(JSON.parse((() => { try { return localStorage.getItem('vitrina_saved'); } catch(e) { return '[]'; } })() || '[]')),
+  likedVideoIds: new Set(JSON.parse((() => { try { return localStorage.getItem('vitrina_likes'); } catch(e) { return '[]'; } })() || '[]')),
+  reportedVideoIds: new Set(JSON.parse((() => { try { return localStorage.getItem('vitrina_reported_spots'); } catch(e) { return '[]'; } })() || '[]')),
   currentStore: null, // Tienda activa en sesión
-  adminToken: localStorage.getItem('vitrina_admin_token') || null,
+  adminToken: (() => { try { return localStorage.getItem('vitrina_admin_token'); } catch(e) { return null; } })(),
   pricing: {
     free_spots_quota: 100,
     spot_permanent_price: 0,
@@ -7701,6 +7701,18 @@ function setupEventListeners() {
     } else {
       window.location.href = 'https://spotplay.netlify.app';
     }
+  });
+
+  // Botón de salto rápido al Panel Maestro de Spot Play desde la bóveda de VitrinaSpot
+  document.getElementById('btn-admin-goto-spotplay')?.addEventListener('click', () => {
+    if (window.parent && window.parent !== window) {
+      try {
+        window.parent.postMessage({ type: 'SPOTPLAY_OPEN_ADMIN' }, '*');
+        return;
+      } catch (e) {}
+    }
+    const spotPlayAdminUrl = 'https://spotplay.netlify.app/#admin';
+    window.open(spotPlayAdminUrl, '_blank');
   });
 }
 

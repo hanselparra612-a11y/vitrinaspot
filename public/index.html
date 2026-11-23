@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script>
+    // Blindaje de almacenamiento para incrustación dentro de Spot Play (Iframe / Cross-Origin)
+    (function() {
+      try {
+        window.localStorage.getItem('__test__');
+      } catch (e) {
+        var _mem = {};
+        var mock = {
+          getItem: function(k) { return _mem[k] !== undefined ? _mem[k] : null; },
+          setItem: function(k, v) { _mem[k] = String(v); },
+          removeItem: function(k) { delete _mem[k]; },
+          clear: function() { _mem = {}; }
+        };
+        try {
+          Object.defineProperty(window, 'localStorage', { get: function() { return mock; } });
+        } catch(err) {}
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>VitrinaSpot - Tu Vitrina Digital y Catálogo Comercial en Colombia</title>
@@ -608,6 +627,12 @@
               <span class="text-muted">Super-Admin Conectado • Modo Seguro 256-bit</span>
             </div>
             <div class="admin-top-btns">
+              <!-- 🎬 PUENTE RÁPIDO AL PANEL MAESTRO DE SPOT PLAY -->
+              <button type="button" class="btn btn-sm" id="btn-admin-goto-spotplay" title="Abrir Panel Maestro de Spot Play" style="background: linear-gradient(135deg, rgba(255, 45, 85, 0.2), rgba(255, 184, 0, 0.2)); border: 1px solid #ffb800; color: #fff; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; cursor: pointer;">
+                <i class="fa-solid fa-play" style="color: #ff2d55;"></i>
+                <span>🎬 Panel Spot Play</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; opacity: 0.7;"></i>
+              </button>
               <button class="btn btn-ghost btn-sm" id="btn-admin-logout">Cerrar Sesión Admin</button>
               <button class="btn btn-gold-ring btn-sm" id="btn-admin-exit-feed" title="Volver al Feed">
                 <i class="fa-solid fa-arrow-left"></i> <span>Volver al Feed</span>
