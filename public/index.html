@@ -18,6 +18,20 @@
           Object.defineProperty(window, 'localStorage', { get: function() { return mock; } });
         } catch(err) {}
       }
+
+      // Enrutamiento automático de APIs hacia el servidor de VitrinaSpot
+      const origFetch = window.fetch;
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const API_TARGET = window.location.port === '4000' 
+        ? '' 
+        : (isLocal ? 'http://127.0.0.1:4000' : 'https://conversation-ste-rug-productive.trycloudflare.com');
+
+      window.fetch = function(url, init) {
+        if (typeof url === 'string' && url.startsWith('/api/')) {
+          url = API_TARGET + url;
+        }
+        return origFetch.call(this, url, init);
+      };
     })();
   </script>
   <meta charset="UTF-8">
@@ -120,7 +134,7 @@
         </button>
 
         <!-- BOTÓN CONEXIÓN SPOT PLAY (VIDEOS) -->
-        <a href="http://localhost:5173" id="btn-nav-goto-spotplay" class="btn-goto-spotplay" title="Ir a Spot Play (Videos en Vivo)">
+        <a href="/" id="btn-nav-goto-spotplay" class="btn-goto-spotplay" title="Ir a Spot Play (Videos en Vivo)" onclick="if (window.parent && window.parent !== window) { event.preventDefault(); window.parent.postMessage({ type: 'SPOTPLAY_NAVIGATE', tab: 'feed' }, '*'); }">
           <i class="fa-solid fa-play"></i>
           <span>Spot Play</span>
         </a>
@@ -2272,7 +2286,7 @@
           </div>
           <div>
             <h3 style="margin: 0; font-size: 1.05rem; color: #fff;">¡Bienvenido desde Spot Play!</h3>
-            <span style="font-size: 0.75rem; color: var(--spot-gold); font-weight: 700;">Vincula tu Vitrina Comercial Oficial</span>
+            <span style="font-size: 0.75rem; color: var(--spot-gold); font-weight: 700;">Activa tu Vitrina Comercial en Spot Play</span>
           </div>
         </div>
         <button type="button" class="close-modal-btn" id="btn-close-sso-modal">&times;</button>

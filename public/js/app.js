@@ -114,9 +114,13 @@ window.setupPasswordEye = function(btnId, inputId, iconId) {
 // ==========================================
 // 1. INICIALIZACIÓN
 // ==========================================
-document.addEventListener('DOMContentLoaded', async () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', async () => {
+    initApp();
+  });
+} else {
   initApp();
-});
+}
 
 async function initApp() {
   setupEventListeners();
