@@ -585,8 +585,8 @@ app.post('/api/videos', upload.fields([
     const platformConfig = db.getConfig();
     const currentPricing = platformConfig.pricing || {};
 
-    // 🚀 Modelo Comercial: 5 spots gratis de 5 fotos por tienda
-    // Al superar los 5 spots, la publicación permanente cuesta $3.500 COP o requiere un Impulso/Membresía
+    // 🚀 Modelo Comercial: spots gratis de hasta 7 fotos por tienda
+    // Al superar los spots incluidos, la publicación permanente está respaldada por la membresía
     const isDiamante = req.body.paidPlan === 'boost_diamante' || req.body.paidPlan === 'boost_extreme' || req.body.paidPlan === 'photos_5_spot' || req.body.paidPlan === 'photos_7_spot' || req.body.paidPlan === 'spot_boost_diamante' || req.body.hasSpot === 'true';
     const isPlatino = req.body.paidPlan === 'boost_platino' || req.body.paidPlan === 'spot_boost_platino';
     const isStandard = req.body.paidPlan === 'boost_standard' || req.body.paidPlan === 'spot_boost_standard' || req.body.isStandardBoost === 'true';
@@ -605,7 +605,7 @@ app.post('/api/videos', upload.fields([
     const hasFreeQuota = storeVideos.length < freeQuota;
 
     // 🚀 MODELO 100% GRATUITO PARA COMERCIOS (MONETIZACIÓN CON GOOGLE ADMOB)
-    // Cualquier negocio puede publicar spots permanentes de 5 fotos sin límite ni cobros
+    // Cualquier negocio puede publicar spots permanentes de hasta 7 fotos sin límite ni cobros
     const isStandardFree = true;
     const hasValidTx = true;
 
@@ -1107,9 +1107,84 @@ app.post('/api/stores/login', (req, res) => {
       welcome_status: db.getStoreWelcomeStatus(store.id)
     }
   });
-}
+});
 
-);
+// ==========================================
+// SSO SPOT PLAY (CUENTA ÚNICA DEL ECOSISTEMA)
+// ==========================================
+app.post('/api/auth/sso-spotplay', (req, res) => {
+  const { spotPlayUid, name, username, avatar, email, whatsapp, city } = req.body;
+  if (!spotPlayUid) {
+    return res.status(400).json({ error: 'Falta el identificador único de Spot Play (spotPlayUid).' });
+  }
+
+  const stores = db.getStores();
+  // 1. Buscar si ya existe tienda vinculada por spotPlayUid o por email
+  let store = stores.find(s => 
+    s.spotPlayUid === spotPlayUid || 
+    (email && s.email && s.email.toLowerCase() === email.toLowerCase())
+  );
+
+  // 2. Si no existe y aún no envía whatsapp, indicamos que se requiere completar WhatsApp y Ciudad
+  if (!store && !whatsapp) {
+    return res.json({
+      success: true,
+      exists: false,
+      message: 'Usuario reconocido desde Spot Play. Requiere completar WhatsApp de ventas y Ciudad.',
+      spotPlayData: { spotPlayUid, name, username, avatar, email }
+    });
+  }
+
+  // 3. Si no existe y ya envió whatsapp, creamos la tienda inmediatamente
+  if (!store && whatsapp) {
+    let cleanWhatsApp = whatsapp.replace(/[^0-9]/g, '');
+    if (cleanWhatsApp.length === 10 && !cleanWhatsApp.startsWith('57')) {
+      cleanWhatsApp = `+57${cleanWhatsApp}`;
+    } else if (!cleanWhatsApp.startsWith('+')) {
+      cleanWhatsApp = `+${cleanWhatsApp}`;
+    }
+
+    const storeName = (name || username || 'Mi Tienda').trim();
+    store = db.addStore({
+      name: storeName,
+      whatsapp: cleanWhatsApp,
+      city: city || 'Bogotá',
+      avatar: avatar || null,
+      email: email || null,
+      spotPlayUid: spotPlayUid,
+      password: `sso_${spotPlayUid.substring(0, 8)}`,
+      description: `Vitrina Oficial en VitrinaSpot vinculada con Spot Play.`
+    });
+  }
+
+  // 4. Si ya existe, nos aseguramos de que tenga vinculado el spotPlayUid
+  if (store && !store.spotPlayUid) {
+    db.updateStore(store.id, { spotPlayUid });
+    store.spotPlayUid = spotPlayUid;
+  }
+
+  const cfg = db.getConfig();
+  const prc = cfg.pricing || {};
+  const isMembershipActive = Boolean(
+    store.hasMembership && 
+    store.membershipExpiresAt && 
+    new Date(store.membershipExpiresAt) > new Date()
+  );
+  const memLimit = Number(store.membershipProductLimit) || Number(prc.membership_product_limit) || 100;
+  const storeVideos = db.getVideosByStoreId(store.id);
+
+  res.json({
+    success: true,
+    exists: true,
+    store: {
+      ...store,
+      isMembershipActive,
+      productsCount: storeVideos.length,
+      membershipProductLimit: memLimit,
+      welcome_status: db.getStoreWelcomeStatus(store.id)
+    }
+  });
+});
 
 // Memoria volátil para códigos de recuperación OTP (expiran en 15 minutos)
 const recoveryCodes = new Map();
@@ -1310,189 +1385,10 @@ app.delete('/api/notifications/:storeId/:notifId', (req, res) => {
 });
 
 // ==========================================
-// 3. PAGOS AUTOMÁTICOS & MONETIZACIÓN (WOMPI / NEQUI)
+// 3. MODELO 100% GRATUITO Y MONETIZACIÓN GOOGLE ADMOB
+// (VitrinaSpot opera sin pasarelas de pago ni cobros in-app:
+//  todas las transacciones son acuerdos directos vía WhatsApp)
 // ==========================================
-
-// Checkout: Comprar SPOT o Extensión de video (30s / 60s / Impulso de Video Existente)
-app.post('/api/payments/checkout', (req, res) => {
-  const { storeId, videoId, type, method, amount } = req.body;
-  const store = db.getStoreById(storeId);
-  if (!store) return res.status(404).json({ error: 'Tienda no encontrada.' });
-
-  const config = db.getConfig();
-  const prc = config.pricing || {};
-  let typeLabel = 'Servicio Publicitario';
-  let days = 0;
-  let bLevel = 'standard';
-
-  if (type === 'spot_boost_diamante' || type === 'spot_boost_extreme' || type === 'spot_7d') {
-    days = Number(prc.boost_diamante_days) || Number(prc.boost_extreme_days) || 8;
-    bLevel = 'diamante';
-    typeLabel = `Impulso Diamante VIP (${days} Días)`;
-  } else if (type === 'spot_boost_platino') {
-    days = Number(prc.boost_platino_days) || 5;
-    bLevel = 'platino';
-    typeLabel = `Impulso Platino (${days} Días)`;
-  } else if (type === 'boost_standard_standalone' || type === 'spot_boost_standard_only') {
-    days = Number(prc.boost_standard_days) || 2;
-    bLevel = 'standard';
-    typeLabel = `Solo Impulso Estándar (${days} Días - Sin Spot)`;
-  } else if (type === 'spot_boost_standard' || type === 'spot_boost_15s' || type === 'spot_boost_single_video') {
-    days = Number(prc.boost_standard_days) || 2;
-    bLevel = 'standard';
-    typeLabel = `Impulso Estándar (${days} Días)`;
-  } else if (type === 'membership_pro_monthly') {
-    days = Number(prc.membership_pro_days) || 30;
-    const limit = Number(prc.membership_product_limit) || 100;
-    typeLabel = `Membresía Mensual Pro (${days} Días)`;
-    db.activateMembership(storeId, days, limit);
-  } else if (type === 'spot_permanent' || type === 'spot_permanent_pack') {
-    typeLabel = 'Spot Permanente 5 Fotos (Sin Impulso)';
-  } else if (type === 'photos_7_pack' || type === 'photos_5_pack') {
-    typeLabel = 'Publicación 5 Fotos Gratis (Permanente)';
-  } else if (type === 'spot_15d') {
-    typeLabel = 'SPOT Destacado 15 Días';
-    days = 15;
-    bLevel = 'diamante';
-  }
-
-  // Si se envió un videoId específico para impulsar post-publicación
-  let boostedVideo = null;
-  if (videoId) {
-    const vid = db.getVideoById(videoId);
-    if (vid) {
-      const vidExpiry = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-      vid.hasSpot = true;
-      vid.spotExpiresAt = vidExpiry;
-      vid.boostLevel = bLevel;
-      db.updateVideo(vid.id, { hasSpot: true, spotExpiresAt: vidExpiry, boostLevel: bLevel });
-      boostedVideo = vid;
-
-      // Actualizar tienda con vigencia armónica (máximo entre sus videos activos)
-      db.recalculateStoreBoost(store.id);
-    }
-  } else if (days > 0 && !type.includes('membership') && !type.includes('permanent')) {
-    // Si no se especificó un videoId único (compra general a nivel tienda), se impulsa la tienda y su catálogo
-    db.activateSpot(storeId, days, bLevel);
-  }
-
-  // Calibración exacta de tarifa si no se especificó en el request
-  let finalAmount = Number(amount) || 0;
-  if (!finalAmount) {
-    if (type.includes('diamante') || type.includes('extreme')) {
-      finalAmount = Number(prc.boost_diamante_price || prc.boost_extreme_price) || 15000;
-    } else if (type.includes('platino')) {
-      finalAmount = Number(prc.boost_platino_price) || 10000;
-    } else if (type.includes('standalone') || type.includes('standard_only')) {
-      finalAmount = Number(prc.boost_standard_standalone_price) || 3500;
-    } else if (type.includes('standard')) {
-      finalAmount = Number(prc.boost_standard_price) || 5000;
-    } else if (type.includes('membership')) {
-      finalAmount = Number(prc.membership_pro_price) || 29000;
-    } else if (type.includes('permanent')) {
-      finalAmount = Number(prc.spot_permanent_price) || 3500;
-    } else {
-      finalAmount = Number(config.pricing[type]) || 5000;
-    }
-  }
-
-  // Registrar activación bonificada en el libro de eventos del administrador
-  const tx = db.addTransaction({
-    storeId,
-    storeName: store.name,
-    type,
-    typeLabel: boostedVideo ? `Impulso SPOT (AdMob): ${boostedVideo.title}` : typeLabel,
-    amount: 0,
-    method: method || 'admob_rewarded_video',
-    status: 'approved'
-  });
-
-  const updatedStore = db.getStoreById(storeId);
-  const isMembershipActive = Boolean(
-    updatedStore.hasMembership && 
-    updatedStore.membershipExpiresAt && 
-    new Date(updatedStore.membershipExpiresAt) > new Date()
-  );
-  const memLimit = Number(updatedStore.membershipProductLimit) || Number(prc.membership_product_limit) || 100;
-  const storeVideos = db.getVideosByStoreId(storeId);
-
-  res.json({
-    success: true,
-    message: `¡Pago exitoso! ${boostedVideo ? 'Tu producto "' + boostedVideo.title + '"' : 'Tu ' + typeLabel} ha sido activado.`,
-    transaction: tx,
-    store: {
-      ...updatedStore,
-      isMembershipActive,
-      productsCount: storeVideos.length,
-      membershipProductLimit: memLimit
-    },
-    video: boostedVideo
-  });
-}
-
-);
-
-// Endpoint exclusivo para impulsar un producto existente post-publicación
-app.post('/api/videos/:id/boost', (req, res) => {
-  const video = db.getVideoById(req.params.id);
-  if (!video) return res.status(404).json({ error: 'Producto no encontrado.' });
-  const store = db.getStoreById(video.storeId);
-  const cfg = db.getConfig();
-  const prc = cfg.pricing || {};
-
-  const bType = req.body.boostType || (req.body.isExtreme ? 'diamante' : 'standard');
-  const isDiam = bType === 'diamante' || bType === 'extreme';
-  const isPlat = bType === 'platino';
-  const isStd = !isDiam && !isPlat;
-
-  let boostDays = 2;
-  let boostAmount = 5000;
-  let boostLevel = 'standard';
-
-  if (isDiam) {
-    boostDays = Number(prc.boost_diamante_days) || Number(prc.boost_extreme_days) || 8;
-    boostAmount = Number(prc.boost_diamante_price) || Number(prc.boost_extreme_price) || 15000;
-    boostLevel = 'diamante';
-  } else if (isPlat) {
-    boostDays = Number(prc.boost_platino_days) || 5;
-    boostAmount = Number(prc.boost_platino_price) || 10000;
-    boostLevel = 'platino';
-  } else {
-    boostDays = Number(prc.boost_standard_days) || 2;
-    boostAmount = Number(prc.boost_standard_standalone_price) || 3500;
-    boostLevel = 'standard';
-  }
-
-  const boostExpiry = new Date(Date.now() + boostDays * 24 * 60 * 60 * 1000).toISOString();
-  
-  video.hasSpot = true;
-  video.spotExpiresAt = boostExpiry;
-  video.boostLevel = boostLevel;
-  db.updateVideo(video.id, { hasSpot: true, spotExpiresAt: boostExpiry, boostLevel: video.boostLevel });
-  
-  if (store) {
-    db.recalculateStoreBoost(store.id);
-  }
-  
-  const tx = db.addTransaction({
-    storeId: video.storeId,
-    storeName: video.storeName,
-    type: `spot_boost_${boostLevel}`,
-    typeLabel: `Impulso ${boostLevel.toUpperCase()} (${boostDays}d): ${video.title}`,
-    amount: boostAmount,
-    method: req.body.method || 'wompi_nequi',
-    status: 'approved'
-  });
-  
-  res.json({
-    success: true,
-    message: `🚀 ¡Producto impulsado con éxito (${boostLevel.toUpperCase()}) durante ${boostDays} días!`,
-    video,
-    transaction: tx
-  });
-}
-
-);
 
 // Endpoint de purga total a modo virgen (0 tiendas, 0 perfiles, 0 publicaciones)
 app.post('/api/admin/clean-to-virgin', (req, res) => {
@@ -1527,24 +1423,6 @@ app.post('/api/admin/clean-demo-data', (req, res) => {
     console.error('Error limpiando datos de prueba:', err);
     res.status(500).json({ error: 'Error al limpiar datos de demostración.' });
   }
-});
-
-// Generar Firma de Integridad (Deprecada: VitrinaSpot opera 100% gratuito con Google AdMob)
-app.get('/api/wompi/signature', (req, res) => {
-  res.json({ success: true, deprecated: true, message: 'Plataforma 100% gratuita financiada con Google AdMob.' });
-});
-
-// Verificación y Healthcheck para validación de URL de eventos de Wompi Bancolombia
-app.get('/api/wompi/webhook', (req, res) => {
-  res.status(200).json({ status: 'ok', service: 'VitrinaSpot Wompi Webhook Receiver', ready: true });
-});
-app.head('/api/wompi/webhook', (req, res) => {
-  res.status(200).end();
-});
-
-// Webhook de pagos deprecado (VitrinaSpot opera 100% gratuito financiado con Google AdMob)
-app.post('/api/wompi/webhook', (req, res) => {
-  res.status(200).json({ received: true, deprecated: true, message: 'Plataforma 100% gratuita financiada con Google AdMob.' });
 });
 
 // ==========================================
@@ -1689,7 +1567,6 @@ app.get('/api/admin/metrics', (req, res) => {
       bannerUnitId: "ca-app-pub-3940256099942544/6300978111",
       interstitialUnitId: "ca-app-pub-3940256099942544/1033173712"
     },
-    wompi: config.wompi,
     reports: config.reports
   });
 });
@@ -1758,11 +1635,6 @@ app.post('/api/admin/launch-campaign', (req, res) => {
   });
 
   res.json({ success: true, launch_campaign: updated });
-});
-
-// Configuración de pasarela deprecada (VitrinaSpot opera 100% con Google AdMob)
-app.post('/api/admin/wompi-config', (req, res) => {
-  res.json({ success: true, deprecated: true, message: 'VitrinaSpot monetiza exclusivamente con Google AdMob.' });
 });
 
 // Actualizar configuración oficial de Google AdMob desde el panel de Administrador

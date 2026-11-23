@@ -1,0 +1,4 @@
+# Google AdMob Official Authorized Digital Sellers (app-ads.txt)
+# VitrinaSpot Colombia - https://vitrinaspot.onrender.com/
+# Sustituye 'pub-3940256099942544' por tu ID oficial de Publisher de Google AdMob cuando pases a producción.
+google.com, pub-3940256099942544, DIRECT, f08c47fec0942fa0

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=27.5">
+  <link rel="stylesheet" href="css/style.css?v=27.7">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -38,7 +38,7 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js?v=27.0').catch(function() {});
+      navigator.serviceWorker.register('/sw.js?v=27.7').catch(function() {});
     }
   </script>
 
@@ -99,6 +99,12 @@
         <button class="icon-nav-btn" id="btn-nav-search-toggle">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
+
+        <!-- BOTÓN CONEXIÓN SPOT PLAY (VIDEOS) -->
+        <a href="http://localhost:5173" id="btn-nav-goto-spotplay" class="btn-goto-spotplay" title="Ir a Spot Play (Videos en Vivo)">
+          <i class="fa-solid fa-play"></i>
+          <span>Spot Play</span>
+        </a>
 
         <!-- BOTÓN SUBIR SPOT -->
         <button class="btn btn-spot" id="btn-nav-upload" title="Publicar SPOT">
@@ -900,7 +906,7 @@
             </div>
           </div>
           <span class="badge" style="background: rgba(168, 85, 247, 0.3); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.6); font-size: 0.78rem; padding: 5px 10px; border-radius: 8px; font-weight: 800; white-space: nowrap;">
-            5 FOTOS $0 COP
+            7 FOTOS $0 COP
           </span>
         </div>
 
@@ -925,8 +931,8 @@
           </div>
 
           <div class="video-plans-grid" id="video-plans-grid">
-            <!-- 1. PUBLICACIÓN ESTÁNDAR 100% GRATIS (5 FOTOS) -->
-            <div class="video-plan-card active" data-plan="photos_5" data-price="0">
+            <!-- 1. PUBLICACIÓN ESTÁNDAR 100% GRATIS (7 FOTOS) -->
+            <div class="video-plan-card active" data-plan="photos_7" data-price="0">
               <span class="plan-badge-pill" id="plan-card-badge-free" style="background: linear-gradient(135deg, var(--wa-green), #00c853); color: #000; font-weight: 800;">100% GRATIS</span>
               <div class="plan-icon"><i class="fa-solid fa-gift text-gold"></i></div>
               <strong class="plan-title">Publicación Gratuita</strong>
@@ -1761,8 +1767,8 @@
             <i class="fa-solid fa-gem"></i>
           </div>
           <div style="font-size: 0.82rem; color: #fff; line-height: 1.35;">
-            <strong style="color: var(--spot-gold); display: block; font-size: 0.88rem;">👑 SPOT VIP Protegido</strong>
-            Tus cambios se actualizarán al instante sin afectar la vigencia ni el podio VIP de tu SPOT pagado.
+            <strong style="color: var(--spot-gold); display: block; font-size: 0.88rem;">👑 SPOT Activo</strong>
+            Tus cambios se actualizarán al instante en tu catálogo digital y en el feed vertical de VitrinaSpot.
           </div>
         </div>
 
@@ -2231,6 +2237,70 @@
     </div>
   </div>
 
+  <!-- MODAL: ACTIVACIÓN RÁPIDA DE TIENDA DESDE SPOT PLAY (SSO EN 1 CLIC) -->
+  <div class="modal-overlay" id="modal-sso-activate-store" style="display: none;">
+    <div class="modal-dialog modal-sm" style="max-width: 440px; border: 1.5px solid var(--spot-gold); box-shadow: 0 10px 40px rgba(255, 184, 0, 0.25);">
+      <div class="modal-header" style="background: linear-gradient(135deg, rgba(255, 184, 0, 0.15), rgba(12, 15, 20, 0.95));">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--spot-gold), #ff8800); display: flex; align-items: center; justify-content: center; color: #000; font-size: 1.1rem;">
+            <i class="fa-solid fa-store"></i>
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 1.05rem; color: #fff;">¡Bienvenido desde Spot Play!</h3>
+            <span style="font-size: 0.75rem; color: var(--spot-gold); font-weight: 700;">Vincula tu Vitrina Comercial Oficial</span>
+          </div>
+        </div>
+        <button type="button" class="close-modal-btn" id="btn-close-sso-modal">&times;</button>
+      </div>
+
+      <form id="form-sso-activate-store" class="modal-body" style="padding: 16px 20px;">
+        <input type="hidden" id="sso-user-uid" value="">
+        <input type="hidden" id="sso-user-avatar" value="">
+        <input type="hidden" id="sso-user-email" value="">
+
+        <div style="text-align: center; margin-bottom: 14px;">
+          <img id="sso-user-preview-avatar" src="" alt="Avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--spot-gold); margin: 0 auto 8px; display: block;">
+          <h4 id="sso-user-preview-name" style="margin: 0 0 4px 0; color: #fff; font-size: 1rem;">Nombre de Creador</h4>
+          <p style="margin: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.35;">Tu cuenta de Spot Play ya está validada. Para comenzar a vender tus productos en VitrinaSpot, solo ingresa tus datos de contacto directo.</p>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">Nombre de tu Tienda / Negocio *</label>
+          <input type="text" id="sso-store-name" required placeholder="Ej: Calzados Bucaramanga" style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">WhatsApp para Recibir Pedidos *</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <span style="position: absolute; left: 12px; font-weight: 700; color: #25d366; font-size: 0.88rem;">🇨🇴 +57</span>
+            <input type="tel" id="sso-store-whatsapp" required placeholder="300 123 4567" maxlength="14" style="width: 100%; padding: 10px 12px 10px 65px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+          </div>
+          <small style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 3px;">Los clientes te escribirán directamente aquí sin intermediarios.</small>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">Ciudad en Colombia *</label>
+          <select id="sso-store-city" style="width: 100%; padding: 10px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+            <option value="Bogotá">Bogotá D.C.</option>
+            <option value="Medellín">Medellín</option>
+            <option value="Cali">Cali</option>
+            <option value="Popayán">Popayán (Cauca)</option>
+            <option value="Barranquilla">Barranquilla</option>
+            <option value="Bucaramanga">Bucaramanga</option>
+            <option value="Eje Cafetero">Eje Cafetero</option>
+            <option value="Cartagena">Cartagena</option>
+            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-spot" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.95rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-rocket"></i> Activar Mi Vitrina Comercial
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- BOTÓN FLOTANTE VIP DE PUBLICACIÓN EN MÓVILES (FAB TIKTOK/INSTAGRAM) -->
   <button type="button" class="floating-fab-upload" id="btn-floating-fab-upload" title="Publicar SPOT">
     <i class="fa-solid fa-plus"></i>
@@ -2249,6 +2319,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=27.5"></script>
+  <script src="js/app.js?v=27.7"></script>
 </body>
 </html>

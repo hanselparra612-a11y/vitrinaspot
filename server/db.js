@@ -226,10 +226,10 @@ const DEFAULT_TRANSACTIONS = [
     id: "tx-1",
     storeId: "store-1",
     storeName: "Calzados Bucaramanga",
-    type: "spot_7d",
-    typeLabel: "SPOT Destacado 7 Días",
-    amount: 25000,
-    method: "wompi_nequi",
+    type: "admob_reward",
+    typeLabel: "Impresión Patrocinada Feed AdMob",
+    amount: 0,
+    method: "admob_feed",
     status: "approved",
     date: new Date(Date.now() - 86400000 * 1).toISOString()
   },
@@ -237,10 +237,10 @@ const DEFAULT_TRANSACTIONS = [
     id: "tx-2",
     storeId: "store-2",
     storeName: "Burger Master Artesanal",
-    type: "spot_7d",
-    typeLabel: "SPOT Destacado 7 Días",
-    amount: 25000,
-    method: "wompi_pse",
+    type: "admob_reward",
+    typeLabel: "Impresión Intersticial AdMob",
+    amount: 0,
+    method: "admob_interstitial",
     status: "approved",
     date: new Date(Date.now() - 86400000 * 3).toISOString()
   },
@@ -411,13 +411,6 @@ class Database {
             email: "admin@vitrinaspot.com",
             password: "admin123vitrina",
             token: "vitrina_super_secret_token_2026"
-          },
-          wompi: {
-            publicKey: "pub_test_xK9sampleKeyColombia2026",
-            eventSecret: "test_secret_eventKeyWompi2026",
-            isLive: false,
-            nequiManualNumber: "3001234567",
-            daviplataManualNumber: "3001234567"
           },
           telemetry: {
             totalWhatsAppClicks: 492,
@@ -849,6 +842,7 @@ class Database {
       hours: storeData.hours || "Lun - Sáb: 8:00 AM - 7:00 PM",
       paymentMethods: storeData.paymentMethods || ["Nequi", "Daviplata", "Efectivo"],
       password: storeData.password || "123",
+      spotPlayUid: storeData.spotPlayUid || null,
       hasSpot: false,
       spotExpiresAt: null,
       acceptedRules: storeData.acceptedRules === true,
@@ -955,18 +949,17 @@ class Database {
     return null;
   }
 
-  // --- TRANSACCIONES & MONETIZACIÓN ---
+  // --- EVENTOS DE MONETIZACIÓN & TELEMETRÍA ---
   addTransaction(tx) {
     const newTx = {
       id: tx.id || `tx-${Date.now()}`,
       reference: tx.reference || null,
-      wompiTransactionId: tx.wompiTransactionId || null,
       storeId: tx.storeId,
       storeName: tx.storeName,
-      type: tx.type, // 'spot_7d', 'spot_15d', 'video_30s', 'video_60s'
+      type: tx.type,
       typeLabel: tx.typeLabel,
-      amount: tx.amount,
-      method: tx.method, // 'wompi_nequi', 'wompi_pse', 'manual_nequi'
+      amount: tx.amount || 0,
+      method: tx.method || 'admob_rewarded',
       status: tx.status || "approved",
       date: new Date().toISOString()
     };
@@ -996,18 +989,6 @@ class Database {
       this.save();
     }
     return this.data.config.public_url;
-  }
-
-  updateWompiConfig(wompiData) {
-    if (!this.data.config.wompi) this.data.config.wompi = {};
-    if (wompiData.publicKey !== undefined) this.data.config.wompi.publicKey = wompiData.publicKey.trim();
-    if (wompiData.integritySecret !== undefined) this.data.config.wompi.integritySecret = wompiData.integritySecret.trim();
-    if (wompiData.eventSecret !== undefined) this.data.config.wompi.eventSecret = wompiData.eventSecret.trim();
-    if (typeof wompiData.isLive === 'boolean') this.data.config.wompi.isLive = wompiData.isLive;
-    if (wompiData.nequiManualNumber !== undefined) this.data.config.wompi.nequiManualNumber = wompiData.nequiManualNumber.trim();
-    if (wompiData.daviplataManualNumber !== undefined) this.data.config.wompi.daviplataManualNumber = wompiData.daviplataManualNumber.trim();
-    this.save();
-    return this.data.config.wompi;
   }
 
   // --- REGISTRO DE TELEMETRÍA Y RENDIMIENTO GOOGLE ADMOB ---
@@ -1074,7 +1055,7 @@ class Database {
     return this.data.config.admob;
   }
 
-  // --- CAMPAÑA DE LANZAMIENTO PIONEROS (GANCHO 1.000 TIENDAS / 5 FOTOS GRATIS) ---
+  // --- CAMPAÑA DE LANZAMIENTO PIONEROS (GANCHO 1.000 TIENDAS / 7 FOTOS GRATIS) ---
   getLaunchCampaign() {
     return {
       welcome_pack_enabled: false,

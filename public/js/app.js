@@ -52,7 +52,6 @@ const state = {
   reportedVideoIds: new Set(JSON.parse(localStorage.getItem('vitrina_reported_spots') || '[]')),
   currentStore: null, // Tienda activa en sesión
   adminToken: localStorage.getItem('vitrina_admin_token') || null,
-  activeCheckout: null, // Item en proceso de compra (spot o video)
   pricing: {
     free_spots_quota: 100,
     spot_permanent_price: 0,
@@ -127,6 +126,7 @@ async function initApp() {
   await loadVideos();
   updateSavedBadge();
   handleSharedUrlParams();
+  handleSpotPlaySSO();
 
   // Detección de ruta secreta /admin (soporta /admin, ?admin=1 y #admin)
   if (window.location.pathname.includes('/admin') || window.location.search.includes('admin') || window.location.hash.includes('admin')) {
@@ -262,6 +262,66 @@ function handleSharedUrlParams() {
 }
 window.handleSharedUrlParams = handleSharedUrlParams;
 
+// Manejador de Single Sign-On (SSO) y Vinculación desde Spot Play
+async function handleSpotPlaySSO() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isSSO = urlParams.get('sso') === '1';
+  const spotPlayUid = urlParams.get('uid');
+  if (!isSSO || !spotPlayUid || spotPlayUid === 'guest') return;
+
+  const creatorName = urlParams.get('name') || '';
+  const creatorAvatar = urlParams.get('avatar') || '';
+  const creatorEmail = urlParams.get('email') || '';
+
+  try {
+    const res = await fetch('/api/auth/sso-spotplay', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        spotPlayUid,
+        name: creatorName,
+        avatar: creatorAvatar,
+        email: creatorEmail
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.exists && data.store) {
+      state.currentStore = data.store;
+      localStorage.setItem('vitrina_current_store_id', data.store.id);
+      updateNavStoreUI();
+      showToast(`✨ ¡Bienvenido de nuevo, ${data.store.name}! Tu Vitrina está sincronizada.`);
+      const cleanUrl = window.location.pathname + (urlParams.get('v') ? `?v=${urlParams.get('v')}` : '');
+      window.history.replaceState({}, document.title, cleanUrl);
+    } else if (data.needsRegistration) {
+      const modal = document.getElementById('modal-sso-activate-store');
+      if (modal) {
+        const uidInput = document.getElementById('sso-user-uid');
+        if (uidInput) uidInput.value = spotPlayUid;
+        const avatarInput = document.getElementById('sso-user-avatar');
+        if (avatarInput) avatarInput.value = creatorAvatar;
+        const emailInput = document.getElementById('sso-user-email');
+        if (emailInput) emailInput.value = creatorEmail;
+
+        const previewAvatar = document.getElementById('sso-user-preview-avatar');
+        if (previewAvatar) {
+          previewAvatar.src = creatorAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+        }
+        const previewName = document.getElementById('sso-user-preview-name');
+        if (previewName) previewName.textContent = creatorName || 'Creador Spot Play';
+
+        const storeNameInput = document.getElementById('sso-store-name');
+        if (storeNameInput && !storeNameInput.value) {
+          storeNameInput.value = creatorName || '';
+        }
+        modal.style.display = 'flex';
+      }
+    }
+  } catch (err) {
+    console.error('Error procesando SSO Spot Play:', err);
+  }
+}
+window.handleSpotPlaySSO = handleSpotPlaySSO;
+
 // Carga de tarifas dinámicas oficiales desde el servidor
 async function loadPricing() {
   try {
@@ -292,8 +352,8 @@ function renderLaunchCampaignUI() {
 function renderDynamicPlansUI() {
   const p = state.pricing;
 
-  // Card 1: Publicación Gratuita (Hasta 5 Spots Gratis de 5 fotos)
-  const c1 = document.querySelector('.video-plan-card[data-plan="photos_5"]');
+  // Card 1: Publicación Gratuita (Hasta 100 Spots Gratis de 7 fotos)
+  const c1 = document.querySelector('.video-plan-card[data-plan="photos_7"], .video-plan-card[data-plan="photos_5"]');
   const freeQuota = Number(p.free_spots_quota) || 5;
   const storeCount = state.currentStore && state.videos 
     ? state.videos.filter(v => v.storeId === state.currentStore.id).length 
@@ -355,7 +415,7 @@ function renderDynamicPlansUI() {
         bEl.style.color = '#000';
       }
       if (dEl) {
-        dEl.textContent = `Tus primeros ${freeQuota} spots con carrusel de hasta 5 fotos son totalmente gratis. Disponibles: ${freeRem} spots.`;
+        dEl.textContent = `Tus primeros ${freeQuota} spots con carrusel de hasta 7 fotos son totalmente gratis. Disponibles: ${freeRem} spots.`;
       }
     }
   }
@@ -372,7 +432,7 @@ function refreshUploadMembershipUI() {
   const welcomeRemEl = document.getElementById('upload-welcome-remaining');
   const welcomeTotEl = document.getElementById('upload-welcome-total');
 
-  const c1 = document.querySelector('.video-plan-card[data-plan="photos_5"]');
+  const c1 = document.querySelector('.video-plan-card[data-plan="photos_7"], .video-plan-card[data-plan="photos_5"]');
   const c4 = document.querySelector('.video-plan-card[data-plan="membership_pro"]');
   const p = state.pricing || {};
   const camp = state.launchCampaign || {};
@@ -421,7 +481,7 @@ function refreshUploadMembershipUI() {
     } else {
       c1.classList.remove('plan-free-locked');
       if (iconEl) iconEl.innerHTML = '<i class="fa-solid fa-gift text-gold"></i>';
-      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">100% GRATIS</span> <small style="font-size:0.75rem; color:#00ff88;">(5 FOTOS)</small>';
+      if (prEl) prEl.innerHTML = '<span style="color:#00ff88; font-weight:800;">100% GRATIS</span> <small style="font-size:0.75rem; color:#00ff88;">(7 FOTOS)</small>';
       if (bgPill) {
         bgPill.className = 'plan-badge-pill';
         bgPill.textContent = `${freeRem > 0 ? freeRem + ' DE ' + freeQuota + ' GRATIS' : freeQuota + ' SPOTS GRATIS'}`;
@@ -429,7 +489,7 @@ function refreshUploadMembershipUI() {
         bgPill.style.color = '#000';
       }
       if (dEl) {
-        dEl.textContent = `Tus primeros ${freeQuota} spots con 5 fotos son totalmente gratis. Disponibles: ${freeRem} spots.`;
+        dEl.textContent = `Tus primeros ${freeQuota} spots con 7 fotos son totalmente gratis. Disponibles: ${freeRem} spots.`;
       }
     }
   }
@@ -769,7 +829,7 @@ async function loadVideos() {
 }
 
 // ==========================================
-// FOTOS DE PRODUCTOS (HASTA 5 FOTOS GRATIS POR ANUNCIO)
+// FOTOS DE PRODUCTOS (HASTA 7 FOTOS GRATIS POR ANUNCIO)
 // ==========================================
 function preloadAdjacentPhotos(video) {
   if (!video || !video._allPhotos || video._allPhotos.length <= 1) return;
@@ -984,7 +1044,9 @@ function buildSingleProductCardHTML(video, idx) {
     waClean = '57' + waClean;
   }
   const videoDirectUrl = getPublicShareUrl('?v=' + video.id);
-  const formattedPrice = video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP');
+  const formattedPrice = (video.priceFormatted && video.priceFormatted !== '$0 COP') 
+    ? video.priceFormatted 
+    : (Number(video.price) > 0 ? ('$' + Number(video.price).toLocaleString('es-CO') + ' COP') : 'Precio a Convenir');
   const rawWaMsg = `¡Hola ${store.name || ''}! Me interesa este producto visto en VitrinaSpot:\n\n🛍️ *${video.title}*\n💰 *${formattedPrice}*\n📍 *${video.city || 'Colombia'}*\n\n👉 Enlace: ${videoDirectUrl}`;
   const msg = encodeURIComponent(rawWaMsg);
   const waLink = 'https://wa.me/' + waClean + '?text=' + msg;
@@ -995,7 +1057,7 @@ function buildSingleProductCardHTML(video, idx) {
 
   return `
     <article class="reel-player-card" id="card-${uid}" data-id="${video.id}" data-uid="${uid}" data-index="${idx}">
-      <!-- CARRUSEL DE FOTOS NATIVO (HASTA 5 FOTOS DESLIZABLES HORIZONTALMENTE) -->
+      <!-- CARRUSEL DE FOTOS NATIVO (HASTA 7 FOTOS DESLIZABLES HORIZONTALMENTE) -->
       <div class="reel-photo-viewport" id="viewport-${uid}">
         <div class="reel-photos-slider" id="slider-${uid}" data-id="${video.id}">
           ${photos.map((pUrl, pIdx) => `
@@ -1094,7 +1156,7 @@ function buildSingleProductCardHTML(video, idx) {
         <h3 class="reel-product-title">${escapeHtml(video.title)}</h3>
 
         <div class="price-and-desc-row">
-          <div class="price-tag-badge">${escapeHtml(video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP'))}</div>
+          <div class="price-tag-badge">${escapeHtml((video.priceFormatted && video.priceFormatted !== '$0 COP') ? video.priceFormatted : (Number(video.price) > 0 ? ('$' + Number(video.price).toLocaleString('es-CO') + ' COP') : 'Precio a Convenir'))}</div>
           ${video.delivery ? `<div class="delivery-pill-badge">${escapeHtml(cleanDelivery(video.delivery))}</div>` : ''}
         </div>
 
@@ -3646,7 +3708,7 @@ async function openSellerPanel() {
 
   if (quotaSubtitle) {
     if (isQuotaFull) {
-      quotaSubtitle.innerHTML = `<strong style="color:var(--spot-gold);">Has publicado ${freeUsed} de tus ${freeQuota} spots gratuitos.</strong> Publicaciones permanentes con carrusel de hasta 5 fotos a $0 COP.`;
+      quotaSubtitle.innerHTML = `<strong style="color:var(--spot-gold);">Has publicado ${freeUsed} de tus ${freeQuota} spots gratuitos.</strong> Publicaciones permanentes con carrusel de hasta 7 fotos a $0 COP.`;
     } else {
       quotaSubtitle.textContent = 'Tus SPOTS permanecen activos en la vitrina comercial';
     }
@@ -6210,7 +6272,7 @@ function setupEventListeners() {
     }
 
     // MODELO DE NEGOCIO VITRINASPOT 100% GRATIS (MONETIZACIÓN CON GOOGLE ADMOB):
-    // Publicar spots de hasta 5 fotos es 100% GRATIS ($0 COP) para todos los comercios.
+    // Publicar spots de hasta 7 fotos es 100% GRATIS ($0 COP) para todos los comercios.
     const submitBtn = document.getElementById('btn-submit-upload');
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -6219,7 +6281,7 @@ function setupEventListeners() {
     const sendData = await prepareCompressedFormData(uploadForm);
     if (state.currentStore) sendData.append('storeId', state.currentStore.id);
     sendData.set('delivery', formattedDelivery);
-    sendData.append('paidPlan', selectedPlan || 'photos_5');
+    sendData.append('paidPlan', selectedPlan || 'photos_7');
     const isBoostPlan = selectedPlan && (selectedPlan.includes('boost') || selectedPlan.includes('diamante') || selectedPlan.includes('platino'));
     sendData.append('hasSpot', isBoostPlan ? 'true' : 'false');
     sendData.append('isStandardBoost', selectedPlan === 'boost_standard' ? 'true' : 'false');
@@ -7563,6 +7625,81 @@ function setupEventListeners() {
       }
     } catch (err) {
       alert('Error de conexión con el servidor al purgar base de datos.');
+    }
+  });
+
+  // Disparadores y Formulario SSO Spot Play (1 clic)
+  document.getElementById('btn-close-sso-modal')?.addEventListener('click', () => {
+    const modal = document.getElementById('modal-sso-activate-store');
+    if (modal) modal.style.display = 'none';
+  });
+
+  document.getElementById('modal-sso-activate-store')?.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'modal-sso-activate-store') {
+      e.target.style.display = 'none';
+    }
+  });
+
+  const ssoForm = document.getElementById('form-sso-activate-store');
+  ssoForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const spotPlayUid = document.getElementById('sso-user-uid')?.value;
+    const name = document.getElementById('sso-store-name')?.value.trim();
+    const whatsapp = document.getElementById('sso-store-whatsapp')?.value.trim();
+    const city = document.getElementById('sso-store-city')?.value || 'Bogotá';
+    const avatar = document.getElementById('sso-user-avatar')?.value || '';
+    const email = document.getElementById('sso-user-email')?.value || '';
+
+    if (!whatsapp) {
+      showToast('⚠️ Ingresa tu número de WhatsApp para recibir pedidos directos.', 'error');
+      document.getElementById('sso-store-whatsapp')?.focus();
+      return;
+    }
+
+    const submitBtn = ssoForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Activando Vitrina...';
+      submitBtn.disabled = true;
+    }
+
+    try {
+      const res = await fetch('/api/auth/sso-spotplay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spotPlayUid, name, whatsapp, city, avatar, email })
+      });
+      const data = await res.json();
+      if (res.ok && data.store) {
+        state.currentStore = data.store;
+        localStorage.setItem('vitrina_current_store_id', data.store.id);
+        updateNavStoreUI();
+        const modal = document.getElementById('modal-sso-activate-store');
+        if (modal) modal.style.display = 'none';
+        showToast(`🎉 ¡Tu Vitrina Comercial "${data.store.name}" está activa y vinculada con Spot Play!`);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        loadStores().catch(console.error);
+        openSellerPanel();
+      } else {
+        showToast(data.error || 'No se pudo activar la vitrina.', 'error');
+      }
+    } catch (err) {
+      showToast('Error de conexión al activar vitrina comercial.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Activar Mi Vitrina Comercial';
+        submitBtn.disabled = false;
+      }
+    }
+  });
+
+  // Botón de retorno a Spot Play desde la barra superior de VitrinaSpot
+  document.getElementById('btn-nav-goto-spotplay')?.addEventListener('click', () => {
+    if (window.parent && window.parent !== window) {
+      try {
+        window.parent.postMessage({ type: 'SPOTPLAY_NAVIGATE', tab: 'feed' }, '*');
+      } catch (e) {}
+    } else {
+      window.location.href = 'https://spotplay.netlify.app';
     }
   });
 }
