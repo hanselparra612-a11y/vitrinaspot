@@ -229,7 +229,7 @@ app.get('/', (req, res, next) => {
     const proto = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
     const baseUrl = `${proto}://${host}`;
 
-    let ogTitle = 'VitrinaSpot Colombia - Tu vitrina digital, directo a WhatsApp';
+    let ogTitle = 'Vitrina Colombia - Tu vitrina digital, pedidos al chat directo';
     let ogDesc = 'Compra y vende productos directamente por WhatsApp sin intermediarios ni comisiones.';
     let ogImage = `${baseUrl}/icons/vitrinaspot-brand-logo.jpg?v=27.3`;
     let ogUrl = `${baseUrl}/`;
@@ -237,7 +237,7 @@ app.get('/', (req, res, next) => {
     if (videoId) {
       const video = db.getVideoById(videoId);
       if (video) {
-        ogTitle = `${video.title} - ${video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP')} | VitrinaSpot`;
+        ogTitle = `${video.title} - ${video.priceFormatted || ('$' + Number(video.price || 0).toLocaleString('es-CO') + ' COP')} | Vitrina`;
         ogDesc = `Vendido por "${video.storeName}" en ${video.city || 'Colombia'}. ${video.delivery ? `(${video.delivery}). ` : ''}Toca aquí para ver fotos y contactar por WhatsApp.`;
         ogUrl = `${baseUrl}/?v=${encodeURIComponent(video.id)}`;
         ogImage = `${baseUrl}/api/videos/${encodeURIComponent(video.id)}/thumbnail.jpg`;
@@ -245,7 +245,7 @@ app.get('/', (req, res, next) => {
     } else if (storeId) {
       const store = db.getStoreById(storeId);
       if (store) {
-        ogTitle = `Tienda ${store.name} - Catálogo Oficial | VitrinaSpot`;
+        ogTitle = `Tienda ${store.name} - Catálogo Oficial | Vitrina`;
         ogDesc = `Explora los productos de ${store.name} en ${store.city || 'Colombia'}. Contacta directamente a su WhatsApp.`;
         ogUrl = `${baseUrl}/?store=${encodeURIComponent(store.id)}`;
         ogImage = `${baseUrl}/api/stores/${encodeURIComponent(store.id)}/avatar.jpg`;
@@ -263,7 +263,7 @@ app.get('/', (req, res, next) => {
     const dynamicTags = `  <title>${cleanStr(ogTitle)}</title>
   <!-- VISTA PREVIA OFICIAL EN WHATSAPP Y REDES SOCIALES (OPEN GRAPH) -->
   <meta property="og:type" content="product">
-  <meta property="og:site_name" content="VitrinaSpot Colombia">
+  <meta property="og:site_name" content="Vitrina Colombia">
   <meta property="og:title" content="${cleanStr(ogTitle)}">
   <meta property="og:description" content="${cleanStr(ogDesc)}">
   <meta property="og:image" content="${cleanStr(ogImage)}">
@@ -643,7 +643,7 @@ app.post('/api/videos', upload.fields([
       spotExpiresAt: isBoosted ? boostExpiry : null,
       boostLevel: isBoosted ? boostLevel : 'none',
       isPermanent: true, // Fijo indefinido hasta que el propio vendedor lo elimine
-      title: title || 'Producto en VitrinaSpot',
+      title: title || 'Producto en la Vitrina',
       description: description || 'Contáctanos al chat directo para consultar disponibilidad y pedidos.',
       category: category || 'Emprendimientos',
       city: city || store.city || 'Bogotá',
@@ -996,7 +996,7 @@ app.post('/api/stores', (req, res) => {
     return res.status(400).json({ error: 'Nombre de tienda y WhatsApp son obligatorios.' });
   }
   if (!acceptedRules) {
-    return res.status(400).json({ error: 'Debes aceptar las Políticas de Seguridad y las 4 Reglas de Oro para activar tu tienda en VitrinaSpot.' });
+    return res.status(400).json({ error: 'Debes aceptar las Políticas de Seguridad y las 4 Reglas de Oro para activar tu tienda en la Vitrina.' });
   }
 
   // Formatear WhatsApp a estándar internacional
@@ -1153,7 +1153,7 @@ app.post('/api/auth/sso-spotplay', (req, res) => {
       email: email || null,
       spotPlayUid: spotPlayUid,
       password: `sso_${spotPlayUid.substring(0, 8)}`,
-      description: `Vitrina Oficial en VitrinaSpot vinculada con Spot Play.`
+      description: `Vitrina Oficial vinculada con Spot Play.`
     });
   }
 
@@ -1341,7 +1341,7 @@ app.delete('/api/stores/:id', (req, res) => {
 
   res.json({
     success: true,
-    message: `La cuenta de "${deleted.name}" y todos sus productos han sido eliminados de VitrinaSpot exitosamente.`
+    message: `La cuenta de "${deleted.name}" y todos sus productos han sido eliminados de la Vitrina exitosamente.`
   });
 });
 
@@ -1439,7 +1439,7 @@ app.post('/api/admin/login', (req, res) => {
     res.json({
       success: true,
       token: adminConf.token,
-      admin: { email: adminConf.email, name: 'Super Administrador VitrinaSpot' }
+      admin: { email: adminConf.email, name: 'Super Administrador de la Vitrina' }
     });
   } else {
     res.status(401).json({ error: 'Credenciales de administrador incorrectas.' });

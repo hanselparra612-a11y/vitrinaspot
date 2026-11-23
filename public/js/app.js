@@ -326,6 +326,37 @@ async function handleSpotPlaySSO() {
 }
 window.handleSpotPlaySSO = handleSpotPlaySSO;
 
+// 🔐 Sincronización Automática SSO en Tiempo Real desde Spot Play (postMessage)
+window.addEventListener('message', async (event) => {
+  if (event.data && event.data.type === 'SPOTPLAY_AUTH_SYNC' && event.data.user) {
+    const u = event.data.user;
+    if (!u.id || u.id === 'guest') return;
+    try {
+      const res = await fetch('/api/auth/sso-spotplay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          spotPlayUid: u.id,
+          name: u.name || '',
+          avatar: u.avatar || '',
+          email: u.email || ''
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.exists && data.store) {
+        state.currentStore = data.store;
+        localStorage.setItem('vitrina_current_store_id', data.store.id);
+        updateNavStoreUI();
+        if (typeof showToast === 'function') {
+          showToast(`✨ ¡Bienvenido, ${data.store.name}! Sincronizado con Spot Play.`);
+        }
+      }
+    } catch (e) {
+      console.warn('Sync auth postMessage error:', e);
+    }
+  }
+});
+
 // Carga de tarifas dinámicas oficiales desde el servidor
 async function loadPricing() {
   try {
@@ -1051,7 +1082,7 @@ function buildSingleProductCardHTML(video, idx) {
   const formattedPrice = (video.priceFormatted && video.priceFormatted !== '$0 COP') 
     ? video.priceFormatted 
     : (Number(video.price) > 0 ? ('$' + Number(video.price).toLocaleString('es-CO') + ' COP') : 'Precio a Convenir');
-  const rawWaMsg = `¡Hola ${store.name || ''}! Me interesa este producto visto en VitrinaSpot:\n\n🛍️ *${video.title}*\n💰 *${formattedPrice}*\n📍 *${video.city || 'Colombia'}*\n\n👉 Enlace: ${videoDirectUrl}`;
+  const rawWaMsg = `¡Hola ${store.name || ''}! Me interesa este producto visto en la Vitrina:\n\n🛍️ *${video.title}*\n💰 *${formattedPrice}*\n📍 *${video.city || 'Colombia'}*\n\n👉 Enlace: ${videoDirectUrl}`;
   const msg = encodeURIComponent(rawWaMsg);
   const waLink = 'https://wa.me/' + waClean + '?text=' + msg;
   const tgLink = getTelegramLink(store.telegram || video.storeTelegram, rawWaMsg);
@@ -1205,7 +1236,7 @@ function buildSingleProductCardHTML(video, idx) {
 
         <!-- LEYENDA LEGAL DE SEGURIDAD -->
         <div class="safety-legal-text">
-          <i class="fa-solid fa-shield-halved"></i> VitrinaSpot es vitrina publicitaria. Acuerdos y envíos directos vía chat.
+          <i class="fa-solid fa-shield-halved"></i> La Vitrina es una vitrina publicitaria. Acuerdos y envíos directos vía chat.
         </div>
       </div>
     </article>
@@ -2508,7 +2539,7 @@ async function generateSpotShareCardBlob(video, store, mimeType = 'image/jpeg') 
     ctx.fillStyle = '#94a3b8';
     ctx.font = 'bold 36px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('VitrinaSpot Colombia', imgBoxX + imgBoxW / 2, imgBoxY + imgBoxH / 2);
+    ctx.fillText('Vitrina Colombia', imgBoxX + imgBoxW / 2, imgBoxY + imgBoxH / 2);
   }
 
   // Viñeta oscura suave en la base de la foto para contraste
@@ -2540,7 +2571,7 @@ async function generateSpotShareCardBlob(video, store, mimeType = 'image/jpeg') 
   ctx.fillStyle = '#ffb800';
   ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('🛍️ VitrinaSpot Colombia', badgeX + 22, badgeY + 35);
+  ctx.fillText('🛍️ Vitrina Colombia', badgeX + 22, badgeY + 35);
   ctx.restore();
 
   // Insignia Top-Right: Categoría o Promo
@@ -2602,7 +2633,7 @@ async function generateSpotShareCardBlob(video, store, mimeType = 'image/jpeg') 
   ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textAlign = 'left';
 
-  const rawTitle = video.title || 'Producto en VitrinaSpot';
+  const rawTitle = video.title || 'Producto en la Vitrina';
   let titleLine1 = rawTitle;
   let titleLine2 = '';
 
@@ -2665,7 +2696,7 @@ async function generateSpotShareCardBlob(video, store, mimeType = 'image/jpeg') 
   ctx.fillStyle = '#f59e0b';
   ctx.font = 'bold 21px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('✨ VitrinaSpot · Catálogo Digital y Conexión Directa al Vendedor', infoBoxX + 28, infoBoxY + 280);
+  ctx.fillText('✨ Vitrina · Catálogo Digital y Conexión Directa al Vendedor', infoBoxX + 28, infoBoxY + 280);
   ctx.restore();
 
   return new Promise((resolve) => {
@@ -2756,7 +2787,7 @@ async function shareSpot(videoId, e) {
 
   const videoDirectUrl = getPublicShareUrl('?v=' + video.id);
   const shareTitle = `${video.title} - ${store?.name || video.storeName || 'VitrinaSpot'}`;
-  const shareText = `🛍️ ¡Mira este producto en VitrinaSpot Colombia!\n\n*${video.title}*\n💰 *${video.priceFormatted || (video.price ? '$ ' + Number(video.price).toLocaleString('es-CO') + ' COP' : 'A convenir')}*\n🏪 Tienda: *${store?.name || video.storeName || 'VitrinaSpot'}*\n📍 Ubicación: *${video.city || 'Colombia'}*\n\n👉 Ver fotos completas y contactar directo al vendedor:\n${videoDirectUrl}`;
+  const shareText = `🛍️ ¡Mira este producto en la Vitrina!\n\n*${video.title}*\n💰 *${video.priceFormatted || (video.price ? '$ ' + Number(video.price).toLocaleString('es-CO') + ' COP' : 'A convenir')}*\n🏪 Tienda: *${store?.name || video.storeName || 'VitrinaSpot'}*\n📍 Ubicación: *${video.city || 'Colombia'}*\n\n👉 Ver fotos completas y contactar directo al vendedor:\n${videoDirectUrl}`;
 
   showToast('🎨 Generando imagen del spot...', 'info', 1800);
 
@@ -3115,7 +3146,7 @@ async function openStoreCatalog(storeId) {
     document.getElementById('cat-store-name').textContent = store.name;
     document.getElementById('cat-store-city').textContent = store.city;
     document.getElementById('cat-store-address').textContent = store.address || 'Venta online';
-    let cleanDesc = store.description || '¡Bienvenidos a nuestra vitrina oficial en VitrinaSpot! Escríbenos al chat directo para atenderte.';
+    let cleanDesc = store.description || '¡Bienvenidos a nuestra vitrina oficial en la Vitrina oficial! Escríbenos al chat directo para atenderte.';
     cleanDesc = cleanDesc.replace(/Escríbenos por WhatsApp/gi, 'Escríbenos al chat directo')
                          .replace(/por WhatsApp/gi, 'al chat directo')
                          .replace(/a su WhatsApp/gi, 'a su chat directo');
@@ -3154,13 +3185,13 @@ async function openStoreCatalog(storeId) {
     // Botón de WhatsApp de la tienda completa
     const catWaBtn = document.getElementById('btn-cat-whatsapp');
     if (catWaBtn) {
-      const msg = encodeURIComponent(`¡Hola! Vi el catálogo de ${store.name} en VitrinaSpot y me interesan sus productos.`);
+      const msg = encodeURIComponent(`¡Hola! Vi el catálogo de ${store.name} en la Vitrina y me interesan sus productos.`);
       catWaBtn.href = `https://wa.me/${cleanWa}?text=${msg}`;
     }
     const catTgBtn = document.getElementById('btn-cat-telegram');
     if (catTgBtn) {
       if (store.telegram) {
-        const tgLink = getTelegramLink(store.telegram, `¡Hola! Vi el catálogo de ${store.name} en VitrinaSpot y me interesan sus productos.`);
+        const tgLink = getTelegramLink(store.telegram, `¡Hola! Vi el catálogo de ${store.name} en la Vitrina y me interesan sus productos.`);
         catTgBtn.href = tgLink;
         catTgBtn.style.display = 'inline-flex';
       } else {
@@ -3331,7 +3362,7 @@ function openCatalogProductSheet(video, store) {
     waClean = `57${waClean}`;
   }
   const videoDirectUrl = getPublicShareUrl(`?v=${video.id}`);
-  const rawMsg = `¡Hola ${store?.name || 'amigos'}! Vi este producto en su catálogo de VitrinaSpot y me gustaría comprarlo:\n\n*${video.title}*\nPrecio: ${video.priceFormatted || `$${(video.price||0).toLocaleString('es-CO')}`}\n\n👉 Enlace: ${videoDirectUrl}`;
+  const rawMsg = `¡Hola ${store?.name || 'amigos'}! Vi este producto en su catálogo de la Vitrina y me gustaría comprarlo:\n\n*${video.title}*\nPrecio: ${video.priceFormatted || `$${(video.price||0).toLocaleString('es-CO')}`}\n\n👉 Enlace: ${videoDirectUrl}`;
   const sheetWaBtn = document.getElementById('btn-sheet-whatsapp');
   if (sheetWaBtn) {
     sheetWaBtn.href = `https://wa.me/${waClean}?text=${encodeURIComponent(rawMsg)}`;
@@ -3352,7 +3383,7 @@ function openCatalogProductSheet(video, store) {
   const shareBtn = document.getElementById('btn-sheet-share');
   if (shareBtn) {
     shareBtn.onclick = () => {
-      const shareText = `🛍️ ¡Mira este producto de *${store?.name || video.storeName}* en VitrinaSpot Colombia!\n*${video.title}* - ${video.priceFormatted || ''}\n\n${videoDirectUrl}`;
+      const shareText = `🛍️ ¡Mira este producto de *${store?.name || video.storeName}* en la Vitrina!\n*${video.title}* - ${video.priceFormatted || ''}\n\n${videoDirectUrl}`;
       if (navigator.share) {
         navigator.share({ title: video.title, text: shareText, url: videoDirectUrl }).catch(() => {});
       } else {
@@ -3602,7 +3633,7 @@ async function openSellerPanel() {
   const waShareBtn = document.getElementById('btn-seller-share-wa-catalog');
   if (waShareBtn) {
     waShareBtn.onclick = () => {
-      const shareText = `🛍️ ¡Hola! Te invito a conocer el catálogo digital oficial de *${state.currentStore.name}* en VitrinaSpot Colombia.\n\n📍 ${state.currentStore.city}\nMira todos nuestros productos disponibles y haz tus pedidos directo por WhatsApp aquí:\n\n${storeUrl}`;
+      const shareText = `🛍️ ¡Hola! Te invito a conocer el catálogo digital oficial de *${state.currentStore.name}* en la Vitrina.\n\n📍 ${state.currentStore.city}\nMira todos nuestros productos disponibles y haz tus pedidos directo por WhatsApp aquí:\n\n${storeUrl}`;
       if (navigator.share) {
         navigator.share({
           title: state.currentStore.name,
@@ -3921,7 +3952,7 @@ async function openSellerPanel() {
     vList.querySelectorAll('.btn-del-video').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.getAttribute('data-id');
-        if (confirm('¿Estás seguro de que deseas eliminar este SPOT? Desaparecerá de VitrinaSpot de inmediato.')) {
+        if (confirm('¿Estás seguro de que deseas eliminar este SPOT? Desaparecerá de la Vitrina de inmediato.')) {
           const delRes = await fetch(`/api/videos/${id}?storeId=${state.currentStore.id}`, { method: 'DELETE' });
           if (delRes.ok) {
             showToast('SPOT eliminado con éxito');
@@ -4336,7 +4367,7 @@ async function loadAdminModeration() {
                 <i class="fa-solid fa-eye"></i> Ver Spot
               </button>
               ${cleanWa ? `
-              <a href="https://wa.me/${cleanWa}?text=${encodeURIComponent(`Hola ${storeName}, te escribo desde la administración oficial de VitrinaSpot sobre tu spot "${title}".`)}" target="_blank" class="btn btn-sm" style="font-size: 0.75rem; background: rgba(37,211,102,0.18); color: #25d366; border: 1px solid rgba(37,211,102,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px;">
+              <a href="https://wa.me/${cleanWa}?text=${encodeURIComponent(`Hola ${storeName}, te escribo desde la administración oficial de la Vitrina sobre tu spot "${title}".`)}" target="_blank" class="btn btn-sm" style="font-size: 0.75rem; background: rgba(37,211,102,0.18); color: #25d366; border: 1px solid rgba(37,211,102,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px;">
                 <i class="fa-brands fa-whatsapp"></i> Chat Vendedor
               </a>` : ''}
               <button type="button" class="btn btn-warning btn-sm" onclick="executeAdminModeration('${videoId}', 'reject_needs_fix', '${storeId}')" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); font-size: 0.75rem; font-weight: 700; padding: 5px 10px;">
@@ -4376,7 +4407,7 @@ async function loadAdminModeration() {
       container.innerHTML = vids.map(v => {
         const store = (state.stores || []).find(s => s.id === v.storeId) || {};
         const cleanWa = (store.whatsapp || v.storeWhatsapp || '').replace(/[^0-9]/g, '');
-        const waMsg = encodeURIComponent(`Hola ${v.storeName}, te escribo desde la administración de VitrinaSpot sobre tu publicación "${v.title}".`);
+        const waMsg = encodeURIComponent(`Hola ${v.storeName}, te escribo desde la administración de la Vitrina sobre tu publicación "${v.title}".`);
         const cover = (v.photos && v.photos[0]) || v.thumbnailUrl || '';
 
         return `
@@ -4439,7 +4470,7 @@ async function loadAdminModeration() {
       container.innerHTML = stores.map(s => {
         const cleanWa = (s.whatsapp || '').replace(/[^0-9]/g, '');
         const storeSpotCount = (state.videos || []).filter(v => v.storeId === s.id).length;
-        const waMsg = encodeURIComponent(`Hola ${s.name}, te escribo desde la administración oficial de VitrinaSpot.`);
+        const waMsg = encodeURIComponent(`Hola ${s.name}, te escribo desde la administración oficial de la Vitrina.`);
 
         return `
           <div class="admin-mod-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
@@ -4851,7 +4882,7 @@ function setupEventListeners() {
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     // 9. Feedback sutil para confirmación
-    showToast('🏠 Inicio de VitrinaSpot');
+    showToast('🏠 Inicio de la Vitrina');
   }
   window.goToHomeScreen = goToHomeScreen;
 
@@ -6305,7 +6336,7 @@ function setupEventListeners() {
     isUploadingVideo = true;
     progCard.style.display = 'block';
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publicando SPOT en VitrinaSpot...';
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publicando en la Vitrina...';
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/videos', true);
@@ -6414,7 +6445,7 @@ function setupEventListeners() {
     }
     const viralDesc = modal.querySelector('.viral-share-card p');
     if (viralDesc) {
-      viralDesc.innerHTML = `Invítalos a publicar sus primeros <strong>${freeQuota} SPOTS</strong> en VitrinaSpot <strong>100% GRATIS</strong> sin comisiones ni mensualidades.`;
+      viralDesc.innerHTML = `Invítalos a publicar sus primeros <strong>${freeQuota} SPOTS</strong> en la Vitrina <strong>100% GRATIS</strong> sin comisiones ni mensualidades.`;
     }
     const viralBtnText = document.getElementById('btn-viral-share-wa');
     if (viralBtnText) {
@@ -6426,14 +6457,14 @@ function setupEventListeners() {
     if (shareBtn) {
       shareBtn.onclick = () => {
         const shareUrl = getPublicShareUrl();
-        const shareMsg = `¡Hola colega! 👋 Mira esta nueva vitrina comercial en Colombia que encontré: *VitrinaSpot* (Tu catálogo digital, pedidos al chat directo).\n\n` +
+        const shareMsg = `¡Hola colega! 👋 Mira esta nueva vitrina comercial en Colombia que encontré: *La Vitrina* (Tu catálogo digital, pedidos al chat directo).\n\n` +
           `🎁 Acabo de subir mi SPOT y están regalando *${freeQuota} SPOTS 100% GRATIS* y fijos para los primeros 1.000 comercios pioneros.\n\n` +
           `Aprovecha y sube tus productos antes de que se completen los 1.000 cupos aquí:\n\n` +
           `${shareUrl}`;
 
         if (navigator.share) {
           navigator.share({
-            title: `VitrinaSpot - ${freeQuota} SPOTS Gratis para Comercios Pioneros`,
+            title: `Vitrina - ${freeQuota} SPOTS Gratis para Comercios Pioneros`,
             text: shareMsg,
             url: shareUrl
           }).catch(() => {
@@ -6583,7 +6614,7 @@ function setupEventListeners() {
         if (targetLabel) targetLabel.textContent = `+${data.whatsapp}`;
 
         // Enlace para abrir o reabrir el código en WhatsApp
-        const waMsg = encodeURIComponent(`🔐 Tu código de recuperación de VitrinaSpot para "${data.storeName}" es: *${data.code}*.\n\nEs válido por 15 minutos. Ingresa este código en la pantalla para crear tu nueva contraseña.`);
+        const waMsg = encodeURIComponent(`🔐 Tu código de recuperación de la Vitrina para "${data.storeName}" es: *${data.code}*.\n\nEs válido por 15 minutos. Ingresa este código en la pantalla para crear tu nueva contraseña.`);
         const waUrl = `https://api.whatsapp.com/send?phone=${data.whatsapp}&text=${waMsg}`;
         const reopenLink = document.getElementById('btn-reopen-wa-code');
         if (reopenLink) reopenLink.href = waUrl;
@@ -7272,7 +7303,7 @@ function setupEventListeners() {
         e.stopPropagation();
         const pIdx = parseInt(btn.getAttribute('data-idx'), 10);
         if (editingSpotPhotos.length <= 1) {
-          alert('Tu SPOT debe tener al menos una foto para ser visible en el catálogo de VitrinaSpot.');
+          alert('Tu SPOT debe tener al menos una foto para ser visible en el catálogo de la Vitrina.');
           return;
         }
         editingSpotPhotos.splice(pIdx, 1);
@@ -7696,14 +7727,10 @@ function setupEventListeners() {
     }
   });
 
-  // Botón de retorno a Spot Play desde la barra superior de VitrinaSpot
-  document.getElementById('btn-nav-goto-spotplay')?.addEventListener('click', () => {
-    if (window.parent && window.parent !== window) {
-      try {
-        window.parent.postMessage({ type: 'SPOTPLAY_NAVIGATE', tab: 'feed' }, '*');
-      } catch (e) {}
-    } else {
-      window.location.href = 'https://spotplay.netlify.app';
+  // Botón de retorno a Spot Play desde la barra superior de la Vitrina
+  document.getElementById('btn-nav-goto-spotplay')?.addEventListener('click', (e) => {
+    if (typeof window.handleGoToSpotPlay === 'function') {
+      window.handleGoToSpotPlay(e);
     }
   });
 
@@ -7715,8 +7742,12 @@ function setupEventListeners() {
         return;
       } catch (e) {}
     }
-    const spotPlayAdminUrl = 'https://spotplay.netlify.app/#admin';
-    window.open(spotPlayAdminUrl, '_blank');
+    let spotOrigin = (new URLSearchParams(window.location.search)).get('spotplay_origin') || localStorage.getItem('spotplay_origin_url');
+    if (!spotOrigin) {
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      spotOrigin = isLocal ? 'http://localhost:5173' : 'https://changelog-heat-consultant-renewal.trycloudflare.com';
+    }
+    window.open(spotOrigin + '/#admin', '_blank');
   });
 }
 
@@ -7743,7 +7774,7 @@ function executeShareVideo(video) {
 
   if (navigator.share) {
     navigator.share({
-      title: `${video.title} | VitrinaSpot`,
+      title: `${video.title} | Vitrina`,
       text: shareText
     }).then(() => {
       showToast('🚀 ¡Enlace listo para compartir!');
@@ -7798,8 +7829,8 @@ function legacyClipboardCopy(text) {
 function openShareAppModal() {
   const shareUrl = getPublicShareUrl();
   const freeQuota = Number(state.pricing?.free_spots_quota) || 5;
-  const shareTitle = `VitrinaSpot - ${freeQuota} SPOTS Gratis para Comercios`;
-  const shareMsg = `🛍️ ¡Hola! Te recomiendo *VitrinaSpot Colombia* (Tu catálogo digital, pedidos al chat directo).\n\n` +
+  const shareTitle = `Vitrina - ${freeQuota} SPOTS Gratis para Comercios`;
+  const shareMsg = `🛍️ ¡Hola! Te recomiendo *Vitrina Colombia* (Tu catálogo digital, pedidos al chat directo).\n\n` +
     `🎁 Para comercios y emprendedores están regalando *${freeQuota} SPOTS 100% GRATIS* y permanentes para exhibir tus productos con fotos y videos.\n\n` +
     `Es una plataforma genial para descubrir tiendas reales y hacer pedidos directo por WhatsApp sin intermediarios ni comisiones:\n\n` +
     `👉 ${shareUrl}`;
@@ -7811,7 +7842,7 @@ function openShareAppModal() {
       text: shareMsg,
       url: shareUrl
     }).then(() => {
-      showToast('🚀 ¡Gracias por recomendar VitrinaSpot!');
+      showToast('🚀 ¡Gracias por recomendar la Vitrina!');
     }).catch((err) => {
       if (err.name !== 'AbortError') {
         showShareAppDialog(shareUrl, shareMsg);
@@ -7840,7 +7871,7 @@ function showShareAppDialog(shareUrl, shareMsg) {
   const copyAction = () => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(shareUrl).then(() => {
-        showToast('📋 ¡Enlace de VitrinaSpot copiado al portapapeles!');
+        showToast('📋 ¡Enlace de la Vitrina copiado al portapapeles!');
       }).catch(() => {
         legacyClipboardCopy(shareUrl);
       });
@@ -8614,7 +8645,7 @@ document.getElementById('btn-pwa-install')?.addEventListener('click', async () =
     deferredPwaPrompt.prompt();
     const { outcome } = await deferredPwaPrompt.userChoice;
     if (outcome === 'accepted') {
-      showToast('🎉 ¡VitrinaSpot instalada con éxito en tu celular!');
+      showToast('🎉 ¡Vitrina instalada con éxito en tu celular!');
     }
     deferredPwaPrompt = null;
   }
@@ -8629,7 +8660,7 @@ document.getElementById('btn-pwa-dismiss')?.addEventListener('click', () => {
 window.addEventListener('appinstalled', () => {
   const banner = document.getElementById('pwa-install-banner');
   if (banner) banner.style.display = 'none';
-  showToast('🚀 ¡VitrinaSpot ya está en tu pantalla de inicio!');
+  showToast('🚀 ¡Vitrina ya está en tu pantalla de inicio!');
 });
 
 // =========================================================
@@ -8942,7 +8973,7 @@ if (formDeleteAccount) {
         const feedSection = document.getElementById('feed-section');
         if (feedSection) feedSection.style.display = 'block';
 
-        showToast(`🗑️ Tu tienda "${deletedStoreName}" y todos sus spots han sido eliminados de VitrinaSpot.`);
+        showToast(`🗑️ Tu tienda "${deletedStoreName}" y todos sus spots han sido eliminados de la Vitrina.`);
         
         // Recargar datos públicos
         await loadStores();

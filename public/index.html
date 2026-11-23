@@ -36,7 +36,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>VitrinaSpot - Tu Vitrina Digital y Catálogo Comercial en Colombia</title>
+  <title>Vitrina - Tu Vitrina Digital y Catálogo Comercial en Colombia</title>
   
   <!-- Font Awesome & Fuentes Modernas -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -50,22 +50,22 @@
   <meta name="theme-color" content="#0c0c0e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="VitrinaSpot">
+  <meta name="apple-mobile-web-app-title" content="Vitrina">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=21.9">
   <link rel="icon" type="image/png" sizes="64x64" href="/icons/favicon.png?v=21.9">
   <link rel="shortcut icon" href="/icons/favicon.png?v=21.9">
 
   <!-- Metadatos SEO y Previsualización al Compartir (WhatsApp, Facebook, Twitter) -->
-  <meta name="description" content="VitrinaSpot Colombia - Tu vitrina comercial digital con catálogo interactivo y pedidos al chat directo. Descubre productos, promociones y tiendas locales en toda Colombia.">
+  <meta name="description" content="Vitrina Colombia - Tu vitrina comercial digital con catálogo interactivo y pedidos al chat directo. Descubre productos, promociones y tiendas locales en toda Colombia.">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="VitrinaSpot">
-  <meta property="og:title" content="VitrinaSpot Colombia - Tu Catálogo Digital y Pedidos al Chat Directo">
+  <meta property="og:site_name" content="Vitrina">
+  <meta property="og:title" content="Vitrina Colombia - Tu Catálogo Digital y Pedidos al Chat Directo">
   <meta property="og:description" content="Descubre tiendas y productos en Colombia con catálogo visual inmersivo y contacto directo con cada vendedor sin intermediarios ni comisiones.">
   <meta property="og:image" content="https://vitrinaspot.onrender.com/icons/vitrinaspot-brand-logo.jpg?v=27.3">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="VitrinaSpot Colombia - Tu Catálogo Digital y Pedidos al Chat Directo">
+  <meta name="twitter:title" content="Vitrina Colombia - Tu Catálogo Digital y Pedidos al Chat Directo">
   <meta name="twitter:description" content="Descubre tiendas y productos en Colombia con catálogo visual interactivo y pedidos al chat directo.">
   <meta name="twitter:image" content="https://vitrinaspot.onrender.com/icons/app-icon-commerce.jpg">
 
@@ -77,6 +77,68 @@
 
   <!-- Google AdMob / AdSense Integration Ready -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+<script>
+    // Recordar origen de Spot Play si viene por parámetro
+    try {
+      const pOrigin = new URLSearchParams(window.location.search).get('spotplay_origin');
+      if (pOrigin) localStorage.setItem('spotplay_origin_url', pOrigin);
+    } catch(e) {}
+
+    // Función universal de retorno a Spot Play (desde iframe, popup o pestaña independiente)
+    window.handleGoToSpotPlay = function(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      // 1. Si está dentro de un iframe dentro de Spot Play
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'SPOTPLAY_NAVIGATE', tab: 'feed' }, '*');
+        return;
+      }
+
+      // 2. Obtener origen de Spot Play guardado o detectado
+      const urlParams = new URLSearchParams(window.location.search);
+      let spotOrigin = urlParams.get('spotplay_origin');
+      if (spotOrigin) {
+        try { localStorage.setItem('spotplay_origin_url', spotOrigin); } catch(e) {}
+      } else {
+        try { spotOrigin = localStorage.getItem('spotplay_origin_url'); } catch(e) {}
+      }
+
+      if (!spotOrigin && document.referrer) {
+        try {
+          const refOrigin = new URL(document.referrer).origin;
+          if (refOrigin && !refOrigin.includes('4000') && !refOrigin.includes('bits-backgrounds')) {
+            spotOrigin = refOrigin;
+          }
+        } catch(e) {}
+      }
+
+      if (!spotOrigin) {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        spotOrigin = isLocal ? 'http://localhost:5173' : 'https://changelog-heat-consultant-renewal.trycloudflare.com';
+      }
+
+      // 3. Si se abrió en una pestaña secundaria desde Spot Play (window.opener)
+      if (window.opener && !window.opener.closed) {
+        try {
+          window.opener.postMessage({ type: 'SPOTPLAY_NAVIGATE', tab: 'feed' }, '*');
+          window.opener.focus();
+          window.close();
+          setTimeout(function() {
+            window.location.href = spotOrigin + '/#feed';
+          }, 350);
+          return;
+        } catch(err) {
+          console.warn('Opener error:', err);
+        }
+      }
+
+      // 4. Redirigir la pestaña actual directamente al feed oficial de Spot Play
+      window.location.href = spotOrigin + '/#feed';
+    };
+</script>
 </head>
 <body class="dark-theme">
 
@@ -86,7 +148,7 @@
   <header class="navbar">
     <div class="nav-left">
       <div class="brand-logo" id="brand-logo-display">
-        <span class="logo-title">Vitrina<span class="logo-highlight">Spot</span></span>
+        <span class="logo-title">Vitrina</span>
       </div>
     </div>
 
@@ -134,7 +196,7 @@
         </button>
 
         <!-- BOTÓN CONEXIÓN SPOT PLAY (VIDEOS) -->
-        <a href="/" id="btn-nav-goto-spotplay" class="btn-goto-spotplay" title="Ir a Spot Play (Videos en Vivo)" onclick="if (window.parent && window.parent !== window) { event.preventDefault(); window.parent.postMessage({ type: 'SPOTPLAY_NAVIGATE', tab: 'feed' }, '*'); }">
+        <a href="javascript:void(0)" id="btn-nav-goto-spotplay" class="btn-goto-spotplay" title="Volver a Spot Play (Videos en Vivo)" onclick="handleGoToSpotPlay(event)">
           <i class="fa-solid fa-play"></i>
           <span>Spot Play</span>
         </a>
@@ -186,7 +248,7 @@
       </button>
       <button type="button" class="dropdown-link" id="btn-store-share-app" style="color: var(--spot-gold); font-weight: 700;">
         <i class="fa-solid fa-share-nodes text-gold"></i>
-        <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
+        <span style="flex: 1; text-align: left;">Recomendar la Vitrina</span>
       </button>
       <button type="button" class="dropdown-link btn-shortcut-admin-panel" style="display: none !important; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
         <i class="fa-solid fa-shield-halved text-gold"></i>
@@ -227,7 +289,7 @@
       </button>
       <button type="button" class="dropdown-link w-100" id="btn-guest-share-app" style="padding: 8px 10px; color: var(--spot-gold); font-weight: 700;">
         <i class="fa-solid fa-share-nodes text-gold"></i>
-        <span style="flex: 1; text-align: left;">Recomendar VitrinaSpot</span>
+        <span style="flex: 1; text-align: left;">Recomendar la Vitrina</span>
       </button>
       <button type="button" class="dropdown-link w-100 btn-shortcut-admin-panel" style="display: none !important; padding: 8px 10px; color: var(--spot-gold); font-weight: 700; border-top: 1px dashed rgba(255,184,0,0.3); margin-top: 6px; padding-top: 8px;">
         <i class="fa-solid fa-shield-halved text-gold"></i>
@@ -613,7 +675,7 @@
         <!-- PANTALLA DE LOGIN ADMIN (SI NO ESTÁ AUTENTICADO) -->
         <div class="admin-login-box" id="admin-login-screen">
           <div class="admin-lock-icon"><i class="fa-solid fa-shield-halved"></i></div>
-          <h2>Acceso al Panel Maestro VitrinaSpot</h2>
+          <h2>Acceso al Panel Maestro de la Vitrina</h2>
           <p>Área confidencial exclusiva para administración financiera y control de plataforma.</p>
           <form id="admin-login-form">
             <div class="form-group">
@@ -637,7 +699,7 @@
         <div class="admin-exec-screen" id="admin-exec-screen" style="display: none;">
           <div class="admin-top-bar">
             <div>
-              <h2>🏛️ Bóveda Ejecutiva & Control Maestro VitrinaSpot</h2>
+              <h2>🏛️ Bóveda Ejecutiva & Control Maestro de la Vitrina</h2>
               <span class="text-muted">Super-Admin Conectado • Modo Seguro 256-bit</span>
             </div>
             <div class="admin-top-btns">
@@ -924,7 +986,7 @@
   <div class="modal-overlay" id="modal-upload" style="display: none;">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-camera-retro text-spot"></i> Publicar SPOT en VitrinaSpot</h3>
+        <h3><i class="fa-solid fa-camera-retro text-spot"></i> Publicar en la Vitrina</h3>
         <button class="close-modal-btn" id="btn-close-upload">&times;</button>
       </div>
 
@@ -1769,7 +1831,7 @@
           </div>
           <h4>¿Conoces a otros amigos con negocio?</h4>
           <p>
-            Invítalos a publicar sus productos y catálogos en VitrinaSpot <strong>100% GRATIS</strong> sin comisiones ni mensualidades.
+            Invítalos a publicar sus productos y catálogos en la Vitrina <strong>100% GRATIS</strong> sin comisiones ni mensualidades.
           </p>
           <button type="button" class="btn-viral-wa-share" id="btn-viral-share-wa">
             <i class="fa-brands fa-whatsapp"></i> Invitar Comercios por WhatsApp
@@ -1807,7 +1869,7 @@
           </div>
           <div style="font-size: 0.82rem; color: #fff; line-height: 1.35;">
             <strong style="color: var(--spot-gold); display: block; font-size: 0.88rem;">👑 SPOT Activo</strong>
-            Tus cambios se actualizarán al instante en tu catálogo digital y en el feed vertical de VitrinaSpot.
+            Tus cambios se actualizarán al instante en tu catálogo digital y en el feed vertical de la Vitrina.
           </div>
         </div>
 
@@ -1926,7 +1988,7 @@
     <div style="display: flex; align-items: center; gap: 12px;">
       <img src="/icons/icon-192.png" alt="VitrinaSpot" style="width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255,184,0,0.5);">
       <div>
-        <div style="font-weight: 800; font-size: 0.92rem; color: #fff;">Instalar VitrinaSpot</div>
+        <div style="font-weight: 800; font-size: 0.92rem; color: #fff;">Instalar la Vitrina</div>
         <div style="font-size: 0.75rem; color: var(--text-muted);">Acceso directo como App en tu celular</div>
       </div>
     </div>
@@ -1949,7 +2011,7 @@
         <input type="hidden" id="report-video-id" value="">
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; color: #fca5a5;">
           <strong id="report-video-title" style="color: #fff; display: block; margin-bottom: 2px;">Título del producto</strong>
-          Ayúdanos a mantener VitrinaSpot 100% familiar, legal y segura para toda Colombia.
+          Ayúdanos a mantener la Vitrina 100% familiar, legal y segura para toda Colombia.
         </div>
         <div class="form-group">
           <label style="font-weight: 700; color: #fff;">¿Cuál es el motivo del reporte?</label>
@@ -2000,9 +2062,9 @@
       <div class="modal-body" style="line-height: 1.5; font-size: 0.88rem; color: var(--text-dim); gap: 14px;">
         <div style="background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(0, 210, 255, 0.08)); border: 1px solid rgba(255, 184, 0, 0.35); border-radius: 12px; padding: 14px; color: #fff;">
           <strong style="font-size: 1rem; color: var(--spot-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-            <i class="fa-solid fa-shield-halved"></i> Compromiso Comunitario VitrinaSpot
+            <i class="fa-solid fa-shield-halved"></i> Compromiso Comunitario de la Vitrina
           </strong>
-          VitrinaSpot es la plataforma de vitrinas comerciales de Colombia diseñada para conectar a familias, compradores y comerciantes de manera transparente, segura y directa a WhatsApp.
+          La Vitrina es la plataforma de vitrinas comerciales de Colombia diseñada para conectar a familias, compradores y comerciantes de manera transparente, segura y directa a WhatsApp.
         </div>
 
         <!-- REGLA 1 -->
@@ -2110,7 +2172,7 @@
           Al eliminar tu cuenta:
           <ul style="margin: 6px 0 0 0; padding-left: 18px; font-size: 0.78rem;">
             <li>Tu tienda y catálogo público se darán de baja de inmediato.</li>
-            <li>Todos tus spots activos o guardados se retirarán de VitrinaSpot.</li>
+            <li>Todos tus spots activos o guardados se retirarán de la Vitrina.</li>
             <li>Tu número de WhatsApp se desvinculará de la plataforma.</li>
           </ul>
         </div>
@@ -2135,12 +2197,12 @@
     </div>
   </div>
 
-  <!-- MODAL: RECOMENDAR / COMPARTIR VITRINASPOT GENERAL -->
+  <!-- MODAL: RECOMENDAR / COMPARTIR LA VITRINA GENERAL -->
   <div class="modal-overlay" id="modal-share-app" style="display: none; z-index: 10000;">
     <div class="modal-dialog" style="max-width: 440px;">
       <div class="modal-header">
         <h3 style="margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-share-nodes text-spot"></i> Recomendar VitrinaSpot
+          <i class="fa-solid fa-share-nodes text-spot"></i> Recomendar la Vitrina
         </h3>
         <button type="button" class="close-modal-btn" id="btn-close-share-app">&times;</button>
       </div>
@@ -2162,7 +2224,7 @@
           </button>
 
           <button type="button" class="share-channel-btn share-channel-copy" id="btn-share-app-copy">
-            <i class="fa-solid fa-copy"></i> Copiar Enlace de VitrinaSpot
+            <i class="fa-solid fa-copy"></i> Copiar Enlace de la Vitrina
           </button>
 
           <div style="display: flex; gap: 8px; margin-top: 6px;">
@@ -2176,7 +2238,7 @@
         </div>
 
         <div class="form-group" style="margin-bottom: 6px;">
-          <label style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 4px; display: block;">Enlace Oficial de VitrinaSpot:</label>
+          <label style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 4px; display: block;">Enlace Oficial de la Vitrina:</label>
           <div style="display: flex; gap: 6px;">
             <input type="text" id="share-app-url-input" readonly style="flex: 1; font-size: 0.82rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 10px; color: #fff;">
             <button type="button" class="btn btn-ghost btn-sm" id="btn-copy-share-app-input" title="Copiar"><i class="fa-solid fa-copy"></i></button>
@@ -2300,7 +2362,7 @@
         <div style="text-align: center; margin-bottom: 14px;">
           <img id="sso-user-preview-avatar" src="" alt="Avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--spot-gold); margin: 0 auto 8px; display: block;">
           <h4 id="sso-user-preview-name" style="margin: 0 0 4px 0; color: #fff; font-size: 1rem;">Nombre de Creador</h4>
-          <p style="margin: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.35;">Tu cuenta de Spot Play ya está validada. Para comenzar a vender tus productos en VitrinaSpot, solo ingresa tus datos de contacto directo.</p>
+          <p style="margin: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.35;">Tu cuenta de Spot Play ya está validada. Para comenzar a vender tus productos en la Vitrina, solo ingresa tus datos de contacto directo.</p>
         </div>
 
         <div class="form-group" style="margin-bottom: 12px;">
