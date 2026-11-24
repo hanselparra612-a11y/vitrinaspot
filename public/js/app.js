@@ -294,6 +294,9 @@ async function handleSpotPlaySSO() {
       localStorage.setItem('vitrina_current_store_id', data.store.id);
       updateNavStoreUI();
       showToast(`✨ ¡Bienvenido de nuevo, ${data.store.name}! Tu Vitrina está sincronizada.`);
+      if (urlParams.get('open_store') === '1' && typeof openStoreCatalog === 'function') {
+        openStoreCatalog(data.store.id);
+      }
       const cleanUrl = window.location.pathname + (urlParams.get('v') ? `?v=${urlParams.get('v')}` : '');
       window.history.replaceState({}, document.title, cleanUrl);
     } else if (data.needsRegistration) {

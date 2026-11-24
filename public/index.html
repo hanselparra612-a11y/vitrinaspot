@@ -21,10 +21,13 @@
 
       // Enrutamiento automático de APIs hacia el servidor de VitrinaSpot
       const origFetch = window.fetch;
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const API_TARGET = window.location.port === '4000' 
+      const hostname = window.location.hostname;
+      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+      const isRender = hostname.includes('vitrinaspot.onrender.com');
+
+      const API_TARGET = (window.location.port === '4000' || isRender)
         ? '' 
-        : (isLocal ? 'http://127.0.0.1:4000' : 'https://conversation-ste-rug-productive.trycloudflare.com');
+        : (isLocal ? 'http://127.0.0.1:4000' : 'https://vitrinaspot.onrender.com');
 
       window.fetch = function(url, init) {
         if (typeof url === 'string' && url.startsWith('/api/')) {
