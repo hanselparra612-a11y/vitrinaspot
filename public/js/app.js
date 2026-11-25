@@ -13,9 +13,32 @@ function triggerOpenUploadModal() {
   if (!uploadModal) return;
   const nameInput = document.getElementById('upload-store-name');
   const waInput = document.getElementById('upload-whatsapp');
+    const uploadCCode = document.getElementById('upload-country-code')?.value || '+57';
+    let combinedUploadWa = waInput ? waInput.value.trim() : '';
+    if (combinedUploadWa && !combinedUploadWa.startsWith('+')) {
+      combinedUploadWa = uploadCCode + combinedUploadWa.replace(/[^0-9]/g, '');
+    }
   if (state.currentStore) {
     if (nameInput) nameInput.value = state.currentStore.name;
-    if (waInput) waInput.value = (state.currentStore.whatsapp || '').replace('+57', '').replace(/[^0-9]/g, '');
+    if (waInput && state.currentStore.whatsapp) {
+        const swa = state.currentStore.whatsapp;
+        const upCC = document.getElementById('upload-country-code');
+        if (swa.startsWith('+1')) {
+          if (upCC) upCC.value = '+1';
+          waInput.value = swa.replace('+1', '').replace(/[^0-9]/g, '');
+        } else if (swa.startsWith('+57')) {
+          if (upCC) upCC.value = '+57';
+          waInput.value = swa.replace('+57', '').replace(/[^0-9]/g, '');
+        } else {
+          const m = swa.match(/^\+(\d{1,4})/);
+          if (m && upCC) {
+            upCC.value = '+' + m[1];
+            waInput.value = swa.replace('+' + m[1], '').replace(/[^0-9]/g, '');
+          } else {
+            waInput.value = swa.replace(/[^0-9]/g, '');
+          }
+        }
+      }
   } else {
     if (nameInput) nameInput.value = '';
     if (waInput) waInput.value = '';
@@ -9210,7 +9233,7 @@ function setupSpotPlayUploadModal() {
     formData.append('city', cityInput ? cityInput.value : 'Toda Colombia');
     formData.append('category', catInput ? catInput.value : '🎭 Humor & Comedia');
     formData.append('delivery', isProduct && delInput ? delInput.value : '');
-    formData.append('whatsapp', waInput.value.trim());
+    formData.append('whatsapp', combinedUploadWa);
     if (state.currentStore) {
       formData.append('storeId', state.currentStore.id);
       formData.append('storeName', state.currentStore.name);

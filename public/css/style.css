@@ -4424,7 +4424,13 @@ body.admin-active-view .main-viewport {
   }
 
   .city-btn span {
-    display: none;
+    display: inline-block;
+    max-width: 82px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.76rem;
+    font-weight: 700;
   }
 
   .city-dropdown {
