@@ -6062,15 +6062,52 @@ function setupEventListeners() {
   const customDelivInput = document.getElementById('upload-custom-delivery');
 
   delivTypeSelect?.addEventListener('change', () => {
-    if (delivTypeSelect.value === 'custom') {
-      customDelivBox.style.display = 'block';
-      customDelivInput?.focus();
-    } else {
-      customDelivBox.style.display = 'none';
-    }
+    setUploadDelivery(delivTypeSelect.value);
   });
 
   
+  // Sincronizador de Botones Rápidos de Domicilio en Publicar SPOT
+  function setUploadDelivery(type) {
+    const delivSelect = document.getElementById('upload-delivery-type');
+    const customDelivBox = document.getElementById('custom-delivery-price-box');
+    const customDelivInput = document.getElementById('upload-custom-delivery');
+    const delivButtons = document.querySelectorAll('.deliv-pill-btn');
+
+    delivButtons.forEach((btn) => {
+      if (btn.getAttribute('data-deliv') === type) {
+        btn.style.border = '1.5px solid var(--spot-gold, #ffb800)';
+        btn.style.background = 'linear-gradient(135deg, rgba(255, 184, 0, 0.28), rgba(12, 15, 20, 0.95))';
+        btn.style.color = '#fff';
+        btn.style.boxShadow = '0 0 10px rgba(255, 184, 0, 0.3)';
+        btn.classList.add('active');
+      } else {
+        btn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+        btn.style.background = 'rgba(255, 255, 255, 0.05)';
+        btn.style.color = 'var(--text-muted, #aaa)';
+        btn.style.boxShadow = 'none';
+        btn.classList.remove('active');
+      }
+    });
+
+    if (delivSelect && delivSelect.value !== type) {
+      delivSelect.value = type;
+    }
+
+    if (type === 'custom') {
+      if (customDelivBox) customDelivBox.style.display = 'block';
+      customDelivInput?.focus();
+    } else {
+      if (customDelivBox) customDelivBox.style.display = 'none';
+    }
+  }
+
+  document.querySelectorAll('.deliv-pill-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const dType = btn.getAttribute('data-deliv');
+      setUploadDelivery(dType);
+    });
+  });
+
   // Controladores de 1-Clic para Cobertura (Global, Colombia, USA) en Publicar SPOT
   function setUploadCoverage(type) {
     const btnGlobal = document.getElementById('btn-cov-global');
@@ -6114,7 +6151,7 @@ function setupEventListeners() {
         statusTag.style.color = 'var(--spot-gold, #ffb800)';
         statusTag.style.borderColor = 'rgba(255, 184, 0, 0.4)';
       }
-      if (delivSelect) delivSelect.value = 'global';
+      if (delivSelect) delivSelect.value = 'global'; setUploadDelivery('global');
       if (badgeSelect && badgeSelect.value === 'none') badgeSelect.value = '🌍 COBERTURA GLOBAL';
     } else if (type === 'Colombia') {
       activatePill(btnColombia);
@@ -6127,7 +6164,7 @@ function setupEventListeners() {
       }
       if (currSelect) currSelect.value = 'COP';
       if (cCodeSelect) cCodeSelect.value = '+57';
-      if (delivSelect && delivSelect.value === 'global') delivSelect.value = 'gratis';
+      if (delivSelect && delivSelect.value === 'global') { delivSelect.value = 'gratis'; setUploadDelivery('gratis'); }
       if (badgeSelect && badgeSelect.value === '🌍 COBERTURA GLOBAL') badgeSelect.value = 'none';
     } else if (type === 'USA') {
       activatePill(btnUsa);
@@ -6140,7 +6177,7 @@ function setupEventListeners() {
       }
       if (currSelect) currSelect.value = 'USD';
       if (cCodeSelect) cCodeSelect.value = '+1';
-      if (delivSelect && delivSelect.value === 'global') delivSelect.value = 'gratis';
+      if (delivSelect && delivSelect.value === 'global') { delivSelect.value = 'gratis'; setUploadDelivery('gratis'); }
       if (badgeSelect && badgeSelect.value === '🌍 COBERTURA GLOBAL') badgeSelect.value = 'none';
     }
   }

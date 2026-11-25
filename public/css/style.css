@@ -11038,3 +11038,73 @@ body.spotplay-active #spotplay-top-bar {
 
 
 #city-dropdown-menu { display: none !important; }
+
+
+/* =========================================================
+   MODAL DE PUBLICACIÓN EN VITRINA (DISEÑO VERTICAL PURO)
+   ========================================================= */
+#modal-upload.modal-overlay {
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+#modal-upload .modal-dialog {
+  max-width: 560px !important;
+  width: 100% !important;
+  max-height: 90vh !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  border-radius: 18px;
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+}
+
+#modal-upload .modal-body {
+  padding: 18px 20px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#modal-upload .form-row {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  width: 100% !important;
+}
+
+#modal-upload .form-group {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#modal-upload input,
+#modal-upload select,
+#modal-upload textarea {
+  box-sizing: border-box;
+}
+
+.coverage-buttons-group,
+.delivery-pills-group {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.coverage-pill-btn,
+.deliv-pill-btn {
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.coverage-pill-btn:active,
+.deliv-pill-btn:active {
+  transform: scale(0.97);
+}

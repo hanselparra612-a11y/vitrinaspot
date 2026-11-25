@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=28.9">
+  <link rel="stylesheet" href="css/style.css?v=29.0">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -1147,159 +1147,191 @@
           </div>
         </div>
 
-        <!-- DATOS DEL NEGOCIO Y WHATSAPP DIRECTO -->
-        <div class="form-row">
-          <div class="form-group flex-1">
-            <label>Nombre de tu Tienda o Negocio *</label>
-            <input type="text" id="upload-store-name" name="storeName" placeholder="Ej: Calzados Bucaramanga" required>
-          </div>
-          <div class="form-group flex-1">
-            <label>Tu WhatsApp de Ventas *</label>
-            <div style="display: flex; gap: 6px; align-items: center;">
-              <select id="upload-country-code" name="countryCode" style="width: 100px; flex-shrink: 0; padding: 10px 4px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.85rem;">
-                <option value="+57" selected>🇨🇴 +57</option>
-                <option value="+1">🇺🇸 +1</option>
-                <option value="+52">🇲🇽 +52</option>
-                <option value="+34">🇪🇸 +34</option>
-                <option value="+58">🇻🇪 +58</option>
-                <option value="+51">🇵🇪 +51</option>
-                <option value="+56">🇨🇱 +56</option>
-                <option value="+54">🇦🇷 +54</option>
-                <option value="+593">🇪🇨 +593</option>
-                <option value="+507">🇵🇦 +507</option>
-              </select>
-              <input type="tel" id="upload-whatsapp" name="whatsapp" placeholder="Ej: 312 456 7890 o 305 123 4567" required style="flex: 1;">
-            </div>
+        <!-- DATOS DEL NEGOCIO Y WHATSAPP DIRECTO (DISEÑO VERTICAL PURO - SOLO DESLIZAR HACIA ABAJO) -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-store text-spot"></i> Nombre de tu Tienda o Negocio *</label>
+          <input type="text" id="upload-store-name" name="storeName" placeholder="Ej: Calzados Bucaramanga" required style="width: 100%;">
+        </div>
+
+        <div class="form-group">
+          <label><i class="fa-brands fa-whatsapp text-wa"></i> Tu WhatsApp de Ventas *</label>
+          <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+            <select id="upload-country-code" name="countryCode" style="width: 110px; flex-shrink: 0; padding: 11px 6px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.88rem;">
+              <option value="+57" selected>🇨🇴 +57</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+52">🇲🇽 +52</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+58">🇻🇪 +58</option>
+              <option value="+51">🇵🇪 +51</option>
+              <option value="+56">🇨🇱 +56</option>
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+593">🇪🇨 +593</option>
+              <option value="+507">🇵🇦 +507</option>
+            </select>
+            <input type="tel" id="upload-whatsapp" name="whatsapp" placeholder="Ej: 312 456 7890 o 305 123 4567" required style="flex: 1;">
           </div>
         </div>
 
         <div class="form-group">
-          <label>Nombre del Producto o Servicio *</label>
-          <input type="text" id="upload-title" name="title" placeholder="Ej: Zapatos Oxford de Cuero Suela Confort" required>
+          <label><i class="fa-solid fa-box-open text-spot"></i> Nombre del Producto o Servicio *</label>
+          <input type="text" id="upload-title" name="title" placeholder="Ej: Zapatos Oxford de Cuero Suela Confort" required style="width: 100%;">
         </div>
 
-        <div class="form-row">
-          <div class="form-group flex-1">
-            <label>Precio y Moneda *</label>
-            <div style="display: flex; gap: 6px;">
-              <select id="upload-currency" name="currency" style="width: 95px; flex-shrink: 0; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-weight: 700; font-size: 0.85rem; padding: 8px 4px;">
-                <option value="COP" selected>COP ($)</option>
-                <option value="USD">USD ($)</option>
-              </select>
-              <input type="number" id="upload-price" name="price" placeholder="Ej: 139900 o 35" style="flex: 1;">
-            </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-coins text-gold"></i> Precio y Moneda *</label>
+          <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+            <select id="upload-currency" name="currency" style="width: 110px; flex-shrink: 0; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.9rem; padding: 11px 8px;">
+              <option value="COP" selected>COP ($)</option>
+              <option value="USD">USD ($)</option>
+            </select>
+            <input type="number" id="upload-price" name="price" placeholder="Ej: 139900 o 35" style="flex: 1;" required>
           </div>
-          <div class="form-group flex-1">
-            <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-              <span><i class="fa-solid fa-earth-americas text-gold"></i> Ubicación o Cobertura del Producto *</span>
-              <span id="coverage-status-tag" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; background: rgba(255, 184, 0, 0.2); color: var(--spot-gold, #ffb800); font-weight: 800; border: 1px solid rgba(255, 184, 0, 0.4);">🌍 GLOBAL ACTIVO</span>
+        </div>
+
+        <!-- SECCIÓN 1: UBICACIÓN Y COBERTURA (DEDICADA 100% ANCHO) -->
+        <div class="form-group coverage-section-box" style="background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(255, 184, 0, 0.25); border-radius: 14px; padding: 14px; margin-bottom: 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+            <label style="font-weight: 800; font-size: 0.95rem; margin-bottom: 0; color: #fff;">
+              <i class="fa-solid fa-earth-americas text-gold"></i> Ubicación o Cobertura *
             </label>
-
-            <!-- BOTONES RÁPIDOS DE 1-CLIC PARA ELEGIR COBERTURA -->
-            <div class="coverage-buttons-group" style="display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 6px; margin-bottom: 8px;">
-              <button type="button" class="coverage-pill-btn active" id="btn-cov-global" data-cov="Global" style="padding: 9px 4px; border-radius: 10px; border: 1.5px solid var(--spot-gold, #ffb800); background: linear-gradient(135deg, rgba(255, 184, 0, 0.28), rgba(12, 15, 20, 0.95)); color: #fff; font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 0 12px rgba(255, 184, 0, 0.35); transition: all 0.2s ease;">
-                🌍 Todo el Mundo
-              </button>
-              <button type="button" class="coverage-pill-btn" id="btn-cov-colombia" data-cov="Bogotá" style="padding: 9px 4px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s ease;">
-                🇨🇴 Colombia
-              </button>
-              <button type="button" class="coverage-pill-btn" id="btn-cov-usa" data-cov="Miami & Florida" style="padding: 9px 4px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s ease;">
-                🇺🇸 EE.UU.
-              </button>
-            </div>
-
-            <!-- DESPLEGABLE DETALLADO DE CIUDADES / REGIONES -->
-            <select id="upload-city" name="city" style="width: 100%; padding: 10px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.88rem;">
-              <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
-                <option value="Global" selected>🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
-                <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
-              </optgroup>
-              <optgroup label="🇨🇴 Colombia">
-                <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
-                <option value="Bogotá">Bogotá D.C.</option>
-                <option value="Medellín">Medellín & Antioquia</option>
-                <option value="Cali">Cali & Valle</option>
-                <option value="Popayán">Popayán (Cauca)</option>
-                <option value="Barranquilla">Barranquilla & Costa</option>
-                <option value="Bucaramanga">Bucaramanga & Santanderes</option>
-                <option value="Eje Cafetero">Eje Cafetero</option>
-                <option value="Cartagena">Cartagena</option>
-                <option value="Meta & Llanos">Meta & Llanos Orientales</option>
-                <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-              </optgroup>
-              <optgroup label="🇺🇸 Estados Unidos">
-                <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
-                <option value="Miami & Florida">Miami & Florida (USA)</option>
-                <option value="New York">New York & New Jersey (USA)</option>
-                <option value="California">California & Los Angeles (USA)</option>
-                <option value="Texas">Texas & Houston (USA)</option>
-                <option value="Orlando">Orlando & Florida Central (USA)</option>
-              </optgroup>
-            </select>
+            <span id="coverage-status-tag" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 8px; background: rgba(255, 184, 0, 0.2); color: var(--spot-gold, #ffb800); font-weight: 800; border: 1px solid rgba(255, 184, 0, 0.4);">🌍 GLOBAL ACTIVO</span>
           </div>
+
+          <!-- BOTONES RÁPIDOS DE 1-CLIC PARA ELEGIR COBERTURA -->
+          <div class="coverage-buttons-group" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; width: 100%;">
+            <button type="button" class="coverage-pill-btn active" id="btn-cov-global" data-cov="Global" style="padding: 12px 6px; border-radius: 12px; border: 1.5px solid var(--spot-gold, #ffb800); background: linear-gradient(135deg, rgba(255, 184, 0, 0.28), rgba(12, 15, 20, 0.95)); color: #fff; font-size: 0.85rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 0 12px rgba(255, 184, 0, 0.35); transition: all 0.2s ease;">
+              🌍 Todo el Mundo
+            </button>
+            <button type="button" class="coverage-pill-btn" id="btn-cov-colombia" data-cov="Bogotá" style="padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              🇨🇴 Colombia
+            </button>
+            <button type="button" class="coverage-pill-btn" id="btn-cov-usa" data-cov="Miami & Florida" style="padding: 12px 6px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              🇺🇸 EE.UU.
+            </button>
+          </div>
+
+          <!-- DESPLEGABLE DETALLADO DE CIUDADES / REGIONES -->
+          <label style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; display: block;">Detalle de Ciudad o Zona:</label>
+          <select id="upload-city" name="city" style="width: 100%; padding: 11px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+            <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
+              <option value="Global" selected>🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
+              <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
+            </optgroup>
+            <optgroup label="🇨🇴 Colombia">
+              <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
+              <option value="Bogotá">Bogotá D.C.</option>
+              <option value="Medellín">Medellín & Antioquia</option>
+              <option value="Cali">Cali & Valle</option>
+              <option value="Popayán">Popayán (Cauca)</option>
+              <option value="Barranquilla">Barranquilla & Costa</option>
+              <option value="Bucaramanga">Bucaramanga & Santanderes</option>
+              <option value="Eje Cafetero">Eje Cafetero</option>
+              <option value="Cartagena">Cartagena</option>
+              <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+              <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+            </optgroup>
+            <optgroup label="🇺🇸 Estados Unidos">
+              <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
+              <option value="Miami & Florida">Miami & Florida (USA)</option>
+              <option value="New York">New York & New Jersey (USA)</option>
+              <option value="California">California & Los Angeles (USA)</option>
+              <option value="Texas">Texas & Houston (USA)</option>
+              <option value="Orlando">Orlando & Florida Central (USA)</option>
+            </optgroup>
+          </select>
         </div>
 
-        <div class="form-row">
-          <div class="form-group flex-1">
-            <label><i class="fa-solid fa-shapes text-gold"></i> Categoría del Producto *</label>
-            <button type="button" class="btn-category-picker-trigger" id="btn-open-category-picker" title="Toca para elegir la categoría de tu producto">
-              <span class="cat-picker-preview-left">
-                <span class="cat-picker-preview-icon" id="cat-picker-preview-icon">🍔</span>
-                <span class="cat-picker-preview-text" id="cat-picker-preview-text">Comida & Domicilios</span>
-              </span>
-              <span class="cat-picker-preview-action">
-                <span class="cat-picker-btn-hint">Elegir</span>
-                <i class="fa-solid fa-chevron-right cat-picker-arrow"></i>
-              </span>
-            </button>
-            <input type="hidden" id="upload-cat" name="category" value="Comida & Domicilios">
+        <!-- SECCIÓN 2: CONDICIONES DE DOMICILIO Y ENTREGA (DEDICADA 100% ANCHO) -->
+        <div class="form-group delivery-section-box" style="background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(0, 210, 255, 0.25); border-radius: 14px; padding: 14px; margin-bottom: 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <label style="font-weight: 800; font-size: 0.95rem; margin-bottom: 0; color: #fff;">
+              <i class="fa-solid fa-truck-fast text-gold"></i> Condiciones de Domicilio y Entrega *
+            </label>
           </div>
 
-          <div class="form-group flex-1">
-            <label>Condiciones de Domicilio</label>
-            <select id="upload-delivery-type" name="deliveryType">
-              <option value="gratis">Domicilio Gratis</option>
-              <option value="global">🌍 Envíos a Todo el Mundo (Global)</option>
-              <option value="nacional">🇨🇴 Envíos a Todo el País</option>
-              <option value="digital">⚡ Entrega Inmediata Digital</option>
-              <option value="custom">Tarifa Personalizada</option>
-              <option value="local">🏪 Recogida en Local Físico</option>
-            </select>
+          <!-- BOTONES RÁPIDOS DE 1-CLIC PARA DOMICILIO -->
+          <div class="delivery-pills-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; width: 100%;">
+            <button type="button" class="deliv-pill-btn active" id="btn-deliv-global" data-deliv="global" style="padding: 11px 8px; border-radius: 10px; border: 1.5px solid var(--spot-gold, #ffb800); background: linear-gradient(135deg, rgba(255, 184, 0, 0.28), rgba(12, 15, 20, 0.95)); color: #fff; font-size: 0.82rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 0 10px rgba(255, 184, 0, 0.3); transition: all 0.2s ease;">
+              🌍 Todo el Mundo
+            </button>
+            <button type="button" class="deliv-pill-btn" id="btn-deliv-gratis" data-deliv="gratis" style="padding: 11px 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              🚚 Domicilio Gratis
+            </button>
+            <button type="button" class="deliv-pill-btn" id="btn-deliv-nacional" data-deliv="nacional" style="padding: 11px 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              🇨🇴 Todo el País
+            </button>
+            <button type="button" class="deliv-pill-btn" id="btn-deliv-local" data-deliv="local" style="padding: 11px 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              🏪 Recogida en Local
+            </button>
+            <button type="button" class="deliv-pill-btn" id="btn-deliv-digital" data-deliv="digital" style="padding: 11px 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              ⚡ Entrega Digital
+            </button>
+            <button type="button" class="deliv-pill-btn" id="btn-deliv-custom" data-deliv="custom" style="padding: 11px 8px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); color: var(--text-muted, #aaa); font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;">
+              💵 Tarifa Personalizada
+            </button>
           </div>
+
+          <!-- SELECT DETALLADO DE DOMICILIO -->
+          <label style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; display: block;">Modo de Entrega:</label>
+          <select id="upload-delivery-type" name="deliveryType" style="width: 100%; padding: 11px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+            <option value="global" selected>🌍 Envíos a Todo el Mundo (Global)</option>
+            <option value="gratis">🚚 Domicilio Gratis</option>
+            <option value="nacional">🇨🇴 Envíos a Todo el País</option>
+            <option value="local">🏪 Recogida en Local Físico</option>
+            <option value="digital">⚡ Entrega Inmediata Digital</option>
+            <option value="custom">💵 Tarifa Personalizada</option>
+          </select>
         </div>
 
         <!-- CASILLA DINÁMICA DE VALOR DE DOMICILIO PERSONALIZADO -->
-        <div class="form-group" id="custom-delivery-price-box" style="display: none;">
-          <label>Valor exacto del Domicilio en COP *</label>
-          <input type="number" id="upload-custom-delivery" name="customDelivery" placeholder="Ej: 7000 (Escribe el valor que cobras por carrera)">
+        <div class="form-group" id="custom-delivery-price-box" style="display: none; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 184, 0, 0.3); border-radius: 10px; padding: 12px;">
+          <label><i class="fa-solid fa-coins text-gold"></i> Valor exacto del Domicilio *</label>
+          <input type="number" id="upload-custom-delivery" name="customDelivery" placeholder="Ej: 7000 (Escribe el valor que cobras por carrera)" style="width: 100%;">
         </div>
 
-        <div class="form-row">
-          <div class="form-group flex-1">
-            <label><i class="fa-solid fa-tag text-gold"></i> Etiqueta Promocional / Cobertura</label>
-            <select id="upload-badge" name="promoBadge">
-              <option value="none">Sin etiqueta</option>
-              <option value="🌍 COBERTURA GLOBAL">🌍 COBERTURA GLOBAL</option>
-              <option value="✈️ ENVÍOS INTERNACIONALES">✈️ ENVÍOS INTERNACIONALES</option>
-              <option value="⚡ SERVICIO DIGITAL">⚡ SERVICIO DIGITAL</option>
-              <option value="¡EN OFERTA!">🏷️ ¡EN OFERTA!</option>
-              <option value="ENVÍO GRATIS">🚚 ENVÍO GRATIS</option>
-              <option value="ÚLTIMAS UNIDADES">⚡ ÚLTIMAS UNIDADES</option>
-              <option value="🛠️ A DOMICILIO">🛠️ A DOMICILIO</option>
-              <option value="📢 SE BUSCA PERSONAL">📢 SE BUSCA PERSONAL</option>
-              <option value="🙋 OFREZCO MI TRABAJO">🙋 OFREZCO MI TRABAJO</option>
-            </select>
-          </div>
-
-          <div class="form-group flex-1">
-            <label>Palabras clave (para búsquedas rápidas)</label>
-            <input type="text" id="upload-keywords" name="keywords" placeholder="ej: cuero, elegante, dama, domicilio">
-          </div>
-        </div>
-
+        <!-- CATEGORÍA DEL PRODUCTO (ANCHO COMPLETO) -->
         <div class="form-group">
-          <label>Descripción del producto o servicio</label>
-          <textarea id="upload-desc" name="description" rows="2" placeholder="Tallas, colores, garantía, detalles de la oferta..."></textarea>
+          <label><i class="fa-solid fa-shapes text-gold"></i> Categoría del Producto *</label>
+          <button type="button" class="btn-category-picker-trigger" id="btn-open-category-picker" title="Toca para elegir la categoría de tu producto" style="width: 100%;">
+            <span class="cat-picker-preview-left">
+              <span class="cat-picker-preview-icon" id="cat-picker-preview-icon">🍔</span>
+              <span class="cat-picker-preview-text" id="cat-picker-preview-text">Comida & Domicilios</span>
+            </span>
+            <span class="cat-picker-preview-action">
+              <span class="cat-picker-btn-hint">Elegir</span>
+              <i class="fa-solid fa-chevron-right cat-picker-arrow"></i>
+            </span>
+          </button>
+          <input type="hidden" id="upload-cat" name="category" value="Comida & Domicilios">
+        </div>
+
+        <!-- ETIQUETA PROMOCIONAL / COBERTURA (ANCHO COMPLETO) -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-tag text-gold"></i> Etiqueta Promocional / Cobertura</label>
+          <select id="upload-badge" name="promoBadge" style="width: 100%; padding: 11px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+            <option value="🌍 COBERTURA GLOBAL" selected>🌍 COBERTURA GLOBAL</option>
+            <option value="none">Sin etiqueta</option>
+            <option value="✈️ ENVÍOS INTERNACIONALES">✈️ ENVÍOS INTERNACIONALES</option>
+            <option value="⚡ SERVICIO DIGITAL">⚡ SERVICIO DIGITAL</option>
+            <option value="¡EN OFERTA!">🏷️ ¡EN OFERTA!</option>
+            <option value="ENVÍO GRATIS">🚚 ENVÍO GRATIS</option>
+            <option value="ÚLTIMAS UNIDADES">⚡ ÚLTIMAS UNIDADES</option>
+            <option value="🛠️ A DOMICILIO">🛠️ A DOMICILIO</option>
+            <option value="📢 SE BUSCA PERSONAL">📢 SE BUSCA PERSONAL</option>
+            <option value="🙋 OFREZCO MI TRABAJO">🙋 OFREZCO MI TRABAJO</option>
+          </select>
+        </div>
+
+        <!-- PALABRAS CLAVE (ANCHO COMPLETO) -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-magnifying-glass text-spot"></i> Palabras clave (para búsquedas rápidas)</label>
+          <input type="text" id="upload-keywords" name="keywords" placeholder="ej: cuero, elegante, dama, domicilio" style="width: 100%;">
+        </div>
+
+        <!-- DESCRIPCIÓN (ANCHO COMPLETO) -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-align-left text-spot"></i> Descripción del producto o servicio</label>
+          <textarea id="upload-desc" name="description" rows="3" placeholder="Tallas, colores, garantía, detalles de la oferta..." style="width: 100%;"></textarea>
         </div>
 
         <!-- BARRA DE SUBIDA RÁPIDA -->
@@ -2601,7 +2633,7 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=28.9"></script>
+  <script src="js/app.js?v=29.0"></script>
 
 
   <!-- MODAL: DIRECTORIO MUNDIAL DE PAÍSES Y CIUDADES GLASSMORPHISM -->
