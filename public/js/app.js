@@ -5753,7 +5753,27 @@ function setupEventListeners() {
       const waInput = document.getElementById('upload-whatsapp');
       if (state.currentStore) {
         if (nameInput) nameInput.value = state.currentStore.name;
-        if (waInput) waInput.value = (state.currentStore.whatsapp || '').replace('+57', '').replace(/[^0-9]/g, '');
+        const profileFullWa = state.currentStore.whatsapp || '';
+    const profileCCSelect = document.getElementById('edit-store-country-code');
+    if (profileCCSelect) {
+      if (profileFullWa.startsWith('+1')) {
+        profileCCSelect.value = '+1';
+        if (waInput) waInput.value = profileFullWa.replace('+1', '').replace(/[^0-9]/g, '');
+      } else if (profileFullWa.startsWith('+57')) {
+        profileCCSelect.value = '+57';
+        if (waInput) waInput.value = profileFullWa.replace('+57', '').replace(/[^0-9]/g, '');
+      } else {
+        const m = profileFullWa.match(/^\+(\d{1,4})/);
+        if (m) {
+          profileCCSelect.value = '+' + m[1];
+          if (waInput) waInput.value = profileFullWa.replace('+' + m[1], '').replace(/[^0-9]/g, '');
+        } else {
+          if (waInput) waInput.value = profileFullWa.replace(/[^0-9]/g, '');
+        }
+      }
+    } else if (waInput) {
+      waInput.value = profileFullWa.replace(/[^0-9]/g, '');
+    }
       } else {
         if (nameInput) nameInput.value = '';
         if (waInput) waInput.value = '';
@@ -6302,6 +6322,13 @@ function setupEventListeners() {
     const sendData = await prepareCompressedFormData(uploadForm);
     if (state.currentStore) sendData.append('storeId', state.currentStore.id);
     sendData.set('delivery', formattedDelivery);
+    const upCountryCode = document.getElementById('upload-country-code')?.value || '+57';
+    let currentUploadWa = sendData.get('whatsapp') ? sendData.get('whatsapp').trim() : '';
+    if (currentUploadWa && !currentUploadWa.startsWith('+')) {
+      sendData.set('whatsapp', upCountryCode + currentUploadWa.replace(/[^0-9]/g, ''));
+    }
+    const upCurrency = document.getElementById('upload-currency')?.value || (/miami|florida|york|california|texas|houston|orlando|angeles|usa|estados unidos/i.test(sendData.get('city') || '') ? 'USD' : 'COP');
+    sendData.set('currency', upCurrency);
     sendData.append('paidPlan', selectedPlan || 'photos_7');
     const isBoostPlan = selectedPlan && (selectedPlan.includes('boost') || selectedPlan.includes('diamante') || selectedPlan.includes('platino'));
     sendData.append('hasSpot', isBoostPlan ? 'true' : 'false');
@@ -7355,6 +7382,10 @@ function setupEventListeners() {
     document.getElementById('edit-prod-id').value = video.id;
     document.getElementById('edit-prod-title').value = video.title || '';
     document.getElementById('edit-prod-price').value = (typeof video.price === 'number') ? video.price : '';
+    const editCurrSel = document.getElementById('edit-prod-currency');
+    if (editCurrSel) {
+      editCurrSel.value = video.currency || ((video.priceFormatted && video.priceFormatted.includes('USD')) ? 'USD' : 'COP');
+    }
     document.getElementById('edit-prod-delivery').value = cleanDelivery(video.delivery) || 'Domicilio Gratis';
     document.getElementById('edit-prod-city').value = video.city || 'Bogotá';
     document.getElementById('edit-prod-category').value = video.category || 'Tecnología';
@@ -7397,6 +7428,7 @@ function setupEventListeners() {
     const vidId = document.getElementById('edit-prod-id').value;
     const title = document.getElementById('edit-prod-title').value.trim();
     const price = document.getElementById('edit-prod-price').value;
+    const prodCurrency = document.getElementById('edit-prod-currency')?.value || 'COP';
     const delivery = document.getElementById('edit-prod-delivery').value.trim();
     const city = document.getElementById('edit-prod-city').value;
     const category = document.getElementById('edit-prod-category').value;
@@ -7430,6 +7462,7 @@ function setupEventListeners() {
           storeId: state.isAdmin ? 'admin' : (state.currentStore ? state.currentStore.id : 'admin'),
           title,
           price: price !== '' ? Number(price) : 0,
+          currency: prodCurrency,
           delivery,
           city,
           category,
