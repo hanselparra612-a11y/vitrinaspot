@@ -4900,6 +4900,7 @@ function setupEventListeners() {
       else if (lbl === 'Todo Estados Unidos') lbl = '🇺🇸 EE.UU.';
       else if (lbl === 'Toda Colombia') lbl = '🇨🇴 Colombia';
       else if (lbl === 'Internacional') lbl = '🌐 Global';
+      else if (lbl === 'California') lbl = '🎬 Los Ángeles';
       document.getElementById('current-city-label').textContent = lbl;
       cityMenu.classList.remove('show');
       showView('feed-view');
