@@ -1381,10 +1381,10 @@ function renderContinuousFeed() {
     if (deskPanel && window.innerWidth > 900) deskPanel.style.display = 'flex';
   }
 
-  // 0. Publicidad de Enganche de Entrada (Reel Cero Oficial de VitrinaSpot)
+  // 0. Publicidad de Enganche de Entrada (Desactivada: entrada directa a productos reales)
   const isSearchActive = Boolean(state.searchQuery && state.searchQuery.trim() !== '');
   const hasDirectSharedProduct = Boolean(state._sharedTargetVideoId);
-  const showWelcomeHook = !isSearchActive && !hasDirectSharedProduct;
+  const showWelcomeHook = false; // Opción 1: Acceso instantáneo al primer producto sin tarjeta intermedia
   const camp = state.launchCampaign || {};
 
   const welcomeHookCardHTML = showWelcomeHook ? `
