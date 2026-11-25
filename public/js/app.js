@@ -9454,3 +9454,144 @@ window.renderSpotPlayFeed = function() {};
       console.error('Error al simular impacto publicitario:', err);
     }
   });
+
+
+// =========================================================
+// GESTOR DEL SELECTOR MUNDIAL INTELIGENTE (195 PAÍSES)
+// =========================================================
+function initGlobalLocationModal() {
+  const cityBtn = document.getElementById('btn-city-dropdown');
+  const locModal = document.getElementById('modal-global-locations');
+  const closeBtn = document.getElementById('btn-close-global-locations');
+  const searchInput = document.getElementById('input-search-location');
+  const clearSearchBtn = document.getElementById('btn-clear-search-location');
+  const tabBtns = document.querySelectorAll('.loc-tab-btn');
+  const locItems = document.querySelectorAll('.global-loc-item');
+  const sections = document.querySelectorAll('.loc-section');
+  const noResults = document.getElementById('loc-search-no-results');
+
+  if (!cityBtn || !locModal) return;
+
+  // Reemplazar comportamiento para abrir el Modal Global
+  cityBtn.onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    locModal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+    if (searchInput) {
+      searchInput.value = '';
+      setTimeout(() => searchInput.focus(), 150);
+      filterLocations('');
+    }
+  };
+
+  const closeModal = () => {
+    locModal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+  };
+
+  closeBtn?.addEventListener('click', closeModal);
+  locModal.addEventListener('click', (e) => {
+    if (e.target === locModal) closeModal();
+  });
+
+  // Selector por Pestañas Rápidas
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.getAttribute('data-tab');
+      if (searchInput) searchInput.value = '';
+
+      sections.forEach(sec => {
+        if (tab === 'all') {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = sec.getAttribute('data-section') === tab ? 'block' : 'none';
+        }
+      });
+      if (noResults) noResults.style.display = 'none';
+    });
+  });
+
+  // Filtro de Búsqueda en Tiempo Real
+  function filterLocations(query) {
+    const q = (query || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    let hasMatch = false;
+
+    if (clearSearchBtn) {
+      clearSearchBtn.style.display = q ? 'block' : 'none';
+    }
+
+    if (!q) {
+      // Restaurar pestañas
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabBtns[0]?.classList.add('active');
+      sections.forEach(s => s.style.display = 'block');
+      locItems.forEach(item => item.style.display = 'flex');
+      if (noResults) noResults.style.display = 'none';
+      return;
+    }
+
+    // Ocultar cabeceras de secciones y filtrar items
+    sections.forEach(s => s.style.display = 'block');
+    locItems.forEach(item => {
+      const text = (item.textContent || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const cityData = (item.getAttribute('data-city') || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+      if (text.includes(q) || cityData.includes(q)) {
+        item.style.display = 'flex';
+        hasMatch = true;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    if (noResults) {
+      noResults.style.display = hasMatch ? 'none' : 'block';
+    }
+  }
+
+  searchInput?.addEventListener('input', (e) => filterLocations(e.target.value));
+  clearSearchBtn?.addEventListener('click', () => {
+    if (searchInput) {
+      searchInput.value = '';
+      filterLocations('');
+      searchInput.focus();
+    }
+  });
+
+  // Selección de Ciudad o País
+  locItems.forEach(item => {
+    item.addEventListener('click', () => {
+      locItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      const targetCity = item.getAttribute('data-city');
+      const targetLabel = item.getAttribute('data-label') || targetCity;
+
+      state.currentCity = targetCity;
+      const cityLabelElem = document.getElementById('current-city-label');
+      if (cityLabelElem) {
+        cityLabelElem.textContent = targetLabel;
+      }
+
+      // Guardar en persistencia local
+      try {
+        localStorage.setItem('spot_selected_city', targetCity);
+        localStorage.setItem('spot_selected_city_label', targetLabel);
+      } catch (err) {}
+
+      closeModal();
+      showView('feed-view');
+      loadVideos();
+    });
+  });
+}
+
+// Auto-iniciar al cargar el DOM
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGlobalLocationModal);
+} else {
+  initGlobalLocationModal();
+}
+

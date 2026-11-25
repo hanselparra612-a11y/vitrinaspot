@@ -2602,5 +2602,347 @@
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <script src="js/app.js?v=28.9"></script>
+
+
+  <!-- MODAL: DIRECTORIO MUNDIAL DE PAÍSES Y CIUDADES GLASSMORPHISM -->
+  <div class="modal-overlay" id="modal-global-locations" style="display: none; z-index: 100000;">
+    <div class="modal-dialog modal-categories-dialog modal-location-dialog">
+      <div class="modal-header" style="flex-shrink: 0; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,184,0,0.15); border: 1px solid rgba(255,184,0,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-earth-americas text-spot" style="font-size: 1rem;"></i>
+          </div>
+          <h3 style="margin: 0; font-size: 1.02rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;">Ubicación & Cobertura Mundial</h3>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin: 0 8px;">
+          <span style="font-size: 0.75rem; background: rgba(255,184,0,0.22); color: var(--spot-gold); border: 1px solid rgba(255,184,0,0.5); border-radius: 12px; padding: 3px 10px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 0 12px rgba(255,184,0,0.25);">195 Países</span>
+        </div>
+
+        <button type="button" class="close-modal-btn" id="btn-close-global-locations" title="Cerrar selector" aria-label="Cerrar" style="flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; cursor: pointer; transition: all 0.2s ease;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Buscador Inteligente en Tiempo Real -->
+      <div style="padding: 12px 18px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <div style="position: relative; display: flex; align-items: center;">
+          <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; color: var(--spot-gold); font-size: 0.9rem;"></i>
+          <input type="text" id="input-search-location" placeholder="Escribe tu país o ciudad (ej. México, España, Bogotá, Los Ángeles...)" style="width: 100%; height: 42px; background: rgba(0,0,0,0.45); border: 1.5px solid rgba(255,184,0,0.3); border-radius: 22px; padding: 0 40px 0 40px; color: #fff; font-size: 0.9rem; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease;" />
+          <button type="button" id="btn-clear-search-location" style="display: none; position: absolute; right: 12px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 0.9rem;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <!-- Píldoras de Filtro Rápido -->
+      <div class="loc-filter-pills-bar" style="display: flex; gap: 8px; padding: 10px 18px; overflow-x: auto; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); scrollbar-width: none;">
+        <button type="button" class="loc-tab-btn active" data-tab="all">🌎 Todos</button>
+        <button type="button" class="loc-tab-btn" data-tab="co">🇨🇴 Colombia</button>
+        <button type="button" class="loc-tab-btn" data-tab="us">🇺🇸 EE.UU.</button>
+        <button type="button" class="loc-tab-btn" data-tab="mx">🇲🇽 México</button>
+        <button type="button" class="loc-tab-btn" data-tab="es">🇪🇸 España</button>
+        <button type="button" class="loc-tab-btn" data-tab="latam">🌎 Latinoamérica</button>
+        <button type="button" class="loc-tab-btn" data-tab="world">🌐 Más Países</button>
+      </div>
+
+      <!-- Cuerpo del Directorio Scrollable -->
+      <div id="location-scroll-content" style="flex: 1; overflow-y: auto; padding: 16px 18px; -webkit-overflow-scrolling: touch;">
+        <!-- COBERTURA GLOBAL -->
+        <div class="loc-section" data-section="all" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-globe"></i> Cobertura Sin Fronteras
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px;">
+            <div class="global-loc-item active" data-city="🌍 Todos los Países" data-label="🌍 Global" style="background: rgba(255,184,0,0.12); border: 1.5px solid rgba(255,184,0,0.45); border-radius: 12px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;">
+              <span style="font-size: 1.4rem;">🌍</span>
+              <div style="flex: 1;">
+                <div style="font-weight: 800; font-size: 0.92rem; color: #fff;">Todos los Países (Global)</div>
+                <div style="font-size: 0.75rem; color: #ffb800;">Feed mundial completo sin restricciones</div>
+              </div>
+              <i class="fa-solid fa-check text-spot" style="font-size: 0.9rem;"></i>
+            </div>
+            <div class="global-loc-item" data-city="Internacional" data-label="🌐 Global" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;">
+              <span style="font-size: 1.4rem;">🌐</span>
+              <div style="flex: 1;">
+                <div style="font-weight: 800; font-size: 0.92rem; color: #fff;">Envíos Internacionales & Digital</div>
+                <div style="font-size: 0.75rem; color: #aaa;">Comercios con despacho a cualquier país</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLOMBIA -->
+        <div class="loc-section" data-section="co" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>🇨🇴</span> Colombia (Nacional & Ciudades)
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+            <div class="global-loc-item" data-city="Toda Colombia" data-label="🇨🇴 Colombia"><span class="loc-flag">🇨🇴</span> <strong>Toda Colombia</strong></div>
+            <div class="global-loc-item" data-city="Bogotá" data-label="🏙️ Bogotá"><span class="loc-flag">🏙️</span> Bogotá D.C.</div>
+            <div class="global-loc-item" data-city="Medellín" data-label="🌸 Medellín"><span class="loc-flag">🌸</span> Medellín & Antioquia</div>
+            <div class="global-loc-item" data-city="Cali" data-label="☀️ Cali"><span class="loc-flag">☀️</span> Cali & Valle</div>
+            <div class="global-loc-item" data-city="Popayán" data-label="🌄 Popayán"><span class="loc-flag">🌄</span> Popayán & Cauca</div>
+            <div class="global-loc-item" data-city="Barranquilla" data-label="🌊 Barranquilla"><span class="loc-flag">🌊</span> Barranquilla & Costa</div>
+            <div class="global-loc-item" data-city="Bucaramanga" data-label="⛰️ Bucaramanga"><span class="loc-flag">⛰️</span> Bucaramanga & Santanderes</div>
+            <div class="global-loc-item" data-city="Eje Cafetero" data-label="☕ Eje Cafetero"><span class="loc-flag">☕</span> Eje Cafetero</div>
+            <div class="global-loc-item" data-city="Cartagena" data-label="🏰 Cartagena"><span class="loc-flag">🏰</span> Cartagena</div>
+            <div class="global-loc-item" data-city="Meta & Llanos" data-label="🐎 Llanos"><span class="loc-flag">🐎</span> Meta & Llanos</div>
+            <div class="global-loc-item" data-city="Amazonas & Leticia" data-label="🌿 Amazonas"><span class="loc-flag">🌿</span> Amazonas & Leticia</div>
+          </div>
+        </div>
+
+        <!-- ESTADOS UNIDOS -->
+        <div class="loc-section" data-section="us" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>🇺🇸</span> Estados Unidos (USA & Polos Comerciales)
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+            <div class="global-loc-item" data-city="Todo Estados Unidos" data-label="🇺🇸 EE.UU."><span class="loc-flag">🇺🇸</span> <strong>Todo Estados Unidos (USA)</strong></div>
+            <div class="global-loc-item" data-city="Miami & Florida" data-label="🌴 Miami"><span class="loc-flag">🌴</span> Miami & Florida</div>
+            <div class="global-loc-item" data-city="New York" data-label="🗽 New York"><span class="loc-flag">🗽</span> New York & New Jersey</div>
+            <div class="global-loc-item" data-city="California" data-label="🎬 Los Ángeles"><span class="loc-flag">🎬</span> Los Ángeles & California</div>
+            <div class="global-loc-item" data-city="Texas" data-label="🤠 Texas"><span class="loc-flag">🤠</span> Texas & Houston</div>
+            <div class="global-loc-item" data-city="Orlando" data-label="🎡 Orlando"><span class="loc-flag">🎡</span> Orlando & Florida Central</div>
+          </div>
+        </div>
+
+        <!-- MÉXICO -->
+        <div class="loc-section" data-section="mx" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>🇲🇽</span> México
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+            <div class="global-loc-item" data-city="México" data-label="🇲🇽 México"><span class="loc-flag">🇲🇽</span> <strong>Todo México</strong></div>
+            <div class="global-loc-item" data-city="CDMX" data-label="🏙️ CDMX"><span class="loc-flag">🏙️</span> Ciudad de México (CDMX)</div>
+            <div class="global-loc-item" data-city="Guadalajara" data-label="🌮 Guadalajara"><span class="loc-flag">🌮</span> Guadalajara & Jalisco</div>
+            <div class="global-loc-item" data-city="Monterrey" data-label="⛰️ Monterrey"><span class="loc-flag">⛰️</span> Monterrey & Nuevo León</div>
+            <div class="global-loc-item" data-city="Cancún" data-label="🏖️ Cancún"><span class="loc-flag">🏖️</span> Cancún & Riviera Maya</div>
+          </div>
+        </div>
+
+        <!-- ESPAÑA -->
+        <div class="loc-section" data-section="es" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>🇪🇸</span> España & Europa
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+            <div class="global-loc-item" data-city="España" data-label="🇪🇸 España"><span class="loc-flag">🇪🇸</span> <strong>Toda España</strong></div>
+            <div class="global-loc-item" data-city="Madrid" data-label="🏛️ Madrid"><span class="loc-flag">🏛️</span> Madrid</div>
+            <div class="global-loc-item" data-city="Barcelona" data-label="🌊 Barcelona"><span class="loc-flag">🌊</span> Barcelona & Cataluña</div>
+            <div class="global-loc-item" data-city="Valencia" data-label="🍊 Valencia"><span class="loc-flag">🍊</span> Valencia & Costa</div>
+            <div class="global-loc-item" data-city="Sevilla" data-label="💃 Sevilla"><span class="loc-flag">💃</span> Sevilla & Andalucía</div>
+          </div>
+        </div>
+
+        <!-- AMÉRICA LATINA -->
+        <div class="loc-section" data-section="latam" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>🌎</span> Latinoamérica
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+            <div class="global-loc-item" data-city="Argentina" data-label="🇦🇷 Argentina"><span class="loc-flag">🇦🇷</span> Argentina (Buenos Aires)</div>
+            <div class="global-loc-item" data-city="Chile" data-label="🇨🇱 Chile"><span class="loc-flag">🇨🇱</span> Chile (Santiago)</div>
+            <div class="global-loc-item" data-city="Perú" data-label="🇵🇪 Perú"><span class="loc-flag">🇵🇪</span> Perú (Lima)</div>
+            <div class="global-loc-item" data-city="Ecuador" data-label="🇪🇨 Ecuador"><span class="loc-flag">🇪🇨</span> Ecuador (Quito & Guayaquil)</div>
+            <div class="global-loc-item" data-city="Panamá" data-label="🇵🇦 Panamá"><span class="loc-flag">🇵🇦</span> Panamá (Hub Comercial)</div>
+            <div class="global-loc-item" data-city="República Dominicana" data-label="🇩🇴 Rep. Dom."><span class="loc-flag">🇩🇴</span> República Dominicana</div>
+            <div class="global-loc-item" data-city="Costa Rica" data-label="🇨🇷 Costa Rica"><span class="loc-flag">🇨🇷</span> Costa Rica (San José)</div>
+            <div class="global-loc-item" data-city="Guatemala" data-label="🇬🇹 Guatemala"><span class="loc-flag">🇬🇹</span> Guatemala</div>
+            <div class="global-loc-item" data-city="El Salvador" data-label="🇸🇻 El Salvador"><span class="loc-flag">🇸🇻</span> El Salvador</div>
+            <div class="global-loc-item" data-city="Bolivia" data-label="🇧🇴 Bolivia"><span class="loc-flag">🇧🇴</span> Bolivia (La Paz & Santa Cruz)</div>
+            <div class="global-loc-item" data-city="Paraguay" data-label="🇵🇾 Paraguay"><span class="loc-flag">🇵🇾</span> Paraguay (Asunción)</div>
+            <div class="global-loc-item" data-city="Uruguay" data-label="🇺🇾 Uruguay"><span class="loc-flag">🇺🇾</span> Uruguay (Montevideo)</div>
+            <div class="global-loc-item" data-city="Brasil" data-label="🇧🇷 Brasil"><span class="loc-flag">🇧🇷</span> Brasil (São Paulo & Rio)</div>
+            <div class="global-loc-item" data-city="Venezuela" data-label="🇻🇪 Venezuela"><span class="loc-flag">🇻🇪</span> Venezuela (Caracas)</div>
+          </div>
+        </div>
+
+        <!-- MÁS PAÍSES DEL MUNDO (A-Z) -->
+        <div class="loc-section" data-section="world" style="margin-bottom: 20px;">
+          <div style="font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-list"></i> Todos los Países del Planeta (A-Z)
+          </div>
+          <div id="all-world-countries-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;">
+            
+              <div class="global-loc-item" data-city="Afganistán" data-label="🇦🇫 Afganistán"><span class="loc-flag">🇦🇫</span> Afganistán</div>
+            
+              <div class="global-loc-item" data-city="Albania" data-label="🇦🇱 Albania"><span class="loc-flag">🇦🇱</span> Albania</div>
+            
+              <div class="global-loc-item" data-city="Alemania" data-label="🇩🇪 Alemania"><span class="loc-flag">🇩🇪</span> Alemania</div>
+            
+              <div class="global-loc-item" data-city="Andorra" data-label="🇦🇩 Andorra"><span class="loc-flag">🇦🇩</span> Andorra</div>
+            
+              <div class="global-loc-item" data-city="Angola" data-label="🇦🇴 Angola"><span class="loc-flag">🇦🇴</span> Angola</div>
+            
+              <div class="global-loc-item" data-city="Arabia Saudita" data-label="🇸🇦 Arabia Saudita"><span class="loc-flag">🇸🇦</span> Arabia Saudita</div>
+            
+              <div class="global-loc-item" data-city="Argelia" data-label="🇩🇿 Argelia"><span class="loc-flag">🇩🇿</span> Argelia</div>
+            
+              <div class="global-loc-item" data-city="Argentina" data-label="🇦🇷 Argentina"><span class="loc-flag">🇦🇷</span> Argentina</div>
+            
+              <div class="global-loc-item" data-city="Armenia" data-label="🇦🇲 Armenia"><span class="loc-flag">🇦🇲</span> Armenia</div>
+            
+              <div class="global-loc-item" data-city="Australia" data-label="🇦🇺 Australia"><span class="loc-flag">🇦🇺</span> Australia</div>
+            
+              <div class="global-loc-item" data-city="Austria" data-label="🇦🇹 Austria"><span class="loc-flag">🇦🇹</span> Austria</div>
+            
+              <div class="global-loc-item" data-city="Azerbaiyán" data-label="🇦🇿 Azerbaiyán"><span class="loc-flag">🇦🇿</span> Azerbaiyán</div>
+            
+              <div class="global-loc-item" data-city="Bahamas" data-label="🇧🇸 Bahamas"><span class="loc-flag">🇧🇸</span> Bahamas</div>
+            
+              <div class="global-loc-item" data-city="Bangladés" data-label="🇧🇩 Bangladés"><span class="loc-flag">🇧🇩</span> Bangladés</div>
+            
+              <div class="global-loc-item" data-city="Barbados" data-label="🇧🇧 Barbados"><span class="loc-flag">🇧🇧</span> Barbados</div>
+            
+              <div class="global-loc-item" data-city="Bélgica" data-label="🇧🇪 Bélgica"><span class="loc-flag">🇧🇪</span> Bélgica</div>
+            
+              <div class="global-loc-item" data-city="Belice" data-label="🇧🇿 Belice"><span class="loc-flag">🇧🇿</span> Belice</div>
+            
+              <div class="global-loc-item" data-city="Bolivia" data-label="🇧🇴 Bolivia"><span class="loc-flag">🇧🇴</span> Bolivia</div>
+            
+              <div class="global-loc-item" data-city="Brasil" data-label="🇧🇷 Brasil"><span class="loc-flag">🇧🇷</span> Brasil</div>
+            
+              <div class="global-loc-item" data-city="Bulgaria" data-label="🇧🇬 Bulgaria"><span class="loc-flag">🇧🇬</span> Bulgaria</div>
+            
+              <div class="global-loc-item" data-city="Canadá" data-label="🇨🇦 Canadá"><span class="loc-flag">🇨🇦</span> Canadá</div>
+            
+              <div class="global-loc-item" data-city="Chile" data-label="🇨🇱 Chile"><span class="loc-flag">🇨🇱</span> Chile</div>
+            
+              <div class="global-loc-item" data-city="China" data-label="🇨🇳 China"><span class="loc-flag">🇨🇳</span> China</div>
+            
+              <div class="global-loc-item" data-city="Chipre" data-label="🇨🇾 Chipre"><span class="loc-flag">🇨🇾</span> Chipre</div>
+            
+              <div class="global-loc-item" data-city="Colombia" data-label="🇨🇴 Colombia"><span class="loc-flag">🇨🇴</span> Colombia</div>
+            
+              <div class="global-loc-item" data-city="Corea del Sur" data-label="🇰🇷 Corea del Sur"><span class="loc-flag">🇰🇷</span> Corea del Sur</div>
+            
+              <div class="global-loc-item" data-city="Costa Rica" data-label="🇨🇷 Costa Rica"><span class="loc-flag">🇨🇷</span> Costa Rica</div>
+            
+              <div class="global-loc-item" data-city="Croacia" data-label="🇭🇷 Croacia"><span class="loc-flag">🇭🇷</span> Croacia</div>
+            
+              <div class="global-loc-item" data-city="Cuba" data-label="🇨🇺 Cuba"><span class="loc-flag">🇨🇺</span> Cuba</div>
+            
+              <div class="global-loc-item" data-city="Dinamarca" data-label="🇩🇰 Dinamarca"><span class="loc-flag">🇩🇰</span> Dinamarca</div>
+            
+              <div class="global-loc-item" data-city="Ecuador" data-label="🇪🇨 Ecuador"><span class="loc-flag">🇪🇨</span> Ecuador</div>
+            
+              <div class="global-loc-item" data-city="Egipto" data-label="🇪🇬 Egipto"><span class="loc-flag">🇪🇬</span> Egipto</div>
+            
+              <div class="global-loc-item" data-city="El Salvador" data-label="🇸🇻 El Salvador"><span class="loc-flag">🇸🇻</span> El Salvador</div>
+            
+              <div class="global-loc-item" data-city="Emiratos Árabes Unidos" data-label="🇦🇪 Emiratos Árabes Unidos"><span class="loc-flag">🇦🇪</span> Emiratos Árabes Unidos</div>
+            
+              <div class="global-loc-item" data-city="España" data-label="🇪🇸 España"><span class="loc-flag">🇪🇸</span> España</div>
+            
+              <div class="global-loc-item" data-city="Estados Unidos" data-label="🇺🇸 Estados Unidos"><span class="loc-flag">🇺🇸</span> Estados Unidos</div>
+            
+              <div class="global-loc-item" data-city="Estonia" data-label="🇪🇪 Estonia"><span class="loc-flag">🇪🇪</span> Estonia</div>
+            
+              <div class="global-loc-item" data-city="Filipinas" data-label="🇵🇭 Filipinas"><span class="loc-flag">🇵🇭</span> Filipinas</div>
+            
+              <div class="global-loc-item" data-city="Finlandia" data-label="🇫🇮 Finlandia"><span class="loc-flag">🇫🇮</span> Finlandia</div>
+            
+              <div class="global-loc-item" data-city="Francia" data-label="🇫🇷 Francia"><span class="loc-flag">🇫🇷</span> Francia</div>
+            
+              <div class="global-loc-item" data-city="Grecia" data-label="🇬🇷 Grecia"><span class="loc-flag">🇬🇷</span> Grecia</div>
+            
+              <div class="global-loc-item" data-city="Guatemala" data-label="🇬🇹 Guatemala"><span class="loc-flag">🇬🇹</span> Guatemala</div>
+            
+              <div class="global-loc-item" data-city="Honduras" data-label="🇭🇳 Honduras"><span class="loc-flag">🇭🇳</span> Honduras</div>
+            
+              <div class="global-loc-item" data-city="Hungría" data-label="🇭🇺 Hungría"><span class="loc-flag">🇭🇺</span> Hungría</div>
+            
+              <div class="global-loc-item" data-city="India" data-label="🇮🇳 India"><span class="loc-flag">🇮🇳</span> India</div>
+            
+              <div class="global-loc-item" data-city="Indonesia" data-label="🇮🇩 Indonesia"><span class="loc-flag">🇮🇩</span> Indonesia</div>
+            
+              <div class="global-loc-item" data-city="Irlanda" data-label="🇮🇪 Irlanda"><span class="loc-flag">🇮🇪</span> Irlanda</div>
+            
+              <div class="global-loc-item" data-city="Islandia" data-label="🇮🇸 Islandia"><span class="loc-flag">🇮🇸</span> Islandia</div>
+            
+              <div class="global-loc-item" data-city="Israel" data-label="🇮🇱 Israel"><span class="loc-flag">🇮🇱</span> Israel</div>
+            
+              <div class="global-loc-item" data-city="Italia" data-label="🇮🇹 Italia"><span class="loc-flag">🇮🇹</span> Italia</div>
+            
+              <div class="global-loc-item" data-city="Jamaica" data-label="🇯🇲 Jamaica"><span class="loc-flag">🇯🇲</span> Jamaica</div>
+            
+              <div class="global-loc-item" data-city="Japón" data-label="🇯🇵 Japón"><span class="loc-flag">🇯🇵</span> Japón</div>
+            
+              <div class="global-loc-item" data-city="Jordania" data-label="🇯🇴 Jordania"><span class="loc-flag">🇯🇴</span> Jordania</div>
+            
+              <div class="global-loc-item" data-city="Líbano" data-label="🇱🇧 Líbano"><span class="loc-flag">🇱🇧</span> Líbano</div>
+            
+              <div class="global-loc-item" data-city="Luxemburgo" data-label="🇱🇺 Luxemburgo"><span class="loc-flag">🇱🇺</span> Luxemburgo</div>
+            
+              <div class="global-loc-item" data-city="Malasia" data-label="🇲🇾 Malasia"><span class="loc-flag">🇲🇾</span> Malasia</div>
+            
+              <div class="global-loc-item" data-city="Marruecos" data-label="🇲🇦 Marruecos"><span class="loc-flag">🇲🇦</span> Marruecos</div>
+            
+              <div class="global-loc-item" data-city="México" data-label="🇲🇽 México"><span class="loc-flag">🇲🇽</span> México</div>
+            
+              <div class="global-loc-item" data-city="Mónaco" data-label="🇲🇨 Mónaco"><span class="loc-flag">🇲🇨</span> Mónaco</div>
+            
+              <div class="global-loc-item" data-city="Nicaragua" data-label="🇳🇮 Nicaragua"><span class="loc-flag">🇳🇮</span> Nicaragua</div>
+            
+              <div class="global-loc-item" data-city="Noruega" data-label="🇳🇴 Noruega"><span class="loc-flag">🇳🇴</span> Noruega</div>
+            
+              <div class="global-loc-item" data-city="Nueva Zelanda" data-label="🇳🇿 Nueva Zelanda"><span class="loc-flag">🇳🇿</span> Nueva Zelanda</div>
+            
+              <div class="global-loc-item" data-city="Países Bajos" data-label="🇳🇱 Países Bajos"><span class="loc-flag">🇳🇱</span> Países Bajos</div>
+            
+              <div class="global-loc-item" data-city="Panamá" data-label="🇵🇦 Panamá"><span class="loc-flag">🇵🇦</span> Panamá</div>
+            
+              <div class="global-loc-item" data-city="Paraguay" data-label="🇵🇾 Paraguay"><span class="loc-flag">🇵🇾</span> Paraguay</div>
+            
+              <div class="global-loc-item" data-city="Perú" data-label="🇵🇪 Perú"><span class="loc-flag">🇵🇪</span> Perú</div>
+            
+              <div class="global-loc-item" data-city="Polonia" data-label="🇵🇱 Polonia"><span class="loc-flag">🇵🇱</span> Polonia</div>
+            
+              <div class="global-loc-item" data-city="Portugal" data-label="🇵🇹 Portugal"><span class="loc-flag">🇵🇹</span> Portugal</div>
+            
+              <div class="global-loc-item" data-city="Puerto Rico" data-label="🇵🇷 Puerto Rico"><span class="loc-flag">🇵🇷</span> Puerto Rico</div>
+            
+              <div class="global-loc-item" data-city="Qatar" data-label="🇶🇦 Qatar"><span class="loc-flag">🇶🇦</span> Qatar</div>
+            
+              <div class="global-loc-item" data-city="Reino Unido" data-label="🇬🇧 Reino Unido"><span class="loc-flag">🇬🇧</span> Reino Unido</div>
+            
+              <div class="global-loc-item" data-city="República Checa" data-label="🇨🇿 República Checa"><span class="loc-flag">🇨🇿</span> República Checa</div>
+            
+              <div class="global-loc-item" data-city="República Dominicana" data-label="🇩🇴 República Dominicana"><span class="loc-flag">🇩🇴</span> República Dominicana</div>
+            
+              <div class="global-loc-item" data-city="Rumania" data-label="🇷🇴 Rumania"><span class="loc-flag">🇷🇴</span> Rumania</div>
+            
+              <div class="global-loc-item" data-city="Singapur" data-label="🇸🇬 Singapur"><span class="loc-flag">🇸🇬</span> Singapur</div>
+            
+              <div class="global-loc-item" data-city="Sudáfrica" data-label="🇿🇦 Sudáfrica"><span class="loc-flag">🇿🇦</span> Sudáfrica</div>
+            
+              <div class="global-loc-item" data-city="Suecia" data-label="🇸🇪 Suecia"><span class="loc-flag">🇸🇪</span> Suecia</div>
+            
+              <div class="global-loc-item" data-city="Suiza" data-label="🇨🇭 Suiza"><span class="loc-flag">🇨🇭</span> Suiza</div>
+            
+              <div class="global-loc-item" data-city="Tailandia" data-label="🇹🇭 Tailandia"><span class="loc-flag">🇹🇭</span> Tailandia</div>
+            
+              <div class="global-loc-item" data-city="Turquía" data-label="🇹🇷 Turquía"><span class="loc-flag">🇹🇷</span> Turquía</div>
+            
+              <div class="global-loc-item" data-city="Ucrania" data-label="🇺🇦 Ucrania"><span class="loc-flag">🇺🇦</span> Ucrania</div>
+            
+              <div class="global-loc-item" data-city="Uruguay" data-label="🇺🇾 Uruguay"><span class="loc-flag">🇺🇾</span> Uruguay</div>
+            
+              <div class="global-loc-item" data-city="Venezuela" data-label="🇻🇪 Venezuela"><span class="loc-flag">🇻🇪</span> Venezuela</div>
+            
+              <div class="global-loc-item" data-city="Vietnam" data-label="🇻🇳 Vietnam"><span class="loc-flag">🇻🇳</span> Vietnam</div>
+            
+          </div>
+        </div>
+
+        <!-- Mensaje de Búsqueda Vacía -->
+        <div id="loc-search-no-results" style="display: none; text-align: center; padding: 40px 20px; color: #aaa;">
+          <div style="font-size: 2.2rem; margin-bottom: 10px;">🔍</div>
+          <div style="font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px;">No encontramos coincidencias exactas</div>
+          <div style="font-size: 0.82rem; color: #888;">Puedes seleccionar <strong>"🌍 Todos los Países"</strong> para ver todo el catálogo mundial o buscar por otra palabra.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
