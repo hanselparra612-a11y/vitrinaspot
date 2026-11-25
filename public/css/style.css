@@ -4787,6 +4787,8 @@ body.admin-active-view .main-viewport {
     aspect-ratio: 1 / 1 !important;
     flex-shrink: 0 !important;
     box-sizing: border-box !important;
+    background: linear-gradient(135deg, #ffe28a, #ffb800 60%, #d97706) !important;
+    box-shadow: 0 0 10px rgba(255, 184, 0, 0.45) !important;
   }
 
   .action-icon-circle,
@@ -4794,11 +4796,18 @@ body.admin-active-view .main-viewport {
     width: 36px !important;
     height: 36px !important;
     font-size: 1.05rem !important;
-    background: rgba(0, 0, 0, 0.45) !important;
+    background: rgba(0, 0, 0, 0.55) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35) !important;
+    border: 1.5px solid rgba(255, 184, 0, 0.75) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 184, 0, 0.35) !important;
+    color: #ffb800 !important;
+  }
+
+  .side-action-btn i,
+  .action-icon-circle i,
+  .side-icon-circle i {
+    color: #ffb800 !important;
   }
 
   .side-action-btn {
@@ -4810,8 +4819,8 @@ body.admin-active-view .main-viewport {
   .side-action-btn .action-count,
   .side-action-btn .action-label {
     font-size: 0.65rem !important;
-    font-weight: 600 !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 700 !important;
+    color: #ffe28a !important;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
     line-height: 1 !important;
   }
@@ -10971,3 +10980,16 @@ body.spotplay-active #spotplay-top-bar {
   }
 }
 
+
+
+/* REGLA MAESTRA: TODOS LOS BOTONES E ICONOS DEL RIEL DERECHO EN DORADO SPOT PLAY */
+.side-action-btn i,
+.action-icon-circle i,
+.side-icon-circle i {
+  color: #ffb800 !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+}
+.side-action-btn .action-count,
+.side-action-btn .action-label {
+  color: #ffe28a !important;
+}
