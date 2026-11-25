@@ -1162,7 +1162,8 @@ body.vitrina-header-collapsed .categories-nav {
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   padding: 2px;
-  background: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, #ffe28a, #ffb800 60%, #d97706);
+  box-shadow: 0 0 10px rgba(255, 184, 0, 0.45);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -1227,23 +1228,43 @@ body.vitrina-header-collapsed .categories-nav {
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 184, 0, 0.45);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.12rem;
+  color: #ffffff;
   flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 6px rgba(255, 184, 0, 0.22);
   transition: all 0.2s ease;
+}
+
+.side-action-btn:hover .action-icon-circle,
+.side-action-btn:hover .side-icon-circle,
+.side-action-btn:active .action-icon-circle,
+.side-action-btn:active .side-icon-circle {
+  border-color: rgba(255, 184, 0, 0.85);
+  box-shadow: 0 0 12px rgba(255, 184, 0, 0.45);
+  color: #ffb800;
 }
 
 /* EFECTO DE ME GUSTA: SOLO EL CORAZÓN SE PINTA DE ROJO (SIN CÍRCULO ROJO ALREDEDOR) */
 .side-action-btn.liked .fa-heart {
-  color: #ff2d55 !important;
-  transform: scale(1.2);
+  color: #ffb800 !important;
+  filter: drop-shadow(0 0 6px rgba(255, 184, 0, 0.85));
+  transform: scale(1.25);
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: heartPulseAnim 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.side-action-btn.liked .action-icon-circle,
+.side-action-btn.liked .side-icon-circle {
+  border-color: rgba(255, 184, 0, 0.85);
+  box-shadow: 0 0 10px rgba(255, 184, 0, 0.45);
+}
+.side-action-btn.liked .action-count {
+  color: #ffb800 !important;
+  font-weight: 800;
 }
 
 @keyframes heartPulseAnim {
