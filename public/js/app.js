@@ -6070,6 +6070,98 @@ function setupEventListeners() {
     }
   });
 
+  
+  // Controladores de 1-Clic para Cobertura (Global, Colombia, USA) en Publicar SPOT
+  function setUploadCoverage(type) {
+    const btnGlobal = document.getElementById('btn-cov-global');
+    const btnColombia = document.getElementById('btn-cov-colombia');
+    const btnUsa = document.getElementById('btn-cov-usa');
+    const citySelect = document.getElementById('upload-city');
+    const statusTag = document.getElementById('coverage-status-tag');
+    const currSelect = document.getElementById('upload-currency');
+    const delivSelect = document.getElementById('upload-delivery-type');
+    const badgeSelect = document.getElementById('upload-badge');
+    const cCodeSelect = document.getElementById('upload-country-code');
+
+    const resetPill = (btn) => {
+      if (!btn) return;
+      btn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+      btn.style.background = 'rgba(255, 255, 255, 0.05)';
+      btn.style.color = 'var(--text-muted, #aaa)';
+      btn.style.boxShadow = 'none';
+      btn.classList.remove('active');
+    };
+
+    const activatePill = (btn) => {
+      if (!btn) return;
+      btn.style.border = '1.5px solid var(--spot-gold, #ffb800)';
+      btn.style.background = 'linear-gradient(135deg, rgba(255, 184, 0, 0.28), rgba(12, 15, 20, 0.95))';
+      btn.style.color = '#fff';
+      btn.style.boxShadow = '0 0 12px rgba(255, 184, 0, 0.35)';
+      btn.classList.add('active');
+    };
+
+    resetPill(btnGlobal);
+    resetPill(btnColombia);
+    resetPill(btnUsa);
+
+    if (type === 'Global') {
+      activatePill(btnGlobal);
+      if (citySelect) citySelect.value = 'Global';
+      if (statusTag) {
+        statusTag.textContent = '🌍 GLOBAL ACTIVO';
+        statusTag.style.background = 'rgba(255, 184, 0, 0.2)';
+        statusTag.style.color = 'var(--spot-gold, #ffb800)';
+        statusTag.style.borderColor = 'rgba(255, 184, 0, 0.4)';
+      }
+      if (delivSelect) delivSelect.value = 'global';
+      if (badgeSelect && badgeSelect.value === 'none') badgeSelect.value = '🌍 COBERTURA GLOBAL';
+    } else if (type === 'Colombia') {
+      activatePill(btnColombia);
+      if (citySelect) citySelect.value = 'Bogotá';
+      if (statusTag) {
+        statusTag.textContent = '🇨🇴 COLOMBIA ACTIVA';
+        statusTag.style.background = 'rgba(0, 200, 83, 0.2)';
+        statusTag.style.color = '#00ff88';
+        statusTag.style.borderColor = 'rgba(0, 200, 83, 0.4)';
+      }
+      if (currSelect) currSelect.value = 'COP';
+      if (cCodeSelect) cCodeSelect.value = '+57';
+      if (delivSelect && delivSelect.value === 'global') delivSelect.value = 'gratis';
+      if (badgeSelect && badgeSelect.value === '🌍 COBERTURA GLOBAL') badgeSelect.value = 'none';
+    } else if (type === 'USA') {
+      activatePill(btnUsa);
+      if (citySelect) citySelect.value = 'Miami & Florida';
+      if (statusTag) {
+        statusTag.textContent = '🇺🇸 EE.UU. ACTIVO';
+        statusTag.style.background = 'rgba(59, 130, 246, 0.2)';
+        statusTag.style.color = '#60a5fa';
+        statusTag.style.borderColor = 'rgba(59, 130, 246, 0.4)';
+      }
+      if (currSelect) currSelect.value = 'USD';
+      if (cCodeSelect) cCodeSelect.value = '+1';
+      if (delivSelect && delivSelect.value === 'global') delivSelect.value = 'gratis';
+      if (badgeSelect && badgeSelect.value === '🌍 COBERTURA GLOBAL') badgeSelect.value = 'none';
+    }
+  }
+
+  document.getElementById('btn-cov-global')?.addEventListener('click', () => setUploadCoverage('Global'));
+  document.getElementById('btn-cov-colombia')?.addEventListener('click', () => setUploadCoverage('Colombia'));
+  document.getElementById('btn-cov-usa')?.addEventListener('click', () => setUploadCoverage('USA'));
+
+  document.getElementById('upload-city')?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    if (val === 'Global' || val === 'Servicios Digitales') {
+      setUploadCoverage('Global');
+    } else if (/miami|florida|york|california|texas|houston|orlando|usa|estados unidos/i.test(val)) {
+      setUploadCoverage('USA');
+      e.target.value = val;
+    } else {
+      setUploadCoverage('Colombia');
+      e.target.value = val;
+    }
+  });
+
   // Envío del formulario de subida con protección anti-duplicados
   const uploadForm = document.getElementById('upload-video-form');
   let isUploadingVideo = false;
