@@ -10953,12 +10953,11 @@ body.spotplay-active #spotplay-top-bar {
 }
 
 @media (max-width: 600px) {
-  .btn-goto-spotplay span {
-    display: none;
-  }
-  .btn-goto-spotplay {
-    padding: 6px 10px;
-    border-radius: 50%;
+  #btn-nav-goto-spotplay,
+  .btn-goto-spotplay,
+  #btn-nav-upload,
+  #btn-nav-store-menu {
+    display: none !important;
   }
 }
 
