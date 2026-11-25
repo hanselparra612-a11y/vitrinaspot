@@ -619,16 +619,39 @@ class Database {
       }
     });
 
-    // Filtro por ciudad (con normalización de tildes, subcadenas y palabras clave regionales)
-    if (filter.city && filter.city !== "Toda Colombia") {
+    // Filtro por ciudad, país o región global
+    if (filter.city) {
       const norm = s => (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
       const normFilter = norm(filter.city);
-      const filterWords = normFilter.split(/[\s&,/]+/).filter(w => w.length > 2);
-      list = list.filter(v => {
-        const normCity = norm(v.city);
-        if (normCity === normFilter || normCity.includes(normFilter) || normFilter.includes(normCity)) return true;
-        return filterWords.some(w => normCity.includes(w));
-      });
+      const isGlobal = !normFilter || normFilter.includes('todos los paises') || normFilter === 'global' || normFilter === 'todos' || normFilter === 'all';
+
+      if (!isGlobal) {
+        if (normFilter === 'toda colombia' || normFilter === 'colombia') {
+          const nonCoWords = ['usa', 'estados unidos', 'miami', 'florida', 'york', 'california', 'texas', 'houston', 'orlando', 'angeles', 'chicago', 'internacional'];
+          list = list.filter(v => {
+            const normCity = norm(v.city);
+            return !nonCoWords.some(w => normCity.includes(w));
+          });
+        } else if (normFilter === 'todo estados unidos' || normFilter === 'estados unidos' || normFilter === 'usa') {
+          const usWords = ['usa', 'estados unidos', 'miami', 'florida', 'york', 'california', 'texas', 'houston', 'orlando', 'angeles', 'chicago'];
+          list = list.filter(v => {
+            const normCity = norm(v.city);
+            return usWords.some(w => normCity.includes(w));
+          });
+        } else if (normFilter === 'internacional') {
+          list = list.filter(v => {
+            const normCity = norm(v.city);
+            return normCity.includes('internacional') || normCity.includes('digital') || normCity.includes('remoto');
+          });
+        } else {
+          const filterWords = normFilter.split(/[\s&,/]+/).filter(w => w.length > 2);
+          list = list.filter(v => {
+            const normCity = norm(v.city);
+            if (normCity === normFilter || normCity.includes(normFilter) || normFilter.includes(normCity)) return true;
+            return filterWords.some(w => normCity.includes(w));
+          });
+        }
+      }
     }
 
     // Filtro por categoría (soporte flexible e insensible a tildes o variaciones de ampersand/barra)

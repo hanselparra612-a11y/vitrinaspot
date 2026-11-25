@@ -572,8 +572,10 @@ app.post('/api/videos', upload.fields([
 
     const numPrice = Number(price);
     const isCommercial = req.body.videoType === 'product' || (!isNaN(numPrice) && numPrice > 0);
+    const isUsLocation = /miami|florida|york|california|texas|houston|orlando|angeles|usa|estados unidos/i.test(city || store.city || '');
+    const currency = req.body.currency || (isUsLocation ? 'USD' : 'COP');
     const priceFormatted = isCommercial && !isNaN(numPrice) && numPrice > 0
-      ? `$${numPrice.toLocaleString('es-CO')} COP`
+      ? (currency === 'USD' ? `$${numPrice.toLocaleString('en-US')} USD` : `$${numPrice.toLocaleString('es-CO')} COP`)
       : (req.body.videoType === 'product' ? 'Cotización Gratis / A convenir' : '');
 
     // Soporte para los 4 paquetes comerciales de VitrinaSpot:
@@ -649,6 +651,7 @@ app.post('/api/videos', upload.fields([
       city: city || store.city || 'Bogotá',
       videoType: req.body.videoType || (isCommercial ? 'product' : 'entertainment'),
       price: !isNaN(numPrice) ? numPrice : 0,
+      currency,
       priceFormatted,
       delivery: isCommercial ? (delivery || '🛵 Domicilio Gratis') : null,
       giftsCount: 140,
@@ -752,9 +755,12 @@ app.put('/api/videos/:id', express.json({ limit: '50mb' }), (req, res) => {
     if (typeof title === 'string' && title.trim()) updates.title = title.trim();
     if (price !== undefined && price !== null) {
       const numPrice = Number(price);
+      const isUsLocation = /miami|florida|york|california|texas|houston|orlando|angeles|usa|estados unidos/i.test(city || video.city || '');
+      const currency = req.body.currency || video.currency || (isUsLocation ? 'USD' : 'COP');
+      updates.currency = currency;
       updates.price = !isNaN(numPrice) ? Math.max(0, numPrice) : 0;
       updates.priceFormatted = updates.price > 0
-        ? `$${updates.price.toLocaleString('es-CO')} COP`
+        ? (currency === 'USD' ? `$${updates.price.toLocaleString('en-US')} USD` : `$${updates.price.toLocaleString('es-CO')} COP`)
         : 'Cotización Gratis / A convenir';
     }
     if (typeof delivery === 'string' && delivery.trim()) updates.delivery = delivery.trim();
@@ -999,12 +1005,20 @@ app.post('/api/stores', (req, res) => {
     return res.status(400).json({ error: 'Debes aceptar las Políticas de Seguridad y las 4 Reglas de Oro para activar tu tienda en la Vitrina.' });
   }
 
-  // Formatear WhatsApp a estándar internacional
-  let cleanWhatsApp = whatsapp.replace(/[^0-9]/g, '');
-  if (cleanWhatsApp.length === 10 && !cleanWhatsApp.startsWith('57')) {
-    cleanWhatsApp = `+57${cleanWhatsApp}`;
-  } else if (!cleanWhatsApp.startsWith('+')) {
-    cleanWhatsApp = `+${cleanWhatsApp}`;
+  // Formatear WhatsApp a estándar internacional (+57, +1, +52, etc.)
+  let cleanWhatsApp = whatsapp.replace(/[^0-9+]/g, '').trim();
+  if (!cleanWhatsApp.startsWith('+')) {
+    const digitsOnly = cleanWhatsApp.replace(/[^0-9]/g, '');
+    const isUs = /miami|florida|york|california|texas|houston|orlando|angeles|usa|estados unidos/i.test(city || '');
+    if (digitsOnly.length === 11 && digitsOnly.startsWith('1')) {
+      cleanWhatsApp = `+${digitsOnly}`;
+    } else if (digitsOnly.length === 12 && digitsOnly.startsWith('57')) {
+      cleanWhatsApp = `+${digitsOnly}`;
+    } else if (digitsOnly.length === 10) {
+      cleanWhatsApp = isUs ? `+1${digitsOnly}` : `+57${digitsOnly}`;
+    } else {
+      cleanWhatsApp = `+${digitsOnly}`;
+    }
   }
 
   const trimmedName = name.trim();
@@ -1065,18 +1079,11 @@ app.post('/api/stores/login', (req, res) => {
     return res.status(400).json({ error: 'Por favor ingresa tu número de WhatsApp.' });
   }
 
-  let cleanWhatsApp = whatsapp.replace(/[^0-9]/g, '');
-  if (cleanWhatsApp.length === 10 && !cleanWhatsApp.startsWith('57')) {
-    cleanWhatsApp = `+57${cleanWhatsApp}`;
-  } else if (!cleanWhatsApp.startsWith('+')) {
-    cleanWhatsApp = `+${cleanWhatsApp}`;
-  }
-
+  const digitsOnly = whatsapp.replace(/[^0-9]/g, '');
   const stores = db.getStores();
   const store = stores.find(s => {
-    const sClean = (s.whatsapp || '').replace(/[^0-9]/g, '');
-    const reqClean = cleanWhatsApp.replace(/[^0-9]/g, '');
-    return sClean === reqClean;
+    const sDigits = (s.whatsapp || '').replace(/[^0-9]/g, '');
+    return sDigits === digitsOnly || (digitsOnly.length >= 7 && (sDigits.endsWith(digitsOnly) || digitsOnly.endsWith(sDigits)));
   });
 
   if (!store) {
@@ -1137,11 +1144,19 @@ app.post('/api/auth/sso-spotplay', (req, res) => {
 
   // 3. Si no existe y ya envió whatsapp, creamos la tienda inmediatamente
   if (!store && whatsapp) {
-    let cleanWhatsApp = whatsapp.replace(/[^0-9]/g, '');
-    if (cleanWhatsApp.length === 10 && !cleanWhatsApp.startsWith('57')) {
-      cleanWhatsApp = `+57${cleanWhatsApp}`;
-    } else if (!cleanWhatsApp.startsWith('+')) {
-      cleanWhatsApp = `+${cleanWhatsApp}`;
+    let cleanWhatsApp = whatsapp.replace(/[^0-9+]/g, '').trim();
+    if (!cleanWhatsApp.startsWith('+')) {
+      const digitsOnly = cleanWhatsApp.replace(/[^0-9]/g, '');
+      const isUs = /miami|florida|york|california|texas|houston|orlando|angeles|usa|estados unidos/i.test(city || '');
+      if (digitsOnly.length === 11 && digitsOnly.startsWith('1')) {
+        cleanWhatsApp = `+${digitsOnly}`;
+      } else if (digitsOnly.length === 12 && digitsOnly.startsWith('57')) {
+        cleanWhatsApp = `+${digitsOnly}`;
+      } else if (digitsOnly.length === 10) {
+        cleanWhatsApp = isUs ? `+1${digitsOnly}` : `+57${digitsOnly}`;
+      } else {
+        cleanWhatsApp = `+${digitsOnly}`;
+      }
     }
 
     const storeName = (name || username || 'Mi Tienda').trim();

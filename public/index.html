@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=28.6">
+  <link rel="stylesheet" href="css/style.css?v=28.7">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -163,11 +163,15 @@
         <div class="city-selector-wrapper">
           <button class="city-btn" id="btn-city-dropdown" title="Filtrar por Ciudad">
             <i class="fa-solid fa-location-dot city-pin-icon"></i>
-            <span id="current-city-label">Toda Colombia</span>
+            <span id="current-city-label">🌍 Global</span>
             <i class="fa-solid fa-chevron-down city-arrow"></i>
           </button>
           <div class="city-dropdown" id="city-dropdown-menu">
-            <div class="city-item active" data-city="Toda Colombia">🇨🇴 Toda Colombia</div>
+            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Cobertura Global</div>
+            <div class="city-item active" data-city="🌍 Todos los Países">🌍 Todos los Países (Global)</div>
+
+            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🇨🇴 Colombia</div>
+            <div class="city-item" data-city="Toda Colombia">🇨🇴 Toda Colombia</div>
             <div class="city-item" data-city="Bogotá">🏙️ Bogotá D.C.</div>
             <div class="city-item" data-city="Medellín">🌸 Medellín & Antioquia</div>
             <div class="city-item" data-city="Cali">☀️ Cali & Valle</div>
@@ -178,7 +182,19 @@
             <div class="city-item" data-city="Cartagena">🏰 Cartagena</div>
             <div class="city-item" data-city="Meta & Llanos">🐎 Meta & Llanos Orientales</div>
             <div class="city-item" data-city="Amazonas & Leticia">🌿 Amazonas & Leticia</div>
+
+            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🇺🇸 Estados Unidos</div>
+            <div class="city-item" data-city="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (USA)</div>
+            <div class="city-item" data-city="Miami & Florida">🌴 Miami & Florida</div>
+            <div class="city-item" data-city="New York">🗽 New York & New Jersey</div>
+            <div class="city-item" data-city="California">☀️ California & LA</div>
+            <div class="city-item" data-city="Texas">🤠 Texas & Houston</div>
+            <div class="city-item" data-city="Orlando">🎡 Orlando & Florida Central</div>
+
+            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🌐 Sin Fronteras</div>
+            <div class="city-item" data-city="Internacional">🌐 Envíos Internacionales / Digital</div>
           </div>
+        </div>
         </div>
 
         <!-- SELECTOR DE CATEGORÍA UNIFICADO EN BARRA SUPERIOR (31 CATEGORÍAS) -->
@@ -1148,22 +1164,43 @@
 
         <div class="form-row">
           <div class="form-group flex-1">
-            <label>Precio en COP (Opcional)</label>
-            <input type="number" id="upload-price" name="price" placeholder="Ej: 139900 (Deja en 0 si es a cotizar)">
+            <label>Precio y Moneda *</label>
+            <div style="display: flex; gap: 6px;">
+              <select id="upload-currency" name="currency" style="width: 95px; flex-shrink: 0; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-weight: 700; font-size: 0.85rem; padding: 8px 4px;">
+                <option value="COP" selected>COP ($)</option>
+                <option value="USD">USD ($)</option>
+              </select>
+              <input type="number" id="upload-price" name="price" placeholder="Ej: 139900 o 35" style="flex: 1;">
+            </div>
           </div>
           <div class="form-group flex-1">
             <label>Ciudad *</label>
             <select id="upload-city" name="city">
-              <option value="Bogotá">Bogotá D.C.</option>
-              <option value="Medellín">Medellín</option>
-              <option value="Cali">Cali</option>
-              <option value="Popayán">Popayán (Cauca)</option>
-              <option value="Barranquilla">Barranquilla</option>
-              <option value="Bucaramanga">Bucaramanga</option>
-              <option value="Eje Cafetero">Eje Cafetero</option>
-              <option value="Cartagena">Cartagena</option>
-            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
-            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+              <optgroup label="🇨🇴 Colombia">
+                <option value="Bogotá" selected>Bogotá D.C.</option>
+                <option value="Medellín">Medellín & Antioquia</option>
+                <option value="Cali">Cali & Valle</option>
+                <option value="Popayán">Popayán (Cauca)</option>
+                <option value="Barranquilla">Barranquilla & Costa</option>
+                <option value="Bucaramanga">Bucaramanga & Santanderes</option>
+                <option value="Eje Cafetero">Eje Cafetero</option>
+                <option value="Cartagena">Cartagena</option>
+                <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+                <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+                <option value="Toda Colombia">Envíos a Toda Colombia</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
+              </optgroup>
+              <optgroup label="🌐 Internacional & Digital">
+                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
+                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -1371,8 +1408,22 @@
           <input type="text" id="reg-store-name" placeholder="Ej: Mi Tienda Virtual" required>
         </div>
         <div class="form-group">
-          <label>Número de WhatsApp para Ventas (10 dígitos) *</label>
-          <input type="tel" id="reg-store-whatsapp" placeholder="Ej: 312 456 7890" required>
+          <label>Número de WhatsApp para Ventas *</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <select id="reg-store-country-code" style="width: 110px; flex-shrink: 0; padding: 10px 6px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.88rem;">
+              <option value="+57" selected>🇨🇴 +57</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+52">🇲🇽 +52</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+58">🇻🇪 +58</option>
+              <option value="+51">🇵🇪 +51</option>
+              <option value="+56">🇨🇱 +56</option>
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+593">🇪🇨 +593</option>
+              <option value="+507">🇵🇦 +507</option>
+            </select>
+            <input type="tel" id="reg-store-whatsapp" placeholder="Ej: 312 456 7890 o 305 123 4567" required style="flex: 1;">
+          </div>
         </div>
         <div class="form-group">
           <label><i class="fa-brands fa-telegram" style="color: #26a5e4;"></i> Usuario de Telegram <small class="text-muted">(Opcional - Ej: @MiTienda o t.me/MiTienda)</small></label>
@@ -1385,17 +1436,32 @@
         <div class="form-group">
           <label>Ciudad Principal</label>
           <select id="reg-store-city">
-            <option value="Bogotá">Bogotá D.C.</option>
-            <option value="Medellín">Medellín</option>
-            <option value="Cali">Cali</option>
-            <option value="Popayán">Popayán (Cauca)</option>
-            <option value="Barranquilla">Barranquilla</option>
-            <option value="Bucaramanga">Bucaramanga</option>
-            <option value="Eje Cafetero">Eje Cafetero</option>
-            <option value="Cartagena">Cartagena</option>
-            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
-            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-          </select>
+              <optgroup label="🇨🇴 Colombia">
+                <option value="Bogotá" selected>Bogotá D.C.</option>
+                <option value="Medellín">Medellín & Antioquia</option>
+                <option value="Cali">Cali & Valle</option>
+                <option value="Popayán">Popayán (Cauca)</option>
+                <option value="Barranquilla">Barranquilla & Costa</option>
+                <option value="Bucaramanga">Bucaramanga & Santanderes</option>
+                <option value="Eje Cafetero">Eje Cafetero</option>
+                <option value="Cartagena">Cartagena</option>
+                <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+                <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+                <option value="Toda Colombia">Envíos a Toda Colombia</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
+              </optgroup>
+              <optgroup label="🌐 Internacional & Digital">
+                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
+                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
+              </optgroup>
+            </select>
         </div>
         <div class="form-group">
           <label>Contraseña para tu Panel <small class="text-muted">(Crea tu clave secreta)</small> *</label>
@@ -1652,25 +1718,51 @@
         <div class="form-row">
           <div class="form-group flex-1">
             <label>WhatsApp de Contacto (10 dígitos) *</label>
-            <div class="phone-input-wrap">
-              <span class="country-prefix">🇨🇴 +57</span>
-              <input type="tel" id="edit-store-whatsapp" name="whatsapp" required placeholder="312 345 6789">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <select id="edit-store-country-code" style="width: 105px; flex-shrink: 0; padding: 10px 4px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.88rem;">
+                <option value="+57" selected>🇨🇴 +57</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+52">🇲🇽 +52</option>
+                <option value="+34">🇪🇸 +34</option>
+                <option value="+58">🇻🇪 +58</option>
+                <option value="+51">🇵🇪 +51</option>
+                <option value="+56">🇨🇱 +56</option>
+                <option value="+54">🇦🇷 +54</option>
+                <option value="+593">🇪🇨 +593</option>
+                <option value="+507">🇵🇦 +507</option>
+              </select>
+              <input type="tel" id="edit-store-whatsapp" name="whatsapp" required placeholder="Ej: 312 345 6789 o 305 123 4567" style="flex: 1;">
             </div>
           </div>
 
           <div class="form-group flex-1">
             <label>Ciudad Principal</label>
             <select id="edit-store-city" name="city">
-              <option value="Bogotá">Bogotá D.C.</option>
-              <option value="Medellín">Medellín</option>
-              <option value="Cali">Cali</option>
-              <option value="Popayán">Popayán (Cauca)</option>
-              <option value="Barranquilla">Barranquilla</option>
-              <option value="Bucaramanga">Bucaramanga</option>
-              <option value="Eje Cafetero">Eje Cafetero</option>
-              <option value="Cartagena">Cartagena</option>
-            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
-            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+              <optgroup label="🇨🇴 Colombia">
+                <option value="Bogotá" selected>Bogotá D.C.</option>
+                <option value="Medellín">Medellín & Antioquia</option>
+                <option value="Cali">Cali & Valle</option>
+                <option value="Popayán">Popayán (Cauca)</option>
+                <option value="Barranquilla">Barranquilla & Costa</option>
+                <option value="Bucaramanga">Bucaramanga & Santanderes</option>
+                <option value="Eje Cafetero">Eje Cafetero</option>
+                <option value="Cartagena">Cartagena</option>
+                <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+                <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+                <option value="Toda Colombia">Envíos a Toda Colombia</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
+              </optgroup>
+              <optgroup label="🌐 Internacional & Digital">
+                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
+                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -1903,8 +1995,14 @@
 
         <div class="form-row">
           <div class="form-group flex-1">
-            <label>Precio en COP (Deja 0 si es a cotizar)</label>
-            <input type="number" id="edit-prod-price" placeholder="Ej: 75000">
+            <label>Precio y Moneda</label>
+            <div style="display: flex; gap: 6px;">
+              <select id="edit-prod-currency" style="width: 95px; flex-shrink: 0; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-weight: 700; font-size: 0.85rem; padding: 8px 4px;">
+                <option value="COP" selected>COP ($)</option>
+                <option value="USD">USD ($)</option>
+              </select>
+              <input type="number" id="edit-prod-price" placeholder="Ej: 75000 o 35" style="flex: 1;">
+            </div>
           </div>
           <div class="form-group flex-1">
             <label>Condiciones de Domicilio / Entrega</label>
@@ -1916,16 +2014,31 @@
           <div class="form-group flex-1">
             <label>Ciudad *</label>
             <select id="edit-prod-city">
-              <option value="Bogotá">Bogotá D.C.</option>
-              <option value="Medellín">Medellín</option>
-              <option value="Cali">Cali</option>
-              <option value="Popayán">Popayán (Cauca)</option>
-              <option value="Barranquilla">Barranquilla</option>
-              <option value="Bucaramanga">Bucaramanga</option>
-              <option value="Eje Cafetero">Eje Cafetero</option>
-              <option value="Cartagena">Cartagena</option>
-            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
-            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+              <optgroup label="🇨🇴 Colombia">
+                <option value="Bogotá" selected>Bogotá D.C.</option>
+                <option value="Medellín">Medellín & Antioquia</option>
+                <option value="Cali">Cali & Valle</option>
+                <option value="Popayán">Popayán (Cauca)</option>
+                <option value="Barranquilla">Barranquilla & Costa</option>
+                <option value="Bucaramanga">Bucaramanga & Santanderes</option>
+                <option value="Eje Cafetero">Eje Cafetero</option>
+                <option value="Cartagena">Cartagena</option>
+                <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+                <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+                <option value="Toda Colombia">Envíos a Toda Colombia</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
+              </optgroup>
+              <optgroup label="🌐 Internacional & Digital">
+                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
+                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
+              </optgroup>
             </select>
           </div>
           <div class="form-group flex-1">
@@ -2375,27 +2488,53 @@
 
         <div class="form-group" style="margin-bottom: 12px;">
           <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">WhatsApp para Recibir Pedidos *</label>
-          <div style="position: relative; display: flex; align-items: center;">
-            <span style="position: absolute; left: 12px; font-weight: 700; color: #25d366; font-size: 0.88rem;">🇨🇴 +57</span>
-            <input type="tel" id="sso-store-whatsapp" required placeholder="300 123 4567" maxlength="14" style="width: 100%; padding: 10px 12px 10px 65px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <select id="sso-store-country-code" style="width: 110px; flex-shrink: 0; padding: 10px 6px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.88rem;">
+              <option value="+57" selected>🇨🇴 +57</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+52">🇲🇽 +52</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+58">🇻🇪 +58</option>
+              <option value="+51">🇵🇪 +51</option>
+              <option value="+56">🇨🇱 +56</option>
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+593">🇪🇨 +593</option>
+              <option value="+507">🇵🇦 +507</option>
+            </select>
+            <input type="tel" id="sso-store-whatsapp" required placeholder="300 123 4567 o 305 123 4567" maxlength="15" style="flex: 1; padding: 10px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
           </div>
-          <small style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 3px;">Los clientes te escribirán directamente aquí sin intermediarios.</small>
+          <small style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 3px;">Los clientes te escribirán directamente aquí sin intermediarios (Soporta Colombia, USA e Internacional).</small>
         </div>
 
         <div class="form-group" style="margin-bottom: 16px;">
-          <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">Ciudad en Colombia *</label>
+          <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">País y Ciudad del Negocio *</label>
           <select id="sso-store-city" style="width: 100%; padding: 10px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
-            <option value="Bogotá">Bogotá D.C.</option>
-            <option value="Medellín">Medellín</option>
-            <option value="Cali">Cali</option>
-            <option value="Popayán">Popayán (Cauca)</option>
-            <option value="Barranquilla">Barranquilla</option>
-            <option value="Bucaramanga">Bucaramanga</option>
-            <option value="Eje Cafetero">Eje Cafetero</option>
-            <option value="Cartagena">Cartagena</option>
-            <option value="Meta & Llanos">Meta & Llanos Orientales</option>
-            <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-          </select>
+              <optgroup label="🇨🇴 Colombia">
+                <option value="Bogotá" selected>Bogotá D.C.</option>
+                <option value="Medellín">Medellín & Antioquia</option>
+                <option value="Cali">Cali & Valle</option>
+                <option value="Popayán">Popayán (Cauca)</option>
+                <option value="Barranquilla">Barranquilla & Costa</option>
+                <option value="Bucaramanga">Bucaramanga & Santanderes</option>
+                <option value="Eje Cafetero">Eje Cafetero</option>
+                <option value="Cartagena">Cartagena</option>
+                <option value="Meta & Llanos">Meta & Llanos Orientales</option>
+                <option value="Amazonas & Leticia">Amazonas & Leticia</option>
+                <option value="Toda Colombia">Envíos a Toda Colombia</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
+              </optgroup>
+              <optgroup label="🌐 Internacional & Digital">
+                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
+                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
+              </optgroup>
+            </select>
         </div>
 
         <button type="submit" class="btn btn-spot" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.95rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -2423,6 +2562,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=28.6"></script>
+  <script src="js/app.js?v=28.7"></script>
 </body>
 </html>

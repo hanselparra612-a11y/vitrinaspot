@@ -38,7 +38,7 @@ const state = {
   videos: [],
   stores: [],
   currentIndex: 0,
-  currentCity: 'Toda Colombia',
+  currentCity: '🌍 Todos los Países',
   currentCategory: 'Todas',
   currentStoreFilter: null, // Filtro de tienda activa en el feed
   searchQuery: '',
@@ -809,7 +809,8 @@ async function loadVideos() {
       // Búsqueda libre global por palabra clave o producto
       params.append('q', state.searchQuery.trim());
     } else {
-      if (state.currentCity && state.currentCity !== 'Toda Colombia') {
+      const isAllCities = !state.currentCity || state.currentCity.includes('Todos los Países') || state.currentCity === 'Global' || state.currentCity === 'Todos';
+      if (!isAllCities) {
         params.append('city', state.currentCity);
       }
       if (state.currentCategory && state.currentCategory !== 'Todas' && state.currentCategory !== 'Solo Ofertas') {
@@ -4871,7 +4872,12 @@ function setupEventListeners() {
       document.querySelectorAll('.city-item').forEach(i => i.classList.remove('active'));
       item.classList.add('active');
       state.currentCity = item.getAttribute('data-city');
-      document.getElementById('current-city-label').textContent = state.currentCity;
+      let lbl = state.currentCity;
+      if (lbl.includes('Todos los Países')) lbl = '🌍 Global';
+      else if (lbl === 'Todo Estados Unidos') lbl = '🇺🇸 EE.UU.';
+      else if (lbl === 'Toda Colombia') lbl = '🇨🇴 Colombia';
+      else if (lbl === 'Internacional') lbl = '🌐 Global';
+      document.getElementById('current-city-label').textContent = lbl;
       cityMenu.classList.remove('show');
       showView('feed-view');
       loadVideos();
@@ -6053,7 +6059,7 @@ function setupEventListeners() {
     const storeAvatar = state.currentStore?.avatar || 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=100&auto=format&fit=crop&q=80';
     const titleVal = document.getElementById('upload-title')?.value.trim() || 'Título de tu producto o servicio';
     const priceNum = Number(document.getElementById('upload-price')?.value || 0);
-    const priceText = priceNum > 0 ? `$${priceNum.toLocaleString('es-CO')} COP` : 'Precio a Convenir';
+    const priceText = priceNum > 0 ? (prodCurrency === 'USD' ? `${priceNum.toLocaleString('en-US')} USD` : `${priceNum.toLocaleString('es-CO')} COP`) : 'Precio a Convenir';
 
     // Domicilio
     let delivText = '🛵 Domicilio Gratis';
@@ -6716,7 +6722,9 @@ function setupEventListeners() {
     e.preventDefault();
     clearRegNameError();
     const name = document.getElementById('reg-store-name').value.trim();
-    const whatsapp = document.getElementById('reg-store-whatsapp').value.trim();
+    const cCode = document.getElementById('reg-store-country-code')?.value || '+57';
+    let rawRegWa = document.getElementById('reg-store-whatsapp').value.trim();
+    const whatsapp = rawRegWa.startsWith('+') ? rawRegWa : (cCode + rawRegWa.replace(/[^0-9]/g, ''));
     const email = document.getElementById('reg-store-email')?.value.trim().toLowerCase() || '';
     const city = document.getElementById('reg-store-city').value;
     const password = document.getElementById('reg-store-pass').value;
@@ -7165,13 +7173,9 @@ function setupEventListeners() {
 
     try {
       const formData = new FormData(editProfileForm);
-      const rawWa = document.getElementById('edit-store-whatsapp')?.value.trim();
-      let cleanWa = rawWa.replace(/[^0-9]/g, '');
-      if (cleanWa.length === 10 && !cleanWa.startsWith('57')) {
-        cleanWa = `+57${cleanWa}`;
-      } else if (!cleanWa.startsWith('+')) {
-        cleanWa = `+${cleanWa}`;
-      }
+      const rawWa = document.getElementById('edit-store-whatsapp')?.value.trim() || '';
+      const cCode = document.getElementById('edit-store-country-code')?.value || '+57';
+      const cleanWa = rawWa.startsWith('+') ? rawWa : (cCode + rawWa.replace(/[^0-9]/g, ''));
       formData.set('whatsapp', cleanWa);
 
       // Si se optimizó la foto en canvas 1:1, adjuntarla; si no se cambió, no enviar campo avatar
@@ -7633,7 +7637,9 @@ function setupEventListeners() {
     e.preventDefault();
     const spotPlayUid = document.getElementById('sso-user-uid')?.value;
     const name = document.getElementById('sso-store-name')?.value.trim();
-    const whatsapp = document.getElementById('sso-store-whatsapp')?.value.trim();
+    const cCode = document.getElementById('sso-store-country-code')?.value || '+57';
+    let rawWa = document.getElementById('sso-store-whatsapp')?.value.trim() || '';
+    const whatsapp = rawWa.startsWith('+') ? rawWa : (cCode + rawWa.replace(/[^0-9]/g, ''));
     const city = document.getElementById('sso-store-city')?.value || 'Bogotá';
     const avatar = document.getElementById('sso-user-avatar')?.value || '';
     const email = document.getElementById('sso-user-email')?.value || '';
