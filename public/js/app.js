@@ -6282,6 +6282,10 @@ function setupEventListeners() {
       } else {
         formattedDelivery = 'Domicilio con costo según destino';
       }
+    } else if (dType === 'global') {
+      formattedDelivery = '🌍 Envíos a Todo el Mundo (Global)';
+    } else if (dType === 'digital') {
+      formattedDelivery = '⚡ Entrega Digital Inmediata';
     } else if (dType === 'local') {
       formattedDelivery = 'Recogida en Local Físico';
     } else if (dType === 'nacional') {

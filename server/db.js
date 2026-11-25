@@ -623,26 +623,30 @@ class Database {
     if (filter.city) {
       const norm = s => (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
       const normFilter = norm(filter.city);
-      const isGlobal = !normFilter || normFilter.includes('todos los paises') || normFilter === 'global' || normFilter === 'todos' || normFilter === 'all';
+      const isGlobalFilter = !normFilter || normFilter.includes('todos los paises') || normFilter === 'global' || normFilter === 'todos' || normFilter === 'all';
 
-      if (!isGlobal) {
+      const isProductGlobal = (cityStr) => {
+        const c = norm(cityStr);
+        return c.includes('global') || c.includes('internacional') || c.includes('sin fronteras') || c.includes('digital') || c.includes('remoto');
+      };
+
+      if (!isGlobalFilter) {
         if (normFilter === 'toda colombia' || normFilter === 'colombia') {
-          const nonCoWords = ['usa', 'estados unidos', 'miami', 'florida', 'york', 'california', 'texas', 'houston', 'orlando', 'angeles', 'chicago', 'internacional'];
+          const nonCoWords = ['usa', 'estados unidos', 'miami', 'florida', 'york', 'california', 'texas', 'houston', 'orlando', 'angeles', 'chicago'];
           list = list.filter(v => {
+            if (isProductGlobal(v.city)) return true; // Productos con cobertura Global también se muestran en Colombia
             const normCity = norm(v.city);
             return !nonCoWords.some(w => normCity.includes(w));
           });
         } else if (normFilter === 'todo estados unidos' || normFilter === 'estados unidos' || normFilter === 'usa') {
           const usWords = ['usa', 'estados unidos', 'miami', 'florida', 'york', 'california', 'texas', 'houston', 'orlando', 'angeles', 'chicago'];
           list = list.filter(v => {
+            if (isProductGlobal(v.city)) return true; // Productos con cobertura Global también se muestran en EE.UU.
             const normCity = norm(v.city);
             return usWords.some(w => normCity.includes(w));
           });
         } else if (normFilter === 'internacional') {
-          list = list.filter(v => {
-            const normCity = norm(v.city);
-            return normCity.includes('internacional') || normCity.includes('digital') || normCity.includes('remoto');
-          });
+          list = list.filter(v => isProductGlobal(v.city));
         } else {
           const filterWords = normFilter.split(/[\s&,/]+/).filter(w => w.length > 2);
           list = list.filter(v => {

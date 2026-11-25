@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=28.7">
+  <link rel="stylesheet" href="css/style.css?v=28.8">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -1188,9 +1188,22 @@
             </div>
           </div>
           <div class="form-group flex-1">
-            <label>Ciudad *</label>
+            <label><i class="fa-solid fa-earth-americas text-gold"></i> Ubicación o Cobertura del Producto *</label>
             <select id="upload-city" name="city">
+              <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
+                <option value="Global">🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
+                <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+              </optgroup>
               <optgroup label="🇨🇴 Colombia">
+                <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
                 <option value="Bogotá" selected>Bogotá D.C.</option>
                 <option value="Medellín">Medellín & Antioquia</option>
                 <option value="Cali">Cali & Valle</option>
@@ -1201,19 +1214,6 @@
                 <option value="Cartagena">Cartagena</option>
                 <option value="Meta & Llanos">Meta & Llanos Orientales</option>
                 <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-                <option value="Toda Colombia">Envíos a Toda Colombia</option>
-              </optgroup>
-              <optgroup label="🇺🇸 Estados Unidos">
-                <option value="Miami & Florida">Miami & Florida (USA)</option>
-                <option value="New York">New York & New Jersey (USA)</option>
-                <option value="California">California & Los Angeles (USA)</option>
-                <option value="Texas">Texas & Houston (USA)</option>
-                <option value="Orlando">Orlando & Florida Central (USA)</option>
-                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
-              </optgroup>
-              <optgroup label="🌐 Internacional & Digital">
-                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
-                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
               </optgroup>
             </select>
           </div>
@@ -1239,9 +1239,11 @@
             <label>Condiciones de Domicilio</label>
             <select id="upload-delivery-type" name="deliveryType">
               <option value="gratis">Domicilio Gratis</option>
+              <option value="global">🌍 Envíos a Todo el Mundo (Global)</option>
+              <option value="nacional">🇨🇴 Envíos a Todo el País</option>
+              <option value="digital">⚡ Entrega Inmediata Digital</option>
               <option value="custom">Tarifa Personalizada</option>
               <option value="local">🏪 Recogida en Local Físico</option>
-              <option value="nacional">🇨🇴 Envíos a Todo el País</option>
             </select>
           </div>
         </div>
@@ -1257,6 +1259,9 @@
             <label>Etiqueta Promocional</label>
             <select id="upload-badge" name="promoBadge">
               <option value="none">Sin etiqueta</option>
+              <option value="🌍 COBERTURA GLOBAL">🌍 COBERTURA GLOBAL</option>
+              <option value="✈️ ENVÍOS INTERNACIONALES">✈️ ENVÍOS INTERNACIONALES</option>
+              <option value="⚡ SERVICIO DIGITAL">⚡ SERVICIO DIGITAL</option>
               <option value="¡EN OFERTA!">🏷️ ¡EN OFERTA!</option>
               <option value="ENVÍO GRATIS">🚚 ENVÍO GRATIS</option>
               <option value="ÚLTIMAS UNIDADES">⚡ ÚLTIMAS UNIDADES</option>
@@ -1450,7 +1455,20 @@
         <div class="form-group">
           <label>Ciudad Principal</label>
           <select id="reg-store-city">
+              <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
+                <option value="Global">🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
+                <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+              </optgroup>
               <optgroup label="🇨🇴 Colombia">
+                <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
                 <option value="Bogotá" selected>Bogotá D.C.</option>
                 <option value="Medellín">Medellín & Antioquia</option>
                 <option value="Cali">Cali & Valle</option>
@@ -1461,19 +1479,6 @@
                 <option value="Cartagena">Cartagena</option>
                 <option value="Meta & Llanos">Meta & Llanos Orientales</option>
                 <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-                <option value="Toda Colombia">Envíos a Toda Colombia</option>
-              </optgroup>
-              <optgroup label="🇺🇸 Estados Unidos">
-                <option value="Miami & Florida">Miami & Florida (USA)</option>
-                <option value="New York">New York & New Jersey (USA)</option>
-                <option value="California">California & Los Angeles (USA)</option>
-                <option value="Texas">Texas & Houston (USA)</option>
-                <option value="Orlando">Orlando & Florida Central (USA)</option>
-                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
-              </optgroup>
-              <optgroup label="🌐 Internacional & Digital">
-                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
-                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
               </optgroup>
             </select>
         </div>
@@ -1752,7 +1757,20 @@
           <div class="form-group flex-1">
             <label>Ciudad Principal</label>
             <select id="edit-store-city" name="city">
+              <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
+                <option value="Global">🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
+                <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+              </optgroup>
               <optgroup label="🇨🇴 Colombia">
+                <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
                 <option value="Bogotá" selected>Bogotá D.C.</option>
                 <option value="Medellín">Medellín & Antioquia</option>
                 <option value="Cali">Cali & Valle</option>
@@ -1763,19 +1781,6 @@
                 <option value="Cartagena">Cartagena</option>
                 <option value="Meta & Llanos">Meta & Llanos Orientales</option>
                 <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-                <option value="Toda Colombia">Envíos a Toda Colombia</option>
-              </optgroup>
-              <optgroup label="🇺🇸 Estados Unidos">
-                <option value="Miami & Florida">Miami & Florida (USA)</option>
-                <option value="New York">New York & New Jersey (USA)</option>
-                <option value="California">California & Los Angeles (USA)</option>
-                <option value="Texas">Texas & Houston (USA)</option>
-                <option value="Orlando">Orlando & Florida Central (USA)</option>
-                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
-              </optgroup>
-              <optgroup label="🌐 Internacional & Digital">
-                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
-                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
               </optgroup>
             </select>
           </div>
@@ -2026,9 +2031,22 @@
 
         <div class="form-row">
           <div class="form-group flex-1">
-            <label>Ciudad *</label>
+            <label><i class="fa-solid fa-earth-americas text-gold"></i> Ubicación o Cobertura del Producto *</label>
             <select id="edit-prod-city">
+              <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
+                <option value="Global">🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
+                <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+              </optgroup>
               <optgroup label="🇨🇴 Colombia">
+                <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
                 <option value="Bogotá" selected>Bogotá D.C.</option>
                 <option value="Medellín">Medellín & Antioquia</option>
                 <option value="Cali">Cali & Valle</option>
@@ -2039,19 +2057,6 @@
                 <option value="Cartagena">Cartagena</option>
                 <option value="Meta & Llanos">Meta & Llanos Orientales</option>
                 <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-                <option value="Toda Colombia">Envíos a Toda Colombia</option>
-              </optgroup>
-              <optgroup label="🇺🇸 Estados Unidos">
-                <option value="Miami & Florida">Miami & Florida (USA)</option>
-                <option value="New York">New York & New Jersey (USA)</option>
-                <option value="California">California & Los Angeles (USA)</option>
-                <option value="Texas">Texas & Houston (USA)</option>
-                <option value="Orlando">Orlando & Florida Central (USA)</option>
-                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
-              </optgroup>
-              <optgroup label="🌐 Internacional & Digital">
-                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
-                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
               </optgroup>
             </select>
           </div>
@@ -2523,7 +2528,20 @@
         <div class="form-group" style="margin-bottom: 16px;">
           <label style="font-size: 0.82rem; font-weight: 700; color: #fff; display: block; margin-bottom: 4px;">País y Ciudad del Negocio *</label>
           <select id="sso-store-city" style="width: 100%; padding: 10px 12px; background: #161c28; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+              <optgroup label="🌍 Cobertura Global (Sin Fronteras)">
+                <option value="Global">🌍 Cobertura Global (Todo el Mundo / Envíos Internacionales)</option>
+                <option value="Servicios Digitales">⚡ Servicios Digitales & Remotos</option>
+              </optgroup>
+              <optgroup label="🇺🇸 Estados Unidos">
+                <option value="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (Envíos USA)</option>
+                <option value="Miami & Florida">Miami & Florida (USA)</option>
+                <option value="New York">New York & New Jersey (USA)</option>
+                <option value="California">California & Los Angeles (USA)</option>
+                <option value="Texas">Texas & Houston (USA)</option>
+                <option value="Orlando">Orlando & Florida Central (USA)</option>
+              </optgroup>
               <optgroup label="🇨🇴 Colombia">
+                <option value="Toda Colombia">🇨🇴 Envíos a Toda Colombia</option>
                 <option value="Bogotá" selected>Bogotá D.C.</option>
                 <option value="Medellín">Medellín & Antioquia</option>
                 <option value="Cali">Cali & Valle</option>
@@ -2534,19 +2552,6 @@
                 <option value="Cartagena">Cartagena</option>
                 <option value="Meta & Llanos">Meta & Llanos Orientales</option>
                 <option value="Amazonas & Leticia">Amazonas & Leticia</option>
-                <option value="Toda Colombia">Envíos a Toda Colombia</option>
-              </optgroup>
-              <optgroup label="🇺🇸 Estados Unidos">
-                <option value="Miami & Florida">Miami & Florida (USA)</option>
-                <option value="New York">New York & New Jersey (USA)</option>
-                <option value="California">California & Los Angeles (USA)</option>
-                <option value="Texas">Texas & Houston (USA)</option>
-                <option value="Orlando">Orlando & Florida Central (USA)</option>
-                <option value="Todo Estados Unidos">Todo Estados Unidos (Envíos USA)</option>
-              </optgroup>
-              <optgroup label="🌐 Internacional & Digital">
-                <option value="Internacional">Envíos Internacionales / Sin Fronteras</option>
-                <option value="Servicios Digitales">Servicios Digitales & Remotos</option>
               </optgroup>
             </select>
         </div>
@@ -2576,6 +2581,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=28.7"></script>
+  <script src="js/app.js?v=28.8"></script>
 </body>
 </html>
