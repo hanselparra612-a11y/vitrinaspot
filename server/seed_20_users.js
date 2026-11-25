@@ -154,20 +154,6 @@ const NEW_STORES_DATA = [
     boostDays: 6,
     spots: [
       {
-        title: "Smartwatch Deportivo Sumergible IP68",
-        price: 165000,
-        delivery: "🛵 Domicilio Gratis en Bogotá",
-        category: "Tecnología",
-        keywords: "smartwatch, reloj inteligente, deportivo, impermeable, salud",
-        description: "Monitoreo cardíaco, oxígeno en sangre, notificaciones de WhatsApp y llamadas Bluetooth integradas.",
-        thumb: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80",
-        photos: [
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80",
-          "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80",
-          "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80"
-        ]
-      },
-      {
         title: "Audífonos Inalámbricos Bluetooth ANC",
         price: 120000,
         delivery: "📦 Envíos a Nivel Nacional",
@@ -755,20 +741,6 @@ const NEW_STORES_DATA = [
           "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&auto=format&fit=crop&q=80",
           "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80",
           "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&auto=format&fit=crop&q=80"
-        ]
-      },
-      {
-        title: "Reloj de Cuarzo Elegante para Caballero",
-        price: 180000,
-        delivery: "📦 Envío Nacional Contraentrega",
-        category: "Emprendimientos",
-        keywords: "reloj, cuarzo, elegante, caballero, acero inoxidable",
-        description: "Caja de acero quirúrgico, cristal mineral resistente a rayones y cronógrafo funcional.",
-        thumb: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&auto=format&fit=crop&q=80",
-        photos: [
-          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&auto=format&fit=crop&q=80",
-          "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop&q=80",
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&auto=format&fit=crop&q=80"
         ]
       },
       {

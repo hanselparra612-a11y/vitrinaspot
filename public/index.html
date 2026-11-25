@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=28.5">
+  <link rel="stylesheet" href="css/style.css?v=28.6">
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
@@ -275,7 +275,7 @@
         </span>
       </div>
       <button type="button" class="btn btn-spot w-100" id="btn-guest-register-trigger" style="margin-bottom: 8px; font-weight: 700;">
-        <i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (5 SPOTS $0 COP)
+        <i class="fa-solid fa-store"></i> Crear Mi Tienda Gratis (Publicaciones Ilimitadas $0 COP)
       </button>
       <button type="button" class="btn btn-ghost w-100" id="btn-guest-login-trigger" style="font-weight: 600; border: 1px solid rgba(255,255,255,0.15);">
         <i class="fa-solid fa-right-to-bracket"></i> Ya tengo Tienda (Ingresar)
@@ -632,7 +632,7 @@
             <div class="metric-icon" id="seller-stat-welcome-icon" style="background: rgba(0, 200, 83, 0.2); color: #00ff88;"><i class="fa-solid fa-gift"></i></div>
             <div class="metric-data">
               <span class="metric-value" id="seller-stat-welcome" style="color: #00ff88;">0 de 5</span>
-              <span class="metric-label" id="seller-stat-welcome-label">Cupo de Spots Gratuitos</span>
+              <span class="metric-label" id="seller-stat-welcome-label">Publicaciones en Catálogo</span>
             </div>
           </div>
         </div>
@@ -646,7 +646,7 @@
               <span class="text-muted" id="seller-quota-subtitle" style="font-size: 0.85rem;">Tus SPOTS permanecen activos en la vitrina comercial</span>
             </div>
             <span class="badge" id="seller-quota-badge" style="background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); font-weight: 800; font-size: 0.8rem; padding: 6px 12px; border-radius: 8px;">
-              Spots Gratuitos: 0 / 5
+              Publicaciones: Ilimitadas ($0 COP)
             </span>
           </div>
           <div class="seller-videos-grid" id="seller-videos-list">
@@ -807,11 +807,11 @@
             </div>
 
             <form id="admin-pricing-form" class="pricing-edit-grid">
-              <!-- 1. Cupo de Spots Gratuitos -->
+              <!-- 1. Publicaciones Ilimitadas en Catálogo -->
               <div class="form-group">
-                <label><i class="fa-solid fa-gift text-gold"></i> 1. Cupo de Spots Gratuitos por Comercio</label>
-                <input type="number" id="adm-quota-free-spots" value="100" min="1" max="1000" required>
-                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">🎁 Cada tienda publica gratis hasta <strong id="adm-helper-quota-val" style="color:var(--spot-gold); font-weight:800;">100</strong> productos (carrusel permanente de fotos totalmente gratis).</small>
+                <label><i class="fa-solid fa-infinity text-gold"></i> 1. Publicaciones por Comercio en Catálogo</label>
+                <input type="text" id="adm-quota-free-spots" value="Ilimitadas (100% Gratis - Modelo AdMob)" disabled style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: #00ff88; font-weight: 700; border-radius: 8px; padding: 10px; width: 100%; cursor: not-allowed;">
+                <small class="text-muted" id="adm-quota-helper-desc" style="display:block; margin-top:3px;">✨ Todas las tiendas publican <strong>ilimitadamente y gratis ($0 COP)</strong> sin restricciones, maximizando el inventario y las impresiones de anuncios AdMob.</small>
               </div>
 
               <!-- 2. Frecuencia de Anuncios In-Feed AdMob -->
@@ -1005,7 +1005,7 @@
                 <span>👑 Tu Tienda tiene Membresía Pro Activa</span>
               </div>
               <div style="font-size: 0.8rem; color: var(--text-dim);" id="upload-membership-quota-text">
-                Cupo utilizado: <strong class="text-spot" id="upload-membership-used">0</strong> de <strong id="upload-membership-total">100</strong> productos incluidos
+                Publicaciones de tu tienda: <strong class="text-spot" id="upload-membership-used">0</strong> productos activos (Ilimitados $0 COP)
               </div>
             </div>
           </div>
@@ -1019,7 +1019,7 @@
           <label class="form-section-title"><i class="fa-solid fa-layer-group text-spot"></i> Elige tu Tipo de Publicación:</label>
 
           <!-- BANNER DE BLOQUEO DE CUPO GRATUITO (5/5 SPOTS COMPLETADOS) -->
-          <div id="upload-free-quota-locked-banner" style="display: none; background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.5); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; align-items: center; gap: 12px;">
+          <div id="upload-free-quota-locked-banner" style="display: none !important; background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.5); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; align-items: center; gap: 12px;">
             <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
               <i class="fa-solid fa-lock" style="font-size: 1.2rem; color: #ef4444;"></i>
             </div>
@@ -2423,6 +2423,6 @@
 
   <!-- Convertidor automático HEIC/HEIF de fotos de smartphones (iPhone/Android HDR) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="js/app.js?v=28.2"></script>
+  <script src="js/app.js?v=28.6"></script>
 </body>
 </html>

@@ -3714,14 +3714,10 @@ async function openSellerPanel() {
       welcomeStatEl.innerHTML = `<span style="color:#00ff88; font-weight:800;">${myVideos.length} / ${memLimit}</span>`;
       if (welcomeStatLabel) welcomeStatLabel.textContent = 'Cupo Membresía Pro';
       if (welcomeStatIcon) welcomeStatIcon.innerHTML = '<i class="fa-solid fa-crown text-spot"></i>';
-    } else if (isQuotaFull) {
-      welcomeStatEl.innerHTML = `<span style="color:#ef4444; font-weight:800;">${freeUsed} de ${freeQuota} (Completo)</span>`;
-      if (welcomeStatLabel) welcomeStatLabel.textContent = 'Cupo Gratuito Agotado';
-      if (welcomeStatIcon) welcomeStatIcon.innerHTML = '<i class="fa-solid fa-lock" style="color:#ef4444;"></i>';
     } else {
-      welcomeStatEl.innerHTML = `<span style="color:#00ff88; font-weight:800;">${freeUsed} de ${freeQuota} usados</span>`;
-      if (welcomeStatLabel) welcomeStatLabel.textContent = `Spots Gratuitos (${freeRem} disponibles)`;
-      if (welcomeStatIcon) welcomeStatIcon.innerHTML = '<i class="fa-solid fa-gift text-gold"></i>';
+      welcomeStatEl.innerHTML = `<span style="color:#00ff88; font-weight:800;">${myVideos.length} activos</span>`;
+      if (welcomeStatLabel) welcomeStatLabel.textContent = 'Publicaciones Ilimitadas ($0 COP)';
+      if (welcomeStatIcon) welcomeStatIcon.innerHTML = '<i class="fa-solid fa-infinity text-gold"></i>';
     }
   }
 
@@ -5776,12 +5772,7 @@ function setupEventListeners() {
         state.currentStore.hasMembership &&
         (!state.currentStore.membershipExpiresAt || new Date(state.currentStore.membershipExpiresAt) > new Date())
       );
-      if (!isMemActive && storeCount >= freeQuota) {
-        updatePlanSelection('spot_permanent');
-        showToast(`🔒 Has completado tus ${freeQuota} spots gratuitos.`, 'warning');
-      } else {
-        updatePlanSelection('photos_5');
-      }
+      updatePlanSelection('photos_5');
       uploadModal.style.display = 'flex';
     });
   });
@@ -5865,16 +5856,7 @@ function setupEventListeners() {
           state.currentStore.hasMembership &&
           (!state.currentStore.membershipExpiresAt || new Date(state.currentStore.membershipExpiresAt) > new Date())
         );
-        if (!isMemActive && storeCount >= freeQuota) {
-          showToast(`🔒 Plan Gratuito Bloqueado: Ya completaste tus ${freeQuota} spots gratis. Has completado tu cupo de publicaciones para este comercio.`, 'error');
-          updatePlanSelection('spot_permanent');
-          const permCard = document.querySelector('.video-plan-card[data-plan="spot_permanent"]');
-          if (permCard) {
-            permCard.classList.add('plan-highlight-pulse');
-            setTimeout(() => permCard.classList.remove('plan-highlight-pulse'), 1600);
-          }
-          return;
-        }
+        // Publicaciones ilimitadas y gratuitas sin bloqueo de cupo
       }
       updatePlanSelection(p);
     });
