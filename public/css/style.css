@@ -4374,7 +4374,7 @@ body.admin-active-view .main-viewport {
     align-items: center !important;
     gap: 8px !important;
     flex: 0 0 auto !important;
-    margin-right: 12px !important;
+    margin-right: 0 !important;
     min-width: auto;
     z-index: 10;
   }
@@ -4403,29 +4403,55 @@ body.admin-active-view .main-viewport {
     letter-spacing: -0.3px;
   }
 
-  /* ACCIONES DE NAVEGACIÓN EN MÓVIL (EQUILIBRADAS Y CON RESPIRO PERFECTO) */
+  /* SELECTOR DE UBICACIÓN CENTRADO (EQUILIBRIO PERFECTO DE PANTALLA) */
+  .nav-center,
   .standard-nav-actions {
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    justify-content: center !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin: 0 6px !important;
+    z-index: 10;
   }
 
-  /* Selector de ciudad compacto */
+  /* Selector de ciudad compacto y perfectamente simétrico */
   .city-selector-wrapper {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-shrink: 0;
   }
 
   .city-btn {
-    padding: 6px 9px;
-    font-size: 0.76rem;
-    height: 32px;
-    gap: 4px;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 11px !important;
+    font-size: 0.76rem !important;
+    height: 34px !important;
+    border-radius: 99px !important;
+    gap: 4px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #ffffff !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+  }
+
+  .city-btn:hover, .city-btn:active {
+    background: rgba(255, 184, 0, 0.18) !important;
+    border-color: rgba(255, 184, 0, 0.5) !important;
+  }
+
+  .city-btn .city-pin-icon {
+    display: none !important; /* Eliminamos el pin blanco duplicado para máxima limpieza */
   }
 
   .city-btn span {
     display: inline-block;
-    max-width: 65px;
+    max-width: 80px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4451,14 +4477,38 @@ body.admin-active-view .main-viewport {
     backdrop-filter: blur(16px) !important;
   }
 
+  /* ACCIONES A LA DERECHA EQUILIBRADAS */
+  .nav-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    flex: 0 0 auto !important;
+    margin-left: 0 !important;
+    padding-right: 0 !important;
+    z-index: 10;
+  }
+
   .category-nav-btn {
-    padding: 6px 9px;
-    font-size: 0.76rem;
-    height: 32px;
-    gap: 4px;
-    width: auto;
-    max-width: none;
-    flex-shrink: 0;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 9px !important;
+    font-size: 0.76rem !important;
+    height: 34px !important;
+    border-radius: 99px !important;
+    gap: 4px !important;
+    width: auto !important;
+    max-width: none !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 184, 0, 0.35) !important;
+    color: #ffffff !important;
+    flex-shrink: 0 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .category-nav-btn:active {
+    background: rgba(255, 184, 0, 0.22) !important;
+    border-color: var(--spot-gold) !important;
   }
 
   .category-nav-btn span {
@@ -4510,7 +4560,7 @@ body.admin-active-view .main-viewport {
     border: 1.5px solid rgba(255, 184, 0, 0.5) !important;
     color: #ffb800 !important;
     flex-shrink: 0 !important;
-    margin-right: 2px !important;
+    margin-right: 0 !important;
     transition: all 0.2s ease !important;
     box-shadow: 0 0 10px rgba(255, 184, 0, 0.2) !important;
   }

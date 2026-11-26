@@ -153,47 +153,44 @@
       <div class="brand-logo" id="brand-logo-display">
         <span class="logo-title">Spot <span style="color: #ffb800;">Vitrina</span></span>
       </div>
+    </div>
 
-        <!-- SELECTOR DE CIUDAD EN COLOMBIA (Junto a Spot Vitrina) -->
-        <div id="standard-nav-actions" class="standard-nav-actions">
-        <!-- SELECTOR DE CIUDAD EN COLOMBIA -->
-        <div class="city-selector-wrapper">
-          <button class="city-btn" id="btn-city-dropdown" title="Filtrar por Ciudad">
-            <i class="fa-solid fa-location-dot city-pin-icon"></i>
-            <span id="current-city-label">🌍 Global</span>
-            <i class="fa-solid fa-chevron-down city-arrow"></i>
-          </button>
-          <div class="city-dropdown" id="city-dropdown-menu">
-            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Cobertura Global</div>
-            <div class="city-item active" data-city="🌍 Todos los Países">🌍 Todos los Países (Global)</div>
+    <!-- SELECTOR DE UBICACIÓN CENTRADO (EQUILIBRIO PERFECTO DE PANTALLA) -->
+    <div class="nav-center" id="standard-nav-actions">
+      <div class="city-selector-wrapper">
+        <button class="city-btn" id="btn-city-dropdown" title="Filtrar por Ubicación y Cobertura">
+          <span id="current-city-label">🌍 Global</span>
+          <i class="fa-solid fa-chevron-down city-arrow"></i>
+        </button>
+        <div class="city-dropdown" id="city-dropdown-menu">
+          <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Cobertura Global</div>
+          <div class="city-item active" data-city="🌍 Todos los Países">🌍 Todos los Países (Global)</div>
 
-            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🇨🇴 Colombia</div>
-            <div class="city-item" data-city="Toda Colombia">🇨🇴 Toda Colombia</div>
-            <div class="city-item" data-city="Bogotá">🏙️ Bogotá D.C.</div>
-            <div class="city-item" data-city="Medellín">🌸 Medellín & Antioquia</div>
-            <div class="city-item" data-city="Cali">☀️ Cali & Valle</div>
-            <div class="city-item" data-city="Popayán">🌄 Popayán & Cauca</div>
-            <div class="city-item" data-city="Barranquilla">🌊 Barranquilla & Costa</div>
-            <div class="city-item" data-city="Bucaramanga">⛰️ Bucaramanga & Santanderes</div>
-            <div class="city-item" data-city="Eje Cafetero">☕ Eje Cafetero</div>
-            <div class="city-item" data-city="Cartagena">🏰 Cartagena</div>
-            <div class="city-item" data-city="Meta & Llanos">🐎 Meta & Llanos Orientales</div>
-            <div class="city-item" data-city="Amazonas & Leticia">🌿 Amazonas & Leticia</div>
+          <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🇨🇴 Colombia</div>
+          <div class="city-item" data-city="Toda Colombia">🇨🇴 Toda Colombia</div>
+          <div class="city-item" data-city="Bogotá">🏙️ Bogotá D.C.</div>
+          <div class="city-item" data-city="Medellín">🌸 Medellín & Antioquia</div>
+          <div class="city-item" data-city="Cali">☀️ Cali & Valle</div>
+          <div class="city-item" data-city="Popayán">🌄 Popayán & Cauca</div>
+          <div class="city-item" data-city="Barranquilla">🌊 Barranquilla & Costa</div>
+          <div class="city-item" data-city="Bucaramanga">⛰️ Bucaramanga & Santanderes</div>
+          <div class="city-item" data-city="Eje Cafetero">☕ Eje Cafetero</div>
+          <div class="city-item" data-city="Cartagena">🏰 Cartagena</div>
+          <div class="city-item" data-city="Meta & Llanos">🐎 Meta & Llanos Orientales</div>
+          <div class="city-item" data-city="Amazonas & Leticia">🌿 Amazonas & Leticia</div>
 
-            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🇺🇸 Estados Unidos</div>
-            <div class="city-item" data-city="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (USA)</div>
-            <div class="city-item" data-city="Miami & Florida">🌴 Miami & Florida</div>
-            <div class="city-item" data-city="New York">🗽 New York & New Jersey</div>
-            <div class="city-item" data-city="California">🎬 Los Ángeles & California</div>
-            <div class="city-item" data-city="Texas">🤠 Texas & Houston</div>
-            <div class="city-item" data-city="Orlando">🎡 Orlando & Florida Central</div>
+          <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🇺🇸 Estados Unidos</div>
+          <div class="city-item" data-city="Todo Estados Unidos">🇺🇸 Todo Estados Unidos (USA)</div>
+          <div class="city-item" data-city="Miami & Florida">🌴 Miami & Florida</div>
+          <div class="city-item" data-city="New York">🗽 New York & New Jersey</div>
+          <div class="city-item" data-city="California">🎬 Los Ángeles & California</div>
+          <div class="city-item" data-city="Texas">🤠 Texas & Houston</div>
+          <div class="city-item" data-city="Orlando">🎡 Orlando & Florida Central</div>
 
-            <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🌐 Sin Fronteras</div>
-            <div class="city-item" data-city="Internacional">🌐 Envíos Internacionales / Digital</div>
-          </div>
+          <div style="padding: 6px 12px 4px; font-size: 0.72rem; color: var(--spot-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">🌐 Sin Fronteras</div>
+          <div class="city-item" data-city="Internacional">🌐 Envíos Internacionales / Digital</div>
         </div>
-        </div>
-      
+      </div>
     </div>
 
     <!-- ACCIONES DE NAVEGACIÓN (1 Sola fila ultraligera y elegante) -->
@@ -212,7 +209,7 @@
         </button>
 
         <!-- BOTÓN TOGGLE BÚSQUEDA FLOTANTE -->
-        <button class="icon-nav-btn" id="btn-nav-search-toggle">
+        <button class="icon-nav-btn" id="btn-nav-search-toggle" title="Buscar productos y tiendas" aria-label="Buscar productos">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
 
