@@ -4355,10 +4355,10 @@ body.admin-active-view .main-viewport {
 
 @media (max-width: 768px) {
   .navbar {
-    height: 54px;
-    min-height: 54px;
+    height: calc(54px + env(safe-area-inset-top, 0px)) !important;
+    min-height: calc(54px + env(safe-area-inset-top, 0px)) !important;
     flex-wrap: nowrap !important;
-    padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 16px)) 0 max(14px, env(safe-area-inset-left, 14px)) !important;\n    height: calc(54px + env(safe-area-inset-top, 0px)) !important;\n    min-height: calc(54px + env(safe-area-inset-top, 0px)) !important;
+    padding: env(safe-area-inset-top, 0px) 10px 0 10px !important;
     align-items: center !important;
     justify-content: space-between !important;
     display: flex !important;
@@ -4374,7 +4374,7 @@ body.admin-active-view .main-viewport {
     align-items: center !important;
     gap: 8px !important;
     flex: 0 0 auto !important;
-    margin-right: 0 !important;
+    margin-right: 2px !important;
     min-width: auto;
     z-index: 10;
   }
@@ -4560,7 +4560,7 @@ body.admin-active-view .main-viewport {
     border: 1.5px solid rgba(255, 184, 0, 0.5) !important;
     color: #ffb800 !important;
     flex-shrink: 0 !important;
-    margin-right: 0 !important;
+    margin-right: 2px !important;
     transition: all 0.2s ease !important;
     box-shadow: 0 0 10px rgba(255, 184, 0, 0.2) !important;
   }
@@ -4814,38 +4814,53 @@ body.admin-active-view .main-viewport {
   /* COLUMNA LATERAL EN MÓVIL: AVATAR Y ACCIONES ELEVADAS (TOTALMENTE DESPEJADAS DEL BOTÓN +) */
   .reel-side-actions {
     right: 10px !important;
+    width: 34px !important;
     bottom: max(158px, calc(env(safe-area-inset-bottom, 0px) + 152px)) !important;
     gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
   }
 
   .store-badge-action {
     margin: 0 !important;
+    width: 34px !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 
   .store-ring-wrapper {
-    width: 36px !important;
-    height: 36px !important;
+    width: 34px !important;
+    height: 34px !important;
     aspect-ratio: 1 / 1 !important;
     flex-shrink: 0 !important;
     box-sizing: border-box !important;
+    margin: 0 auto !important;
   }
 
   .action-icon-circle,
   .side-icon-circle {
-    width: 36px !important;
-    height: 36px !important;
+    width: 34px !important;
+    height: 34px !important;
     font-size: 1.05rem !important;
     background: rgba(0, 0, 0, 0.45) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     border: 1px solid rgba(255, 255, 255, 0.16) !important;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35) !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
   }
 
   .side-action-btn {
     gap: 2px !important;
-    width: 44px !important;
+    width: 34px !important;
     margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    overflow: visible !important;
   }
 
   .side-action-btn .action-count,
@@ -4881,17 +4896,20 @@ body.admin-active-view .main-viewport {
     .reel-side-actions {
       bottom: max(148px, calc(env(safe-area-inset-bottom, 0px) + 142px)) !important;
       gap: 6px !important;
-      right: 8px !important;
+      right: 10px !important;
+      width: 34px !important;
     }
     .action-icon-circle,
     .side-icon-circle {
-      width: 32px !important;
-      height: 32px !important;
+      width: 34px !important;
+      height: 34px !important;
       font-size: 0.95rem !important;
+      margin: 0 auto !important;
     }
     .store-ring-wrapper {
-      width: 32px !important;
-      height: 32px !important;
+      width: 34px !important;
+      height: 34px !important;
+      margin: 0 auto !important;
     }
     .side-action-btn .action-count,
     .side-action-btn .action-label {
