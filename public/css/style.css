@@ -11009,6 +11009,91 @@ body.spotplay-active #spotplay-top-bar {
   #btn-nav-store-menu {
     display: none !important;
   }
+
+  /* Blindaje total del Navbar superior para pantallas móviles */
+  .navbar {
+    padding: env(safe-area-inset-top, 0px) 8px 0 10px !important;
+    gap: 4px !important;
+  }
+
+  /* Logo: blindado e inamovible, nunca se le monta nada encima */
+  .nav-left {
+    flex: 0 0 auto !important;
+    min-width: auto !important;
+    margin-right: 4px !important;
+    gap: 4px !important;
+    z-index: 20 !important;
+  }
+
+  .brand-logo {
+    flex-shrink: 0 !important;
+  }
+
+  .logo-title {
+    font-size: 0.98rem !important;
+    letter-spacing: -0.4px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Contenedor central de ciudad: auto-ajustable sin invadir el logo */
+  .nav-center,
+  .standard-nav-actions {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 110px !important;
+    margin: 0 2px !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  .city-selector-wrapper {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+  }
+
+  /* Botón de Ciudad: compacto, nunca empuja ni se desborda */
+  .city-btn {
+    padding: 0 7px !important;
+    height: 32px !important;
+    max-width: 106px !important;
+    font-size: 0.72rem !important;
+    gap: 3px !important;
+    flex-shrink: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .city-btn span {
+    max-width: 64px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 0.72rem !important;
+  }
+
+  .city-btn .city-arrow {
+    font-size: 0.65rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Acciones a la derecha compactas y bien alineadas */
+  .nav-right {
+    flex: 0 0 auto !important;
+    gap: 4px !important;
+    margin-left: auto !important;
+  }
+
+  .category-nav-btn {
+    height: 32px !important;
+    padding: 0 7px !important;
+  }
+
+  .icon-nav-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.8rem !important;
+  }
 }
 
 
