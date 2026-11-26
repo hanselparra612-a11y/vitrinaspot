@@ -4355,8 +4355,8 @@ body.admin-active-view .main-viewport {
 
 @media (max-width: 768px) {
   .navbar {
-    height: calc(54px + env(safe-area-inset-top, 0px)) !important;
-    min-height: calc(54px + env(safe-area-inset-top, 0px)) !important;
+    height: calc(50px + env(safe-area-inset-top, 0px)) !important;
+    min-height: calc(50px + env(safe-area-inset-top, 0px)) !important;
     flex-wrap: nowrap !important;
     padding: env(safe-area-inset-top, 0px) 10px 0 10px !important;
     align-items: center !important;
