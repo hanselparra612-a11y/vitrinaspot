@@ -6588,26 +6588,31 @@ function setupEventListeners() {
     }
     const viralDesc = modal.querySelector('.viral-share-card p');
     if (viralDesc) {
-      viralDesc.innerHTML = `Invítalos a publicar sus primeros <strong>${freeQuota} SPOTS</strong> en la Vitrina <strong>100% GRATIS</strong> sin comisiones ni mensualidades.`;
+      viralDesc.innerHTML = `Invítalos a publicar sus productos en <strong>Spot Vitrina</strong> con pedidos directos al WhatsApp y sin comisiones.`;
     }
     const viralBtnText = document.getElementById('btn-viral-share-wa');
     if (viralBtnText) {
-      viralBtnText.innerHTML = `<i class="fa-brands fa-whatsapp"></i> Invitar Comercios (${freeQuota} SPOTS Gratis)`;
+      viralBtnText.innerHTML = `<i class="fa-brands fa-whatsapp"></i> Recomendar Spot Vitrina`;
     }
 
     // Configurar botón Compartir por WhatsApp
     const shareBtn = document.getElementById('btn-viral-share-wa');
     if (shareBtn) {
       shareBtn.onclick = () => {
-        const shareUrl = getPublicShareUrl();
-        const shareMsg = `¡Hola colega! 👋 Mira esta nueva vitrina comercial en Colombia que encontré: *La Vitrina* (Tu catálogo digital, pedidos al chat directo).\n\n` +
-          `🎁 Acabo de subir mi SPOT y están regalando *${freeQuota} SPOTS 100% GRATIS* y fijos para los primeros 1.000 comercios pioneros.\n\n` +
-          `Aprovecha y sube tus productos antes de que se completen los 1.000 cupos aquí:\n\n` +
-          `${shareUrl}`;
+        let shareUrl = 'https://spotplay-1.onrender.com/#vitrina';
+        try {
+          const spotOrigin = localStorage.getItem('spotplay_origin_url');
+          if (spotOrigin && !spotOrigin.includes('localhost') && !spotOrigin.includes('127.0.0.1')) {
+            shareUrl = `${spotOrigin.replace(/\/+$/, '')}/#vitrina`;
+          }
+        } catch(e) {}
+        const shareMsg = `🛍️ ¡Hola colega! Te recomiendo *Spot Vitrina & Spot Play* en Colombia.\n\n` +
+          `✨ Una vitrina comercial para exhibir productos con videos y fotos, y recibir pedidos directo a tu WhatsApp sin comisiones ni intermediarios.\n\n` +
+          `👉 Mira y publica aquí:\n${shareUrl}`;
 
         if (navigator.share) {
           navigator.share({
-            title: `Vitrina - ${freeQuota} SPOTS Gratis para Comercios Pioneros`,
+            title: `Spot Vitrina & Spot Play - Comercio Directo en Colombia`,
             text: shareMsg,
             url: shareUrl
           }).catch(() => {
@@ -7973,16 +7978,21 @@ function legacyClipboardCopy(text) {
 }
 
 // ==========================================
-// RECOMENDAR / COMPARTIR VITRINASPOT GENERAL
+// RECOMENDAR / COMPARTIR SPOT PLAY & VITRINA
 // ==========================================
 function openShareAppModal() {
-  const shareUrl = getPublicShareUrl();
-  const freeQuota = Number(state.pricing?.free_spots_quota) || 5;
-  const shareTitle = `Vitrina - ${freeQuota} SPOTS Gratis para Comercios`;
-  const shareMsg = `🛍️ ¡Hola! Te recomiendo *Vitrina Colombia* (Tu catálogo digital, pedidos al chat directo).\n\n` +
-    `🎁 Para comercios y emprendedores están regalando *${freeQuota} SPOTS 100% GRATIS* y permanentes para exhibir tus productos con fotos y videos.\n\n` +
-    `Es una plataforma genial para descubrir tiendas reales y hacer pedidos directo por WhatsApp sin intermediarios ni comisiones:\n\n` +
-    `👉 ${shareUrl}`;
+  let shareUrl = 'https://spotplay-1.onrender.com/#vitrina';
+  try {
+    const spotOrigin = localStorage.getItem('spotplay_origin_url');
+    if (spotOrigin && !spotOrigin.includes('localhost') && !spotOrigin.includes('127.0.0.1')) {
+      shareUrl = `${spotOrigin.replace(/\/+$/, '')}/#vitrina`;
+    }
+  } catch(e) {}
+
+  const shareTitle = 'Spot Play & Spot Vitrina - Videos Cortos y Vitrina Comercial';
+  const shareMsg = `🛍️🎬 ¡Hola! Te invito a conocer *Spot Play & Spot Vitrina* en Colombia.\n\n` +
+    `✨ Disfruta de videos cortos virales, entretenimiento y descubre tiendas locales con pedidos directos al WhatsApp de cada comercio sin comisiones ni intermediarios.\n\n` +
+    `👉 Conócela y entra aquí:\n${shareUrl}`;
 
   // Si el dispositivo cuenta con menú nativo de compartir (móviles Android / iPhone)
   if (navigator.share) {
@@ -7991,7 +8001,7 @@ function openShareAppModal() {
       text: shareMsg,
       url: shareUrl
     }).then(() => {
-      showToast('🚀 ¡Gracias por recomendar la Vitrina!');
+      showToast('🚀 ¡Gracias por recomendar Spot Play!');
     }).catch((err) => {
       if (err.name !== 'AbortError') {
         showShareAppDialog(shareUrl, shareMsg);
