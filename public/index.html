@@ -47,6 +47,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=29.6">
+  <style>
+    /* Nivelación milimétrica cuando está incrustada en Spot Play */
+    .in-spotplay-iframe .navbar,
+    body.in-spotplay-iframe .navbar {
+      padding-top: 0 !important;
+      height: 50px !important;
+      min-height: 50px !important;
+    }
+  </style>
+  <script>
+    if ((window.parent && window.parent !== window) || new URLSearchParams(window.location.search).get('embedded') === '1') {
+      document.documentElement.classList.add('in-spotplay-iframe');
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('in-spotplay-iframe');
+      });
+    }
+  </script>
  
   <!-- Progressive Web App (PWA) e Íconos Oficiales de Celular -->
   <link rel="manifest" href="/manifest.json?v=21.9">
