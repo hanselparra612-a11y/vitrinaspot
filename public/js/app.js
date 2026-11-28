@@ -13,6 +13,7 @@ function triggerOpenUploadModal() {
   if (!uploadModal) return;
   const nameInput = document.getElementById('upload-store-name');
   const waInput = document.getElementById('upload-whatsapp');
+  const tgInput = document.getElementById('upload-telegram');
     const uploadCCode = document.getElementById('upload-country-code')?.value || '+57';
     let combinedUploadWa = waInput ? waInput.value.trim() : '';
     if (combinedUploadWa && !combinedUploadWa.startsWith('+')) {
@@ -20,6 +21,7 @@ function triggerOpenUploadModal() {
     }
   if (state.currentStore) {
     if (nameInput) nameInput.value = state.currentStore.name;
+    if (tgInput) tgInput.value = state.currentStore.telegram || '';
     if (waInput && state.currentStore.whatsapp) {
         const swa = state.currentStore.whatsapp;
         const upCC = document.getElementById('upload-country-code');
@@ -42,6 +44,7 @@ function triggerOpenUploadModal() {
   } else {
     if (nameInput) nameInput.value = '';
     if (waInput) waInput.value = '';
+    if (tgInput) tgInput.value = '';
   }
   refreshUploadMembershipUI();
   renderDynamicPlansUI();
@@ -5752,8 +5755,10 @@ function setupEventListeners() {
       // Pre-llenar datos de tienda si existen, o dejar limpios para nuevo comercio
       const nameInput = document.getElementById('upload-store-name');
       const waInput = document.getElementById('upload-whatsapp');
+      const tgInput = document.getElementById('upload-telegram');
       if (state.currentStore) {
         if (nameInput) nameInput.value = state.currentStore.name;
+        if (tgInput) tgInput.value = state.currentStore.telegram || '';
         const profileFullWa = state.currentStore.whatsapp || '';
     const profileCCSelect = document.getElementById('edit-store-country-code');
     if (profileCCSelect) {
@@ -5778,6 +5783,7 @@ function setupEventListeners() {
       } else {
         if (nameInput) nameInput.value = '';
         if (waInput) waInput.value = '';
+        if (tgInput) tgInput.value = '';
       }
       refreshUploadMembershipUI();
       renderDynamicPlansUI();

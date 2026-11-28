@@ -869,6 +869,8 @@ class Database {
       hours: storeData.hours || "Lun - Sáb: 8:00 AM - 7:00 PM",
       paymentMethods: storeData.paymentMethods || ["Nequi", "Daviplata", "Efectivo"],
       password: storeData.password || "123",
+      telegram: storeData.telegram || "",
+      primaryChat: storeData.primaryChat || "whatsapp",
       spotPlayUid: storeData.spotPlayUid || null,
       hasSpot: false,
       spotExpiresAt: null,

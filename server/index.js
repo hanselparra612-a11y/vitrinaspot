@@ -513,6 +513,7 @@ app.post('/api/videos', upload.fields([
       storeId,
       storeName,
       whatsapp,
+      telegram,
       title,
       description,
       category,
@@ -553,6 +554,7 @@ app.post('/api/videos', upload.fields([
         store = db.createStore({
           name: storeName || 'Mi Tienda Comercial',
           whatsapp: cleanWa,
+          telegram: telegram ? telegram.trim() : '',
           city: city || 'Bogotá'
         });
       }
@@ -560,6 +562,11 @@ app.post('/api/videos', upload.fields([
 
     if (!store) {
       store = db.getStores()[0]; // Fallback
+    }
+
+    if (store && telegram !== undefined && telegram.trim() && store.telegram !== telegram.trim()) {
+      store.telegram = telegram.trim();
+      db.updateStore(store.id, { telegram: store.telegram });
     }
 
     // Miniatura por defecto
@@ -641,6 +648,7 @@ app.post('/api/videos', upload.fields([
       storeName: store.name,
       storeAvatar: store.avatar,
       storeVerified: store.verified,
+      storeTelegram: store.telegram || (telegram ? telegram.trim() : ''),
       hasSpot: isBoosted,
       spotExpiresAt: isBoosted ? boostExpiry : null,
       boostLevel: isBoosted ? boostLevel : 'none',
