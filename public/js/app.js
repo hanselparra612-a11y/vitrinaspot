@@ -851,6 +851,53 @@ async function loadVideos() {
       if (!state.searchQuery && state.currentCategory === 'Solo Ofertas') {
         vids = vids.filter(v => v.promoBadge && v.promoBadge.includes('OFERTA'));
       }
+
+      // 🎲 Barajado inteligente y anti-repetición de tiendas consecutivas
+      if (Array.isArray(vids) && vids.length > 2 && !state.searchQuery && !state.currentStoreFilter) {
+        const storeBuckets = new Map();
+        vids.forEach(v => {
+          const sId = v.storeId || v.storeName || 'generic';
+          if (!storeBuckets.has(sId)) storeBuckets.set(sId, []);
+          storeBuckets.get(sId).push(v);
+        });
+
+        // Barajar aleatoriamente cada bucket
+        storeBuckets.forEach((list) => {
+          for (let i = list.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [list[i], list[j]] = [list[j], list[i]];
+          }
+        });
+
+        // Intercalar round-robin evitando tiendas consecutivas
+        const interleaved = [];
+        let lastStore = null;
+        let remaining = vids.length;
+
+        while (remaining > 0) {
+          const validStores = Array.from(storeBuckets.keys()).filter(
+            k => storeBuckets.get(k).length > 0 && k !== lastStore
+          );
+
+          let chosenStore = null;
+          if (validStores.length > 0) {
+            chosenStore = validStores[Math.floor(Math.random() * validStores.length)];
+          } else {
+            chosenStore = Array.from(storeBuckets.keys()).find(k => storeBuckets.get(k).length > 0);
+          }
+
+          if (chosenStore) {
+            const vid = storeBuckets.get(chosenStore).shift();
+            interleaved.push(vid);
+            lastStore = chosenStore;
+            remaining--;
+          } else {
+            break;
+          }
+        }
+        vids = interleaved;
+      }
+
       state.videos = vids;
       state.currentIndex = 0;
       renderCurrentReelVideo();
