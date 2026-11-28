@@ -1785,7 +1785,7 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+if (!process.env.VERCEL) app.listen(PORT, '0.0.0.0', () => {
     console.log(`=======================================================`);
     console.log(`🚀 VitrinaSpot Server corriendo con éxito:`);
     console.log(`   - Local:    http://localhost:${PORT}`);
@@ -1796,3 +1796,5 @@ app.listen(PORT, '0.0.0.0', () => {
 }
 
 startServer();
+
+export default app;
